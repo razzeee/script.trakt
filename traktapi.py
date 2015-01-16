@@ -75,9 +75,8 @@ class traktAPI(object):
 		jdata = json.dumps(args)
 
 		url = "%s/auth/login" % (self.__baseURL)
-		# get data from trakt.tv
-		raw = self.__getData(url, jdata)
-		data = json.loads(raw)
+		# Login
+		data = self.traktRequest("POST",url,args)
 
 		Debug("[traktAPI] __userLogin(): token: '%s'" % data['token'])
 		return data['token']
@@ -88,20 +87,19 @@ class traktAPI(object):
 		try:
 			Debug("[traktAPI] __getData(): urllib2.Request(%s)" % url)
 
-			headers = { 'trakt-user-login': self.__username,
-						'trakt-user-token': self.__userToken,
-						'Content-type': 'application/json',
-						'trakt-api-key': self.__apikey,
-						'trakt-api-version': '2'
-						}
-
-			if args == None:
+			if args is None or args == {} :
 				Debug("[traktAPI] __getData(): Without args")
-				req = Request(url, headers)
+				req = Request(url)
 			else:
 				Debug("[traktAPI] __getData(): With args")
-				req = Request(url, args, headers)
-
+				req = Request(url, args)
+			
+			req.add_header('trakt-user-login', self.__username);
+			req.add_header('trakt-user-token', self.__userToken);
+			req.add_header('Content-type', 'application/json');
+			req.add_header('trakt-api-key', self.__apikey);
+			req.add_header('trakt-api-version', '2');
+			
 			Debug("[traktAPI] __getData(): urllib2.urlopen()")
 			t1 = time.time()
 			response = urlopen(req, timeout=timeout)
@@ -200,6 +198,7 @@ class traktAPI(object):
 					xbmc.sleep(5000)
 				elif isinstance(e, traktUnknownError):
 					Debug("[traktAPI] traktRequest(): (%i) Other problem (%s)" % (i, e.value))
+					xbmc.sleep(5000)
 				else:
 					pass
 
@@ -344,36 +343,36 @@ class traktAPI(object):
 		data = { 'movie': { 'ids': {'imdb': info['imdbnumber']}, 'title': info['title'], 'year': info['year']}, 'progress': math.ceil(percent)}
 		return self.scrobble(data, status)
 
-	# url: http://api.trakt.tv/users/library/<shows|movies>/collection.json/<apikey>/<username>/min
-	# response: [{"title":"Archer (2009)","year":2009,"imdb_id":"tt1486217","tvdb_id":110381,"seasons":[{"season":2,"episodes":[1,2,3,4,5]},{"season":1,"episodes":[1,2,3,4,5,6,7,8,9,10]}]}]
+	# url: http://api.trakt.tv/users/<username>/collection/<shows|movies>
+	# response: [{u'last_collected_at': u'2014-12-03T22:01:57.000-08:00', u'seasons': [{u'episodes': [{u'number': 1, u'collected_at': u'2014-12-03T22:01:57.000-08:00'}, {u'number': 2, u'collected_at': u'2014-12-03T22:01:57.000-08:00'}, {u'number': 3, u'collected_at': u'2014-12-03T22:01:57.000-08:00'}, {u'number': 4, u'collected_at': u'2014-12-03T22:01:57.000-08:00'}, {u'number': 5, u'collected_at': u'2014-12-03T22:01:57.000-08:00'}], u'number': 1}], u'show': {u'year': 2012, u'ids': {u'tmdb': None, u'tvdb': 258519, u'trakt': 66328, u'imdb': u'tt2007042', u'tvrage': None, u'slug': u'whale-wars-viking-shores'}, u'title': u'Whale Wars: Viking Shores'}}]
 	# note: if user has nothing in collection, response is then []
 	def getLibrary(self, type):
-			url = "%s/users/library/%s/collection.json/%s/%s/min" % (self.__baseURL, type, self.__apikey, self.__username)
+			url = "%s/sync/collection/%s" % (self.__baseURL, type)
 			Debug("[traktAPI] getLibrary(url: %s)" % url)
-			return self.traktRequest('POST', url)
+			return self.traktRequest('GET', url)
 
 	def getShowLibrary(self):
 		return self.getLibrary('shows')
 	def getMovieLibrary(self):
 		return self.getLibrary('movies')
 
-	# url: http://api.trakt.tv/users/library/<shows|movies>/watched.json/<apikey>/<username>/min
-	# returns: [{"title":"Archer (2009)","year":2009,"imdb_id":"tt1486217","tvdb_id":110381,"seasons":[{"season":2,"episodes":[1,2,3,4,5]},{"season":1,"episodes":[1,2,3,4,5,6,7,8,9,10]}]}]
+	# url: http://api.trakt.tv/users/<username>/watched/<shows|movies>
+	# returns: [{u'seasons': [{u'episodes': [{u'plays': 14, u'number': 1}, {u'plays': 14, u'number': 2}, {u'plays': 14, u'number': 3}, {u'plays': 14, u'number': 4}, {u'plays': 14, u'number': 5}], u'number': 1}], u'last_watched_at': u'2015-01-15T22:30:39.000-08:00', u'plays': 70, u'show': {u'year': 2012, u'ids': {u'tmdb': None, u'tvdb': 258519, u'trakt': 66328, u'imdb': u'tt2007042', u'tvrage': None, u'slug': u'whale-wars-viking-shores'}, u'title': u'Whale Wars: Viking Shores'}}]
 	# note: if nothing watched in collection, returns []
 	def getWatchedLibrary(self, type):
-			url = "%s/users/library/%s/watched.json/%s/%s/min" % (self.__baseURL, type, self.__apikey, self.__username)
+			url = "%s/sync/watched/%s" % (self.__baseURL, type)
 			Debug("[traktAPI] getWatchedLibrary(url: %s)" % url)
-			return self.traktRequest('POST', url)
+			return self.traktRequest('GET', url)
 
 	def getWatchedEpisodeLibrary(self,):
 		return self.getWatchedLibrary('shows')
 	def getWatchedMovieLibrary(self):
 		return self.getWatchedLibrary('movies')
 
-	# url: http://api.trakt.tv/<show|show/episode|movie>/library/<apikey>
-	# returns: {u'status': u'success', u'message': u'27 episodes added to your library'}
+	# url: http://api.trakt.tv/sync/collection>
+	# returns: {'added': {'movies': 1,'episodes': 12},'updated': {'movies': 0,'episodes': 0},'existing': {'movies': 0,'episodes': 0},'not_found': {'movies': [{'ids': {'imdb': 'tt0000111'}}],'shows': [],'seasons': [],'episodes': []}}
 	def addToLibrary(self, type, data):
-			url = "%s/%s/library/%s" % (self.__baseURL, type, self.__apikey)
+			url = "%s/sync/collection" % (self.__baseURL)
 			Debug("[traktAPI] addToLibrary(url: %s, data: %s)" % (url, str(data)))
 			return self.traktRequest('POST', url, data)
 
@@ -398,10 +397,10 @@ class traktAPI(object):
 	def removeMovie(self, data):
 		return self.removeFromLibrary('movie', data)
 
-	# url: http://api.trakt.tv/<show|show/episode|movie>/seen/<apikey>
-	# returns: {u'status': u'success', u'message': u'2 episodes marked as seen'}
+	# url: http://api.trakt.tv/sync/history
+	# returns: {'added': {'movies': 1,'episodes': 12},'updated': {'movies': 0,'episodes': 0},'existing': {'movies': 0,'episodes': 0},'not_found': {'movies': [{'ids': {'imdb': 'tt0000111'}}],'shows': [],'seasons': [],'episodes': []}}
 	def updateSeenInLibrary(self, type, data):
-			url = "%s/%s/seen/%s" % (self.__baseURL, type, self.__apikey)
+			url = "%s/sync/history" % (self.__baseURL)
 			Debug("[traktAPI] updateSeenInLibrary(url: %s, data: %s)" % (url, str(data)))
 			return self.traktRequest('POST', url, data)
 
