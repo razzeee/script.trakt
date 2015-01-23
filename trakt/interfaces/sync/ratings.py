@@ -20,11 +20,11 @@ class SyncRatingsInterface(Get, Add, Remove):
 
     @authenticated
     def shows(self, store=None, rating=None):
-        return self.get('shows', store, rating,)
+        return self.get('shows', store, rating)
 
     @authenticated
     def seasons(self, store=None, rating=None):
-        return self.get('seasons', store, rating,)
+        return self.get('seasons', store, rating)
 
     @authenticated
     def episodes(self, store=None, rating=None):
