@@ -269,7 +269,7 @@ def findInList(list, returnIndex=False, returnCopy=False, case_sensitive=True, *
 					i = i + 1
 			else:
 				# forcing the compare to be done at the string level
-				if str(key_val) == str(kwargs[key]):
+				if key_val.decode('utf-8') == kwargs[key].decode('utf-8'):
 					i = i + 1
 		if i == len(kwargs):
 			if returnIndex:
