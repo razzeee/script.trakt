@@ -79,7 +79,7 @@
 	<string id="1412">Show notifications</string>
 	<string id="1413">Remove deleted movies from trakt collection</string>
 	<string id="1414">Remove deleted episodes from trakt collection</string>
-	<string id="1416">Notify when watched successfully</string>
+	<string id="1416">Notify when scrobbled successfully</string>
 	<string id="1417">Disable notifications during playback</string>
 
 	<!-- Sync Notifications -->
