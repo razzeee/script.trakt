@@ -5,10 +5,10 @@
 	<string id="1002">API Key</string>
 	<string id="1003">Benutzername</string>
 	<string id="1004">Passwort</string>
-	<string id="1005">Aktualisiere Filmsammlung beim start</string>
-	<string id="1006">Aktualisiere Seriensammlung beim start</string>
-	<string id="1007">Synchronisiere gesehene Filme beim start</string>
-	<string id="1008">Synchronisiere gesehene Serien beim start</string>
+	<string id="1005">Aktualisiere Filmsammlung beim Start</string>
+	<string id="1006">Aktualisiere Seriensammlung beim Start</string>
+	<string id="1007">Synchronisiere gesehene Filme beim Start</string>
+	<string id="1008">Synchronisiere gesehene Serien beim Start</string>
 	
 	<!-- Info -->
 	<string id="1105"></string>
@@ -17,7 +17,7 @@
 	<string id="1108">Kann keine Verbindung zu Trakt aufbauen</string>
 	<string id="1109">Error</string>
 	<string id="1120">Überprüfe Datenbank nach Updates</string>
-	<string id="1121">Error beim hochladen der Film Sammlung</string>
+	<string id="1121">Error beim hochladen der Filmsammlung</string>
 	<string id="1122">Keine neuen Filme in der Kodi Datenbank</string>
 	<string id="1123">Error beim hochladen der gesehenen Filme</string>
 	<string id="1124">Keine gesehenen Filme für Trakt gefunden</string>
@@ -31,7 +31,7 @@
 	<string id="1132">Überprüfe Kodi Datenbank nach neuen Filmen</string>
 	<string id="1133">Überprüfe Kodi Datenbank nach neuen Episoden</string>
 	<string id="1134">Prozess vom Benutzer abgebrochen</string>
-	<string id="1135">Fehler beim Hochladen der Seriensammlung</string>
+	<string id="1135">Fehler beim hochladen der Seriensammlung</string>
 	<string id="1136">Keine Episoden in Kodi zu aktualisieren</string>
 	<string id="1137">Episoden erfolgreich auf Trakt aktualisiert</string>
 	<string id="1138">Filme übersprungen</string>
@@ -41,12 +41,12 @@
 	<string id="1142">Keine Episoden von Trakt zu entfernen</string>
 	<string id="1143">Überprüfe Kodi Datenbank nach gesehenen Episoden</string>
 	<string id="1144">Episoden werden auf Trakt als gesehen hinzugefügt</string>
-	<string id="1145">Fehler beim Hochladen gesehener Episoden</string>
+	<string id="1145">Fehler beim hochladen gesehener Episoden</string>
 	<string id="1146">Keine neuen gesehenen Episoden in Kodi Datenbank</string>
 	<string id="1147">Filme werden in Kodi als gesehen markiert</string>
 	<string id="1148">Überprüfe Trakt Datenbank nach gesehenen Episoden</string>
 	<string id="1149">Episoden werden in Kodi als gesehen markiert</string>
-	<string id="1150">aktualisiere Kodi Datenbank</string>
+	<string id="1150">Aktualisiere Kodi Datenbank</string>
 	<string id="1151">Keine gesehenen Episoden auf Trakt zu aktualisieren</string>
 	<string id="1152">Error: kann Kodi Datenbank nicht öffnen</string>
 	
@@ -59,6 +59,6 @@
 	<string id="1222">Bereinige Seriensammlung</string>
 
 	<!-- Titles -->
-	<string id="1201">trakt</string>
+	<string id="1201">Trakt</string>
 	
 </strings>
