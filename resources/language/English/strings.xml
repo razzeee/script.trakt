@@ -43,7 +43,7 @@
 	<string id="1351">trakt - Item already rated</string>
 	<string id="1352">trakt - Item unrated successfully</string>
 	<string id="1353">trakt - Item has already been rated</string>
-	<string id="1354">trakt - Error submitting rating</string>
+	<string id="1354">trakt - Error! submitting rating</string>
 	
 	<!-- Rating Dialog -->
 	<string id="1313">What Did You Think?</string>
@@ -102,27 +102,27 @@
 
 	<!-- Sync Movies - update trakt -->
 	<string id="1469">trakt movie playcount is up to date</string>
-	<string id="1428">%i movie(s) playcount will be updated on trakt</string>
+	<string id="1428">%i movie(s) playcount(s) will be updated on trakt</string>
 	<string id="1478">Updating %i of %i movie play counts on trakt</string>
 	<string id="1470">Play counts updated for %i movie(s) on trakt</string>
 	
 	<!-- Sync Movies - update kodi -->
-	<string id="1471">Kodi movie playcount is synced with trakt</string>
-	<string id="1430">%i movie(s) playcount will be updated in Kodi</string>
+	<string id="1471">Kodi movie playcount(s) have been synced with trakt</string>
+	<string id="1430">%i movie(s) playcount(s) will be updated in Kodi</string>
 	<string id="1472">Updating %i of %i movie play counts in Kodi</string>
 	<string id="1473">Play counts updated for %i movie(s) in Kodi</string>
 
     <!-- Sync Movies - add to trakt -->
 	<string id="1467">trakt movie collection is up to date, no movies have been added</string>
-	<string id="1426">%i movie(s) will be added to trakt collection</string>
-	<string id="1468">%i movie(s) were added to your trakt collection</string>
+	<string id="1426">%i movie(s) will be added to your trakt collection</string>
+	<string id="1468">%i movie(s) have been added to your trakt collection</string>
 
 	<!-- Sync Movies - complete -->
 	<string id="1431">Movie Sync Completed successfully</string>
 	
 	<!-- Sync Episodes - load from kodi -->
 	<string id="1480">Loading episode data from Kodi</string>
-	<string id="1481">Loading show from Kodi</string>
+	<string id="1481">Loading show data from Kodi</string>
 	<string id="1482">Show data loaded from Kodi successfully</string>
 	<string id="1483">Parsing %i of %i episode data from Kodi</string>
 	<string id="1484">Loaded episode data from Kodi successfully</string>
@@ -136,22 +136,22 @@
 
     <!-- Sync Episodes - clean trakt -->
 	<string id="1445">Cleaning trakt show collection</string>
-	<string id="1496">trakt episode collection is clean, no episodes have been removeed</string>
+	<string id="1496">trakt episode collection is clean, no episodes have been removed</string>
 	<string id="1497">%i episode(s) are being removed from your trakt collection</string>
 	<string id="1447">episodes are being removed</string>
 	<string id="1498">%i episode(s) were removed from your trakt collection</string>
 
 	<!-- Sync Episodes - update trakt -->
 	<string id="1438">Checking watched episode history on trakt</string>
-	<string id="1492">trakt episode play count is up to date</string>
+	<string id="1492">trakt episode playcount is up to date</string>
 	<string id="1439">%i shows had missing watched status</string>
 	<string id="1440">%i episodes are being updated</string>
 	
 	<!-- Sync Episodes - update kodi -->
 	<string id="1441">Checking watched episodes on Kodi</string>
-	<string id="1493">Kodi episode play count is up to date</string>
-	<string id="1494">Updating %i of %i episode play counts in Kodi</string>
-	<string id="1495">Play counts updated for %i episode(s) in Kodi</string>
+	<string id="1493">Kodi episode playcount is up to date</string>
+	<string id="1494">Updating %i of %i episode playcount(s) in Kodi</string>
+	<string id="1495">Playcount(s) updated for %i episode(s) in Kodi</string>
 
     <!-- Sync Episodes - add to trakt -->
 	<string id="1435">Checking for missing episodes in trakt collection</string>
@@ -165,7 +165,7 @@
 
 	<!-- Sync - manual mark watched -->
 	<string id="1550">trakt - Marked as watched successfully</string>
-	<string id="1551">trakt - Failed marking as watched - Error</string>
+	<string id="1551">trakt - Failed marking as watched - Error!</string>
 	<string id="1552">%d episode(s) of '%s'</string>
 	
 	<!-- Debug Settings -->
