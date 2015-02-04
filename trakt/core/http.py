@@ -62,7 +62,6 @@ class HttpClient(object):
                 response = self.session.send(prepared)
             except socket.gaierror, e:
                 code, _ = e
-                print("Encountered following code "+code)    
 
                 if code != 8:
                     raise e
