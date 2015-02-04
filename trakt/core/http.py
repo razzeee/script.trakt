@@ -30,8 +30,8 @@ class HttpClient(object):
         # retrieve configuration
         ctx = self.configuration.pop()
 
-        retry = self.client.configuration.get('http.retry', False)
-        max_retries = self.client.configuration.get('http.max_retries', 3)
+        retry = self.client.configuration.get('http.retry', True)
+        max_retries = self.client.configuration.get('http.max_retries', 5)
 
         # build request
         if ctx.base_path and path:
@@ -69,11 +69,14 @@ class HttpClient(object):
                 log.warn('Encountered socket.gaierror (code: 8)')
 
                 response = self._build_session().send(prepared)
+            except requests.exceptions.ConnectionError,e:
+                log.warn("Encountered Connection errors , will retry")    
 
-            if not retry or response.status_code < 500:
+            if not retry or not response or response.status_code < 500:
                 break
 
-            log.warn('Continue retry since status is %s', response.status_code)
+            if response is not None and response.status_code is not None:         
+                log.warn('Continue retry since status is %s', response.status_code)
             time.sleep(5)
 
         return response
