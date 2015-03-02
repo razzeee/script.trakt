@@ -355,12 +355,12 @@ class traktPlayer(xbmc.Player):
 
 			try:
 				self.id = result['item']['id']
-                _idchecker=True
-            except:
+				_idchecker=True
+			except:
 				#dont have an id, not library item
-                _idchecker=False
-
-            data = {'action': 'started'}
+				_idchecker=False
+			
+			data = {'action': 'started'}
 
 			# check type of item
 			if self.type == 'unknown' or _idchecker==False:
