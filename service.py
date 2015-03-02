@@ -353,10 +353,17 @@ class traktPlayer(xbmc.Player):
 
 			self.type = result['item']['type']
 
-			data = {'action': 'started'}
+			try:
+				self.id = result['item']['id']
+                _idchecker=True
+            except:
+				#dont have an id, not library item
+                _idchecker=False
+
+            data = {'action': 'started'}
 
 			# check type of item
-			if self.type == 'unknown':
+			if self.type == 'unknown' or _idchecker==False:
 				# do a deeper check to see if we have enough data to perform scrobbles
 				logger.debug("[traktPlayer] onPlayBackStarted() - Started playing a non-library file, checking available data.")
 				
