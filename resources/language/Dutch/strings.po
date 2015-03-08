@@ -30,7 +30,7 @@ msgstr "Wachtwoord"
 
 msgctxt "#32003"
 msgid "Startup Delay"
-msgstr "Start vertraging"
+msgstr "Startvertraging"
 
 msgctxt "#32004"
 msgid "Rating"
@@ -46,7 +46,7 @@ msgstr "Geef cijfer aan aflevering na bekijken"
 
 msgctxt "#32007"
 msgid "Rate each playlist item"
-msgstr "Beoordeel elk afspeellijst item"
+msgstr "Beoordeel elk afspeellijst-item"
 
 msgctxt "#32008"
 msgid "Minimum percent watched to display rating dialog"
@@ -54,7 +54,7 @@ msgstr "Minimum bekeken percentage bekeken om beoordelingsdialoog te tonen"
 
 msgctxt "#32009"
 msgid "Allow re-rating of media"
-msgstr "Toestaan opnieuw beoordelen van media"
+msgstr "Opnieuw beoordelen van media toestaan"
 
 msgctxt "#32010"
 msgid "Default rating"
@@ -66,11 +66,11 @@ msgstr "Scrobbling"
 
 msgctxt "#32012"
 msgid "Scrobble movies"
-msgstr "Scrobble films"
+msgstr "Films scrobblen"
 
 msgctxt "#32013"
 msgid "Scrobble TV show episodes"
-msgstr "Scrobble TV-serie afleveringen"
+msgstr "Afleveringen van TV-series scrobblen"
 
 msgctxt "#32014"
 msgid "Show notification on scrobble"
@@ -90,15 +90,15 @@ msgstr "Live TV uitsluiten"
 
 msgctxt "#32018"
 msgid "Exclude HTTP sources"
-msgstr "HTTP bronnen uitsluiten"
+msgstr "HTTP-bronnen uitsluiten"
 
 msgctxt "#32019"
 msgid "Exclude path"
-msgstr "Uitsluiten bestandspad"
+msgstr "Bestandspad uitsluiten"
 
 msgctxt "#32020"
 msgid "Folder's path (including subfolders)"
-msgstr "Map locatie (inclusief onderliggende folders)"
+msgstr "Maplocatie (inclusief onderliggende mappen)"
 
 msgctxt "#32021"
 msgid "Enter your Username and Password in settings"
@@ -122,11 +122,11 @@ msgstr "Verkeerde gebruikersnaam of wachtwoord"
 
 msgctxt "#32026"
 msgid "What Did You Think?"
-msgstr "Wat vondt je er van?"
+msgstr "Wat vond je er van?"
 
 msgctxt "#32027"
 msgid "Totally Ninja!"
-msgstr "Totaal ninja!"
+msgstr "Helemaal ninja!"
 
 msgctxt "#32028"
 msgid "Weak Sauce :("
@@ -158,7 +158,7 @@ msgstr "Goed"
 
 msgctxt "#32035"
 msgid "Great"
-msgstr "Groots"
+msgstr "Geweldig"
 
 msgctxt "#32036"
 msgid "Superb"
@@ -182,7 +182,7 @@ msgstr "Trakt - waardering succesvol doorgegeven"
 
 msgctxt "#32041"
 msgid "Trakt - Already rated"
-msgstr "Trakt - al gewaardeerd"
+msgstr "Trakt - reeds gewaardeerd"
 
 msgctxt "#32042"
 msgid "Trakt - Unrated successfully"
@@ -198,7 +198,7 @@ msgstr "Trakt- probleem met indienen waardering"
 
 msgctxt "#32045"
 msgid "Synchronize"
-msgstr "Synchroniseer"
+msgstr "Synchroniseren"
 
 msgctxt "#32046"
 msgid "Movies"
@@ -206,11 +206,11 @@ msgstr "Films"
 
 msgctxt "#32047"
 msgid "Add new movies to Trakt collection"
-msgstr "Voeg nieuwe films toe aan je Trakt collectie"
+msgstr "Voeg nieuwe films toe aan je Trakt-collectie"
 
 msgctxt "#32048"
 msgid "Add watched movies to Trakt history"
-msgstr "Voeg bekeken films toe aan je Trakt historie"
+msgstr "Voeg bekeken films toe aan je Trakt-historie"
 
 msgctxt "#32049"
 msgid "Mark movies from Trakt history as watched in Kodi"
@@ -218,19 +218,19 @@ msgstr "Markeer films van Trakt historie als bekeken in Kodi"
 
 msgctxt "#32050"
 msgid "TV Episodes"
-msgstr "TV afleveringen"
+msgstr "TV-afleveringen"
 
 msgctxt "#32051"
 msgid "Add new TV episodes to Trakt collection"
-msgstr "Voeg nieuwe tv afleveringen toe aan je Trakt collectie"
+msgstr "Voeg nieuwe tv-afleveringen toe aan je Trakt-collectie"
 
 msgctxt "#32052"
 msgid "Add watched TV episodes to Trakt history"
-msgstr "Voeg bekeken TV afleveringen toe aan je Trakt historie"
+msgstr "Voeg bekeken TV-afleveringen toe aan je Trakt-historie"
 
 msgctxt "#32053"
 msgid "Mark TV episodes from Trakt history as watched in Kodi"
-msgstr "Markeer TV afleveringen uit je Trakt historie als bekeken in kodi"
+msgstr "Markeer TV-afleveringen uit je Trakt-historie als bekeken in kodi"
 
 msgctxt "#32054"
 msgid "Service"
@@ -246,19 +246,19 @@ msgstr "Toon berichten"
 
 msgctxt "#32057"
 msgid "Remove deleted movies from Trakt collection"
-msgstr "Haal de verwijderde films uit je Trakt collectie"
+msgstr "Haal de verwijderde films uit je Trakt-collectie"
 
 msgctxt "#32058"
 msgid "Remove deleted TV episodes from Trakt collection"
-msgstr "Haal de verwijderde TV afleveringen uit je Trakt collectie"
+msgstr "Haal de verwijderde TV-afleveringen uit je Trakt-collectie"
 
 msgctxt "#32059"
 msgid "Show marked as watched notification"
-msgstr "Aflevering gemarkeerd als bekeken bericht"
+msgstr "Bericht 'aflevering gemarkeerd als bekeken' weergeven"
 
 msgctxt "#32060"
 msgid "Hide notifications during playback"
-msgstr "Verberg berichten tijdens het afspelen"
+msgstr "Berichten verbergen tijdens het afspelen"
 
 msgctxt "#32061"
 msgid "Sync started"
@@ -266,11 +266,11 @@ msgstr "Synchronisatie gestart"
 
 msgctxt "#32062"
 msgid "Sync complete"
-msgstr "Synchronisatie compleet"
+msgstr "Synchronisatie voltooid"
 
 msgctxt "#32063"
 msgid "%i movie(s) will be added to Trakt collection"
-msgstr "%i film(s) worden toegevoegd aan je Trakt collectie"
+msgstr "%i film(s) worden toegevoegd aan je Trakt-collectie"
 
 msgctxt "#32064"
 msgid "%i movie playcount(s) will be updated on Trakt"
@@ -282,19 +282,19 @@ msgstr "Voor %i film(s) wordt het aantal keren bekeken bijgewerkt in Kodi"
 
 msgctxt "#32066"
 msgid "Movie Sync Complete"
-msgstr "Film synchronisatie voltooid"
+msgstr "Filmsynchronisatie voltooid"
 
 msgctxt "#32067"
 msgid "Going to add %i show(s) to Trakt collection"
-msgstr "Gaat %i aflevering(en) toevoegen aan je Trakt collectie"
+msgstr "Gaat %i aflevering(en) toevoegen aan je Trakt-collectie"
 
 msgctxt "#32068"
 msgid "Checking for episodes missing from Trakt collection"
-msgstr "Controle op ontbrekende afleveringen uit je Trakt collectie"
+msgstr "Controle op ontbrekende afleveringen uit je Trakt-collectie"
 
 msgctxt "#32069"
 msgid "%i of %i show(s) have episodes added to Trakt collection"
-msgstr "%i van %i aflevering(en) zijn toegevoegd aan je Trakt collectie"
+msgstr "%i van %i aflevering(en) zijn toegevoegd aan je Trakt-collectie"
 
 msgctxt "#32070"
 msgid "Going to update %i show(s) missing watched status"
@@ -302,7 +302,7 @@ msgstr "%i  afleveringen met ontbrekende status Bekeken gaan worden bijgewerkt"
 
 msgctxt "#32071"
 msgid "Checking watched episodes on Trakt"
-msgstr "Controleren bekeken afleveringen op trak"
+msgstr "Controleren bekeken afleveringen op Trakt"
 
 msgctxt "#32072"
 msgid "%i show(s) had missing watched status"
@@ -318,15 +318,15 @@ msgstr "Bezig met controleren bekeken afleveringen in Kodi"
 
 msgctxt "#32075"
 msgid "Episode Sync Complete"
-msgstr "Aflevering synchronisatie compleet"
+msgstr "Aflevering-synchronisatie voltooid"
 
 msgctxt "#32076"
 msgid "%i movie(s) will be removed from Trakt collection"
-msgstr "%i film(s) worden verwijderd uit je Trakt collectie"
+msgstr "%i film(s) worden verwijderd uit je Trakt-collectie"
 
 msgctxt "#32077"
 msgid "Cleaning Trakt TV show collection"
-msgstr "Bezig met opschonen van je Trakt TV serie collectie"
+msgstr "Bezig met opschonen van je Trakt-TV-serie-collectie"
 
 msgctxt "#32078"
 msgid "episodes are being removed"
@@ -342,7 +342,7 @@ msgstr "Films geladen van Kodi"
 
 msgctxt "#32081"
 msgid "Retrieving movie collection from Trakt"
-msgstr "Bezig met ophalen film collectie van Trakt"
+msgstr "Bezig met ophalen filmcollectie van Trakt"
 
 msgctxt "#32082"
 msgid "Retrieving watched movies from Trakt"
@@ -350,15 +350,15 @@ msgstr "Bezig met ophalen bekeken films van Trakt"
 
 msgctxt "#32083"
 msgid "Retrieved movie data from Trakt"
-msgstr "Film gegevens opgehaald bij Trakt"
+msgstr "Filmgegevens opgehaald van Trakt"
 
 msgctxt "#32084"
 msgid "Trakt movie collection is up to date, no movies to add"
-msgstr "Trakt film collectie is al bijgewerkt, er zijn geen films om toe te voegen"
+msgstr "Trakt filmcollectie is al bijgewerkt, er zijn geen films om toe te voegen"
 
 msgctxt "#32085"
 msgid "%i movie(s) were added to your Trakt collection"
-msgstr "%i film(s) zijn toegevoegd aan je Trakt collectie"
+msgstr "%i film(s) zijn toegevoegd aan je Trakt-collectie"
 
 msgctxt "#32086"
 msgid "Trakt movie playcounts are up to date"
@@ -382,11 +382,11 @@ msgstr "Aantal keer afgespeeld is bijgewerkt voor %i film(s) in Kodi"
 
 msgctxt "#32091"
 msgid "Trakt movie collection is up to date, no movies removed"
-msgstr "Trakt film collectie is up to date, geen films verwijderd"
+msgstr "Trakt filmcollectie is up-to-date, geen films verwijderd"
 
 msgctxt "#32092"
 msgid "%i movie(s) were removed from your Trakt collection"
-msgstr "%i film(s) zijn verwijderd uit je Trakt collectie"
+msgstr "%i film(s) zijn verwijderd uit je Trakt-collectie"
 
 msgctxt "#32093"
 msgid "Updating %i of %i movie playcount(s) on Trakt"
@@ -394,7 +394,7 @@ msgstr "Bijwerken %i van %i films aantal keer afgespeeld naar Trakt"
 
 msgctxt "#32094"
 msgid "Loading episode data from Kodi"
-msgstr "Bezig met laden aflevering gegevens van Kodi"
+msgstr "Bezig met laden afleveringgegevens van Kodi"
 
 msgctxt "#32095"
 msgid "Loading shows from Kodi"
@@ -406,7 +406,7 @@ msgstr "Afleveringen geladen van Kodi"
 
 msgctxt "#32097"
 msgid "Parsing %i of %i episode data from Kodi"
-msgstr "Verwerken %i van %i aflevering(en) gegevens van Kodi"
+msgstr "Verwerken %i van %i aflevering(s)-gegevens van Kodi"
 
 msgctxt "#32098"
 msgid "Loaded episode data from Kodi"
@@ -414,7 +414,7 @@ msgstr "Afleveringsgegevens geladen van Kodi"
 
 msgctxt "#32099"
 msgid "Loading episode data from Trakt"
-msgstr "Laden aflevering gegevens van Trakt"
+msgstr "Laden afleveringsgegevens van Trakt"
 
 msgctxt "#32100"
 msgid "Retrieving episode collection from Trakt"
@@ -434,19 +434,19 @@ msgstr "Afleveringsgegevens geladen van Trakt"
 
 msgctxt "#32104"
 msgid "Trakt episode collection is up to date, no episodes to add"
-msgstr "Trakt afleveringscollectie is al bijgewerkt, er zijn geen afleveringen om toe te voegen"
+msgstr "Trakt-afleveringscollectie is al bijgewerkt, er zijn geen afleveringen om toe te voegen"
 
 msgctxt "#32105"
 msgid "%i episode(s) were added to your Trakt collection"
-msgstr "%i aflevering(en) zijn toegevoegd aan jouw Trakt collectie"
+msgstr "%i aflevering(en) zijn toegevoegd aan jouw Trakt-collectie"
 
 msgctxt "#32106"
 msgid "Trakt episode playcounts are up to date"
-msgstr "Trakt afllevering keren afgespeeld zijn up to date"
+msgstr "Afspeelhoeveelheidsgegevens van Trakt zijn up-to-date"
 
 msgctxt "#32107"
 msgid "Kodi episode playcounts are up to date"
-msgstr "Kodi afleveringen keren afgespeeld zijn up to date"
+msgstr "Afspeelhoeveelheidsgegevens van Kodi zijn up-to-date"
 
 msgctxt "#32108"
 msgid "Updating %i of %i episode playcount(s) in Kodi"
@@ -458,15 +458,15 @@ msgstr "Aantal keer afgespeeld bijgewerkt voor %i serie(s) in Kodi"
 
 msgctxt "#32110"
 msgid "Trakt episode collection is clean, no episodes to remove"
-msgstr "Trakt afleveringscollectie is schoon, geen afleveringen te verwijderen"
+msgstr "Trakt-afleveringscollectie is schoon, geen afleveringen te verwijderen"
 
 msgctxt "#32111"
 msgid "%i episode(s) are being removed from your Trakt collection"
-msgstr "%i aflevering(s) worden verwijderd van jouw Trakt collectie"
+msgstr "%i aflevering(s) worden verwijderd van jouw Trakt-collectie"
 
 msgctxt "#32112"
 msgid "%i episode(s) were removed from your Trakt collection"
-msgstr "%i aflevering(en) werden verwijderd uit je Trakt collectie"
+msgstr "%i aflevering(en) zijn verwijderd uit je Trakt-collectie"
 
 msgctxt "#32113"
 msgid "Trakt - Marked as watched"
@@ -474,7 +474,7 @@ msgstr "Trakt - Gemarkeerd als bekeken"
 
 msgctxt "#32114"
 msgid "Trakt - Failed marking as watched"
-msgstr "Trakt - Het is niet gelukt om te markeren als bekeken"
+msgstr "Trakt - Markeren als bekeken mislukt"
 
 msgctxt "#32115"
 msgid "%d episode(s) of '%s'"
@@ -482,4 +482,4 @@ msgstr "%d aflevering(en) van '%s'"
 
 msgctxt "#32116"
 msgid "Enable debug mode"
-msgstr "Schakel debug mode in"
+msgstr "Debugmode inschakelen"
