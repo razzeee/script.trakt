@@ -48,7 +48,7 @@ def Main():
         xbmc.executebuiltin('Dialog.Close(all, true)')
 
         pinInfo = xbmcgui.WindowXMLDialog(
-            "PinInfoWindow.xml",
+            "pinInfoWindow.xml",
             __addon__.getAddonInfo('path')
         )
 
