@@ -56,12 +56,11 @@
 			<control type="label" id="203">
 				<description>Instructions Label</description>
 				<posx>206</posx>
-				<posy>73</posy>
+				<posy>71</posy>
 				<width>360</width>
 				<height>200</height>
 				<font>font12</font>
 				<wrapmultiline>true</wrapmultiline>
-				<label></label><!-- this is set from the code -->
 				<textcolor>AA000000</textcolor>
 				<align>left</align>
 				<aligny>top</aligny>
@@ -84,8 +83,8 @@
 			<aligny>center</aligny>
 			<font>font12</font>
 			<textcolor>FFFFFFFF</textcolor>
-			<texturefocus>button-focus2.png</texturefocus>
-			<texturenofocus>button-nofocus.png</texturenofocus>
+			<texturefocus>noop</texturefocus>
+			<texturenofocus>noop</texturenofocus>
 		</control>
 		<control type="group" id="9001">
 			<control type="button" id="200">
@@ -99,6 +98,7 @@
 				<label>$ADDON[script.trakt 32154]</label>
 				<font>font12_title</font>
 				<textcolor>AA000000</textcolor>
+				<focusedcolor>FFFFFFFF</focusedcolor>
 				<texturenofocus>button-nofo.png</texturenofocus>
 				<texturefocus>button-fo.png</texturefocus>
 				<textoffsetx>10</textoffsetx>
@@ -116,6 +116,7 @@
 				<label>$ADDON[script.trakt 32155]</label>
 				<font>font12_title</font>
 				<textcolor>AA000000</textcolor>
+				<focusedcolor>FFFFFFFF</focusedcolor>
 				<texturenofocus>button-nofo.png</texturenofocus>
 				<texturefocus>button-fo.png</texturefocus>				
 				<textoffsetx>10</textoffsetx>
@@ -134,6 +135,7 @@
 				<aligny>center</aligny>
 				<label>$ADDON[script.trakt 32156]</label>
 				<textcolor>AA000000</textcolor>
+				<focusedcolor>FFFFFFFF</focusedcolor>
 				<texturenofocus>button-nofo.png</texturenofocus>
 				<texturefocus>button-fo.png</texturefocus>				
 				<font>font12_title</font>
