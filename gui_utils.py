@@ -29,7 +29,13 @@ def get_pin():
             auth = self.getControl(AUTH_BUTTON)
             never = self.getControl(NEVER_BUTTON)
             instuction = self.getControl(INSTRUCTION_LABEL)
-            instuction.setLabel("1) " + getString(32159).format("[COLOR red]http://trakt.tv/pin/999[/COLOR]") + "\n2) " + getString(32160) + "\n3) " + getString(32161) + "\n\n" + getString(32162))
+
+            if xbmcgui.Window(10000).getProperty('script.trakt.linkcolor'):
+                linkcolor = xbmcgui.Window(10000).getProperty('script.trakt.linkcolor')
+            else:
+                linkcolor = 'red'
+
+            instuction.setLabel("1) " + getString(32159).format("[COLOR "+ linkcolor +"]http://trakt.tv/pin/999[/COLOR]") + "\n2) " + getString(32160) + "\n3) " + getString(32161) + "\n\n" + getString(32162))
             self.pin.controlUp(never)
             self.pin.controlLeft(never)
             self.pin.controlDown(auth)
