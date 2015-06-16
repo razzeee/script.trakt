@@ -76,6 +76,17 @@
 			<texture>qr_code.png</texture>
 			<aspectratio>keep</aspectratio>
 		</control>
+		<control type="edit" id="3001">
+			<posx>200</posx>
+			<posy>240</posy>
+			<height>40</height>
+			<width>350</width>
+			<aligny>center</aligny>
+			<font>font12</font>
+			<textcolor>FFFFFFFF</textcolor>
+			<texturefocus>button-focus2.png</texturefocus>
+			<texturenofocus>button-nofocus.png</texturenofocus>
+		</control>
 		<control type="group" id="9001">
 			<control type="button" id="200">
 				<description>Authorize Button</description>
