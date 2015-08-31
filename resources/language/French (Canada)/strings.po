@@ -220,6 +220,10 @@ msgctxt "#32055"
 msgid "Sync collection on library update or cleaning"
 msgstr "Synchroniser la collection lors de la mise à jour ou du nettoyage de la vidéothèque"
 
+msgctxt "#32056"
+msgid "Show sync notifications"
+msgstr "Montrer les notifications de synchro"
+
 msgctxt "#32057"
 msgid "Remove deleted movies from Trakt collection"
 msgstr "Enlever les films supprimés de la collection Trakt"
@@ -532,6 +536,38 @@ msgctxt "#32135"
 msgid "Remove from Watchlist"
 msgstr "Supprimer de la liste de suivi"
 
+msgctxt "#32136"
+msgid "Add to watchlist"
+msgstr "Ajouter à la liste de suivi"
+
+msgctxt "#32137"
+msgid "Rate this movie"
+msgstr "Évaluer ce film"
+
+msgctxt "#32138"
+msgid "Rate this show"
+msgstr "Évaluer cette émission"
+
+msgctxt "#32139"
+msgid "Rate this episode"
+msgstr "Évaluer cet épisode"
+
+msgctxt "#32140"
+msgid "Toggle watched"
+msgstr "Activer/désactiver les regardés"
+
+msgctxt "#32141"
+msgid "Manage all lists"
+msgstr "Gérer toutes les listes"
+
+msgctxt "#32142"
+msgid "Update all tags"
+msgstr "Mettre à jour toutes les balises"
+
+msgctxt "#32143"
+msgid "Synchronize library"
+msgstr "Synchroniser la médiathèque"
+
 msgctxt "#32144"
 msgid "How do I authorize the trakt addon to access my trakt.tv account?"
 msgstr "Comment autoriser l'addiciel trakt à accéder à mon compte trakt.tv?"
@@ -599,3 +635,11 @@ msgstr "Utilisateur"
 msgctxt "#32164"
 msgid "Fallback to Title/Year matching if necessary"
 msgstr "Se replier vers une concordance Titre/Année si nécessaire"
+
+msgctxt "#32165"
+msgid "Trakt - Added to watchlist"
+msgstr "Trakt - Ajouter à la liste de suivi"
+
+msgctxt "#32166"
+msgid "Trakt - Failed adding to watchlist"
+msgstr "Trakt - Échec d'ajout à la liste de suivi"

@@ -614,7 +614,7 @@ msgstr "Autorização na Conta"
 
 msgctxt "#32159"
 msgid "Visit {0} or scan the QR Code below."
-msgstr "Visite {0} ou escanei o código QR abaixo."
+msgstr "Visite {0} ou escaneie o código QR abaixo."
 
 msgctxt "#32160"
 msgid "Authorize the trakt addon to access your account."

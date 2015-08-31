@@ -1,3 +1,6 @@
+version 3.0.5
+  - updated language files from Transifex
+
 version 3.0.4
   - added playback progress sync for episodes
   - fixed problem when external addon is providing video_ids but no year

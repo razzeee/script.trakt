@@ -566,7 +566,7 @@ msgstr "Mettre à jour toutes mes étiquettes"
 
 msgctxt "#32143"
 msgid "Synchronize library"
-msgstr "Synchroniser votre librairie"
+msgstr "Synchroniser votre médiathèque"
 
 msgctxt "#32144"
 msgid "How do I authorize the trakt addon to access my trakt.tv account?"

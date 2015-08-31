@@ -20,17 +20,129 @@ msgctxt "#32000"
 msgid "General"
 msgstr "Općenito"
 
+msgctxt "#32003"
+msgid "Startup Delay"
+msgstr "Odgoda pokretanja"
+
 msgctxt "#32004"
 msgid "Rating"
 msgstr "Ocjena"
+
+msgctxt "#32005"
+msgid "Rate Movie after watching"
+msgstr "Ocijeni film nakon gledanja"
+
+msgctxt "#32006"
+msgid "Rate TV show Episode after watching"
+msgstr "Ocijeni TV seriju nakon gledanja"
+
+msgctxt "#32007"
+msgid "Rate each playlist item"
+msgstr "Ocijeni svaku stavku popisa izvođenja"
+
+msgctxt "#32008"
+msgid "Minimum percent watched to display rating dialog"
+msgstr "Najmanji postotak gledanja za prikaz dijaloga ocjene"
+
+msgctxt "#32009"
+msgid "Allow re-rating of media"
+msgstr "Doputi ponvno ocjenjivanje medija"
+
+msgctxt "#32010"
+msgid "Default rating"
+msgstr "Zadana ocjena"
+
+msgctxt "#32011"
+msgid "Scrobbling"
+msgstr "Skroblanje"
+
+msgctxt "#32012"
+msgid "Scrobble movies"
+msgstr "Skroblaj filmove"
+
+msgctxt "#32013"
+msgid "Scrobble TV show episodes"
+msgstr "Skroblaj epizode TV serija"
+
+msgctxt "#32014"
+msgid "Show notification on scrobble"
+msgstr "Prikaži obavijesti pri skroblanju"
+
+msgctxt "#32015"
+msgid "Trakt - Scrobbled successfully"
+msgstr "Trakt - Skroblanje uspješno"
+
+msgctxt "#32016"
+msgid "Exclusions"
+msgstr "Izuzeto"
+
+msgctxt "#32017"
+msgid "Exclude Live TV"
+msgstr "Izuzmi televiziju"
+
+msgctxt "#32018"
+msgid "Exclude HTTP sources"
+msgstr "Izuzmi HTTP izvore"
+
+msgctxt "#32019"
+msgid "Exclude path"
+msgstr "Izuzmi putanju"
+
+msgctxt "#32020"
+msgid "Folder's path (including subfolders)"
+msgstr "Putanja mape (uključi podmape)"
+
+msgctxt "#32023"
+msgid "Can not connect to Trakt"
+msgstr "Nemoguće povezivanje s Traktom"
 
 msgctxt "#32024"
 msgid "Error"
 msgstr "Greška"
 
+msgctxt "#32026"
+msgid "What Did You Think?"
+msgstr "Što ste mislili?"
+
+msgctxt "#32027"
+msgid "Totally Ninja!"
+msgstr "Totalni Ninja!"
+
+msgctxt "#32028"
+msgid "Weak Sauce :("
+msgstr "Slabi umak :("
+
+msgctxt "#32029"
+msgid "Terrible"
+msgstr "Užasno"
+
+msgctxt "#32030"
+msgid "Bad"
+msgstr "Loše"
+
+msgctxt "#32031"
+msgid "Poor"
+msgstr "Slabo"
+
+msgctxt "#32032"
+msgid "Meh"
+msgstr "Moje"
+
 msgctxt "#32033"
 msgid "Fair"
 msgstr "Prosječno"
+
+msgctxt "#32034"
+msgid "Good"
+msgstr "Dobro"
+
+msgctxt "#32035"
+msgid "Great"
+msgstr "Sjajno"
+
+msgctxt "#32036"
+msgid "Superb"
+msgstr "Veličanstveno"
 
 msgctxt "#32046"
 msgid "Movies"
