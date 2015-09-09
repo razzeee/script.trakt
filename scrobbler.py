@@ -257,6 +257,8 @@ class Scrobbler():
                 self.__scrobbleNotification(response)
                 logger.debug("Scrobble response: %s" % str(response))
                 return response
+            else:
+                logger.debug("Failed to scrobble movie: %s | %s | %s" % (self.curVideoInfo, watchedPercent, status))
 
         elif utilities.isEpisode(self.curVideo['type']) and scrobbleEpisodeOption:
             if self.isMultiPartEpisode:
@@ -270,6 +272,10 @@ class Scrobbler():
                 self.__scrobbleNotification(response)
                 logger.debug("Scrobble response: %s" % str(response))
                 return response
+            else:
+                logger.debug("Failed to scrobble episode: %s | %s | %s | %s" % (self.traktShowSummary,
+                                                                                self.curVideoInfo, watchedPercent,
+                                                                                status))
 
     def __scrobbleNotification(self, info):
         if not self.curVideoInfo:
