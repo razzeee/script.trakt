@@ -3,7 +3,7 @@
 	<requires>
 		<import addon="xbmc.python" version="2.14.0"/>
 		<import addon="script.module.simplejson" version="3.3.0"/>
-        <import addon="script.module.trakt" version="2.3.3"/>
+        <import addon="script.module.trakt" version="2.4.1"/>
         <import addon="script.module.dateutil" version="2.4.2"/>
 	</requires>
 	<extension point="xbmc.python.script" library="script.py">
