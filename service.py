@@ -379,6 +379,10 @@ class traktPlayer(xbmc.Player):
         self.type = None
         self.id = None
 
+        # take the user start scrobble offset into account
+        scrobbleStartOffset = utilities.getSettingAsInt('scrobble_start_offset')*60
+        time.sleep(scrobbleStartOffset)
+
         # only do anything if we're playing a video
         if self.isPlayingVideo():
             # get item data from json rpc

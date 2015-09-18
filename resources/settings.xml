@@ -23,6 +23,7 @@
 		<setting id="scrobble_episode" type="bool" label="32013" default="true"/>
 		<setting id="scrobble_notification" type="bool" label="32014" default="false"/>
 		<setting id="scrobble_fallback" type="bool" label="32164" default="true"/>
+        <setting id="scrobble_start_offset" type="number" label="32167" default="0"/>
 	</category>
 	<category label="32045"><!-- Synchronize -->
 		<setting label="32054" type="lsep"/><!-- Service -->

@@ -661,3 +661,7 @@ msgstr ""
 msgctxt "#32166"
 msgid "Trakt - Failed adding to watchlist"
 msgstr ""
+
+msgctxt "#32167"
+msgid "Offset scrobble start by X minutes"
+msgstr ""
