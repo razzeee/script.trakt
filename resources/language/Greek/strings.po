@@ -152,6 +152,10 @@ msgctxt "#32054"
 msgid "Service"
 msgstr "Υπηρεσία"
 
+msgctxt "#32056"
+msgid "Show sync notifications"
+msgstr "Εμφάνιση ειδοποιήσεων συγχρονισμού"
+
 msgctxt "#32060"
 msgid "Hide notifications during playback"
 msgstr "Απόκρυψη ειδοποιήσεων κατά την αναπαραγωγή"

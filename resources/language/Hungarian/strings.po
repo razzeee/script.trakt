@@ -18,28 +18,460 @@ msgstr ""
 
 msgctxt "#32000"
 msgid "General"
-msgstr "Menük"
+msgstr "Általános"
+
+msgctxt "#32003"
+msgid "Startup Delay"
+msgstr "Indítás késleltetése másodpercben"
 
 msgctxt "#32004"
 msgid "Rating"
-msgstr "Korhatár"
+msgstr "Értékelés"
+
+msgctxt "#32005"
+msgid "Rate Movie after watching"
+msgstr "Film értékelése lejátszás után"
+
+msgctxt "#32006"
+msgid "Rate TV show Episode after watching"
+msgstr "Epizód értékelése lejátszás után"
+
+msgctxt "#32007"
+msgid "Rate each playlist item"
+msgstr "Minden lejátszási lista elem értékelése"
+
+msgctxt "#32008"
+msgid "Minimum percent watched to display rating dialog"
+msgstr "Értékelés ennyi százalék lejátszása után"
+
+msgctxt "#32009"
+msgid "Allow re-rating of media"
+msgstr "Újraértékelés engedélyezése"
+
+msgctxt "#32010"
+msgid "Default rating"
+msgstr "Alapértelmezett értékelés"
+
+msgctxt "#32011"
+msgid "Scrobbling"
+msgstr "Beküldés"
+
+msgctxt "#32012"
+msgid "Scrobble movies"
+msgstr "Filmek beküldése"
+
+msgctxt "#32013"
+msgid "Scrobble TV show episodes"
+msgstr "Sorozat részek beküldése"
+
+msgctxt "#32014"
+msgid "Show notification on scrobble"
+msgstr "Értesítés megjelenítése beküldéskor"
+
+msgctxt "#32015"
+msgid "Trakt - Scrobbled successfully"
+msgstr "Trakt - Sikeresen beküldve"
+
+msgctxt "#32016"
+msgid "Exclusions"
+msgstr "Kivételek"
+
+msgctxt "#32017"
+msgid "Exclude Live TV"
+msgstr "Élő adás kihagyása"
+
+msgctxt "#32018"
+msgid "Exclude HTTP sources"
+msgstr "HTTP források kihagyása"
+
+msgctxt "#32019"
+msgid "Exclude path"
+msgstr "Elérési út kihagyása"
+
+msgctxt "#32020"
+msgid "Folder's path (including subfolders)"
+msgstr "Mappa elérési újta (almappákkal együtt)"
+
+msgctxt "#32023"
+msgid "Can not connect to Trakt"
+msgstr "Nem lehet csatlakozni a Trakt-hoz"
 
 msgctxt "#32024"
 msgid "Error"
 msgstr "Hiba"
 
+msgctxt "#32026"
+msgid "What Did You Think?"
+msgstr "Mit gondolsz?"
+
+msgctxt "#32027"
+msgid "Totally Ninja!"
+msgstr "Tök nindzsa!"
+
+msgctxt "#32028"
+msgid "Weak Sauce :("
+msgstr "Nagyon gyenge :("
+
+msgctxt "#32029"
+msgid "Terrible"
+msgstr "Rettenetes"
+
+msgctxt "#32030"
+msgid "Bad"
+msgstr "Rossz"
+
+msgctxt "#32031"
+msgid "Poor"
+msgstr "Silány"
+
+msgctxt "#32032"
+msgid "Meh"
+msgstr "Hagyjuk"
+
 msgctxt "#32033"
 msgid "Fair"
-msgstr "Szép idő"
+msgstr "Elmegy"
+
+msgctxt "#32034"
+msgid "Good"
+msgstr "Jó"
+
+msgctxt "#32035"
+msgid "Great"
+msgstr "Nagyszerű"
+
+msgctxt "#32036"
+msgid "Superb"
+msgstr "Fenséges"
+
+msgctxt "#32037"
+msgid "Unrate this movie"
+msgstr "Film értékelés eltávolítása"
+
+msgctxt "#32038"
+msgid "Unrate this show"
+msgstr "Sorozat értékelés eltávolítása"
+
+msgctxt "#32039"
+msgid "Unrate this episode"
+msgstr "Epizód értékelés eltávolítása"
+
+msgctxt "#32040"
+msgid "Trakt - Rating submitted successfully"
+msgstr "Trakt - Értékelés sikeresen beküldve"
+
+msgctxt "#32041"
+msgid "Trakt - Already rated"
+msgstr "Trakt - Már értékelve"
+
+msgctxt "#32042"
+msgid "Trakt - Unrated successfully"
+msgstr "Trakt - Értékelés sikeresen eltávolítva"
+
+msgctxt "#32043"
+msgid "Trakt - Already has the same rating"
+msgstr "Trakt - Most is ez az értékelése"
+
+msgctxt "#32044"
+msgid "Trakt - Problem submitting rating"
+msgstr "Trakt - Gond volt beküldés közben"
+
+msgctxt "#32045"
+msgid "Synchronize"
+msgstr "Szinkronizálás"
 
 msgctxt "#32046"
 msgid "Movies"
 msgstr "Filmek"
 
+msgctxt "#32047"
+msgid "Add new movies to Trakt collection"
+msgstr "Új filmek hozzáadása a Trakt gyűjteményhez"
+
+msgctxt "#32048"
+msgid "Add watched movies to Trakt history"
+msgstr "Megnézett filmek hozzáadása a Trakt előzményekhez"
+
+msgctxt "#32049"
+msgid "Mark movies from Trakt history as watched in Kodi"
+msgstr "Trakt előzményekben levő filmek megnézettnek jelölése"
+
+msgctxt "#32050"
+msgid "TV Episodes"
+msgstr "Sorozatok"
+
+msgctxt "#32051"
+msgid "Add new TV episodes to Trakt collection"
+msgstr "Új epizódok hozzáadása a Trakt gyűjteményhez"
+
+msgctxt "#32052"
+msgid "Add watched TV episodes to Trakt history"
+msgstr "Megnézett epizódok hozzáadása a Trakt előzményekhez"
+
+msgctxt "#32053"
+msgid "Mark TV episodes from Trakt history as watched in Kodi"
+msgstr "Trakt előzményekben levő epizódok megnézettnek jelölése"
+
 msgctxt "#32054"
 msgid "Service"
 msgstr "Szolgáltatás"
 
+msgctxt "#32055"
+msgid "Sync collection on library update or cleaning"
+msgstr "Gyűjtemény szinkronizálása médiatár frissítéskor vagy tisztításkor"
+
+msgctxt "#32056"
+msgid "Show sync notifications"
+msgstr "Szinkronizálási értesítések mutatása"
+
+msgctxt "#32057"
+msgid "Remove deleted movies from Trakt collection"
+msgstr "Törölt filmek törlése a Trakt gyűjteményből"
+
+msgctxt "#32058"
+msgid "Remove deleted TV episodes from Trakt collection"
+msgstr "Törölt sorozat részek törlése a Trakt gyűjteményből"
+
+msgctxt "#32060"
+msgid "Hide notifications during playback"
+msgstr "Értesítések elrejtése lejátszáskor"
+
+msgctxt "#32061"
+msgid "Sync started"
+msgstr "Szinkronizáció elkezdve"
+
+msgctxt "#32062"
+msgid "Sync complete"
+msgstr "Szinkronizáció kész"
+
+msgctxt "#32063"
+msgid "%i movie(s) will be added to Trakt collection"
+msgstr "(%i) film lesz hozzáadva a Trakt gyűjteményhez"
+
+msgctxt "#32064"
+msgid "%i movie playcount(s) will be updated on Trakt"
+msgstr "(%i) film lejátszási számlálója lesz frissítve a Trakt-on"
+
+msgctxt "#32065"
+msgid "%i movie(s) playcount will be updated in Kodi"
+msgstr "(%i) film lejátszási számlálója lesz frissítve a Kodi-ban"
+
+msgctxt "#32066"
+msgid "Movie Sync Complete"
+msgstr "Film szinkronizáció kész"
+
+msgctxt "#32071"
+msgid "Checking watched episodes on Trakt"
+msgstr "Megnézett sorozat részek ellenőrzése Trakt-on"
+
+msgctxt "#32074"
+msgid "Checking watched episodes on Kodi"
+msgstr "Megnézett sorozat részek ellenőrzése"
+
+msgctxt "#32075"
+msgid "Episode Sync Complete"
+msgstr "Epizód szinkronizáció kész"
+
+msgctxt "#32077"
+msgid "Cleaning Trakt TV show collection"
+msgstr "Trakt Sorozat gyűjtemény tisztítása"
+
+msgctxt "#32078"
+msgid "episodes are being removed"
+msgstr "epizódok eltávolítása"
+
+msgctxt "#32079"
+msgid "Loading movies from Kodi"
+msgstr "Filmek betöltése"
+
+msgctxt "#32080"
+msgid "Movies loaded from Kodi"
+msgstr "Filmek betöltve"
+
+msgctxt "#32113"
+msgid "Trakt - Marked as watched"
+msgstr "Trakt - Megnézettként megjelöl"
+
+msgctxt "#32114"
+msgid "Trakt - Failed marking as watched"
+msgstr "Trakt - Megnézettként megjelölés sikertelen"
+
+msgctxt "#32116"
+msgid "Enable debug mode"
+msgstr "Hibakereső mód"
+
+msgctxt "#32117"
+msgid "Sync movie playback progress to Kodi"
+msgstr "Film lejátszási folyamat szinkronizálása"
+
+msgctxt "#32118"
+msgid "Sync episode playback progress to Kodi"
+msgstr "Epizód lejátszási folyamat szinkronizálása"
+
+msgctxt "#32119"
+msgid "Retrieving episode playback progress from Trakt"
+msgstr "Sorozat rész lejátszási folyamat letöltése a Trakt-ról"
+
+msgctxt "#32121"
+msgid "Retrieved episode playback progress from Trakt"
+msgstr "Sorozat rész lejátszási folyamat letöltve a Trakt-ról"
+
+msgctxt "#32122"
+msgid "Retrieving movie playback progress from Trakt"
+msgstr "Film lejátszási folyamat letöltése a Trakt-ról"
+
+msgctxt "#32124"
+msgid "Retrieved movie playback progress from Trakt"
+msgstr "Film lejátszási folyamat letöltve a Trakt-ról"
+
+msgctxt "#32125"
+msgid "Kodi movie playback progress is up to date"
+msgstr "Kodi film lejátszási folyamatok naprakészek"
+
+msgctxt "#32126"
+msgid "%i movie(s) playback progress will be updated in Kodi"
+msgstr "(%i) film lejátszási folyamata lesz frissítve"
+
+msgctxt "#32127"
+msgid "Updating %i of %i movie(s) playback progress in Kodi"
+msgstr "(%i/%i) film lejátszási folyamatának frissítése"
+
+msgctxt "#32128"
+msgid "Playback progress updated for %i movie(s) in Kodi"
+msgstr "(%i/%i) film lejátszási folyamatának frissítése"
+
+msgctxt "#32129"
+msgid "Kodi episode playback progress is up to date"
+msgstr "Kodi sorozat részek lejátszási folyamatai naprakészek"
+
+msgctxt "#32130"
+msgid "Updating %i of %i episode(s) playback progress in Kodi"
+msgstr "%i. epizód lejátszási folyamatának frissítése a %i-ból"
+
+msgctxt "#32131"
+msgid "Playback progress updated for %i episode(s) in Kodi"
+msgstr "Lejátszási folyamat frissítve %i epizódhoz"
+
+msgctxt "#32132"
+msgid "Unrate this season"
+msgstr "Évad értékelés eltávolítása"
+
+msgctxt "#32133"
+msgid "Manage Movie's Lists"
+msgstr "Film listák kezelése"
+
+msgctxt "#32134"
+msgid "Manage Show's Lists"
+msgstr "Sorozat listák kezelése"
+
+msgctxt "#32135"
+msgid "Remove from Watchlist"
+msgstr "Eltávolítás a lejátszási listából"
+
+msgctxt "#32136"
+msgid "Add to watchlist"
+msgstr "Hozzáadás a lejátszási listához"
+
+msgctxt "#32137"
+msgid "Rate this movie"
+msgstr "Film értékelése"
+
+msgctxt "#32138"
+msgid "Rate this show"
+msgstr "Sorozat értékelése"
+
+msgctxt "#32139"
+msgid "Rate this episode"
+msgstr "Epizód értékelése"
+
+msgctxt "#32140"
+msgid "Toggle watched"
+msgstr "Megnézettként megjelöl"
+
+msgctxt "#32141"
+msgid "Manage all lists"
+msgstr "Minden lista kezelése"
+
+msgctxt "#32142"
+msgid "Update all tags"
+msgstr "Minden címke frissítése"
+
+msgctxt "#32143"
+msgid "Synchronize library"
+msgstr "Médiatár szinkronizálása"
+
+msgctxt "#32144"
+msgid "How do I authorize the trakt addon to access my trakt.tv account?"
+msgstr "Hogyan hitelesíthetem a kiegészítőt, hogy hozzáférjen a trakt.tv fiókomhoz?"
+
+msgctxt "#32147"
+msgid "Trakt.tv PIN Authorization Failed"
+msgstr "Trakt.tv PIN hitelesítés sikertelen"
+
+msgctxt "#32149"
+msgid "Rate this Season"
+msgstr "Évad értékelése"
+
+msgctxt "#32150"
+msgid "You will be reminded in 24 hours"
+msgstr "24 órán belül értesítve leszel"
+
+msgctxt "#32151"
+msgid "Use Addon Settings later if you change your mind"
+msgstr "Használd a kiegészítő beállításait ha meggondolnád magad"
+
+msgctxt "#32152"
+msgid "Trakt Authorization Complete"
+msgstr "Trakt fiók hitelesítése kész"
+
+msgctxt "#32153"
+msgid "Trakt Account Authorization"
+msgstr "Trakt fiók hitelesítés"
+
+msgctxt "#32154"
+msgid "Authorize"
+msgstr "Hítelesítés"
+
+msgctxt "#32155"
+msgid "Remind Me Later"
+msgstr "Később emlékeztet"
+
+msgctxt "#32156"
+msgid "No Thanks"
+msgstr "Köszönöm, nem!"
+
+msgctxt "#32157"
+msgid "Account Authorization"
+msgstr "Fiók hitelesítése"
+
+msgctxt "#32159"
+msgid "Visit {0} or scan the QR Code below."
+msgstr "Látogass el a {0} oldalra, vagy olvasd be a QR kódot."
+
+msgctxt "#32160"
+msgid "Authorize the trakt addon to access your account."
+msgstr "Hitelesítsd a kiegszítőt, hogy hozzáférjen a fiókodhoz."
+
+msgctxt "#32161"
+msgid "Enter the PIN provided in the box below."
+msgstr "Írd be a kapott PIN kódot."
+
+msgctxt "#32162"
+msgid "The trakt addon CAN NOT be used without authorizing it to access your trakt.tv account."
+msgstr "A trakt kiegészítő hitelesítés nélkül nem fér hozzá a trakt.tv fiókodhoz."
+
 msgctxt "#32163"
 msgid "User"
 msgstr "Felhasználó"
+
+msgctxt "#32164"
+msgid "Fallback to Title/Year matching if necessary"
+msgstr "Ha nincs találat, akkor keresés Cím/Év alapján"
+
+msgctxt "#32165"
+msgid "Trakt - Added to watchlist"
+msgstr "Trakt - Figyelési listához adva"
+
+msgctxt "#32166"
+msgid "Trakt - Failed adding to watchlist"
+msgstr "Trakt - Figyelési listához adás sikertelen"
