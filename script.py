@@ -33,7 +33,6 @@ def Main():
     data = {}
 
     if args['action'] == 'pin_info':
-        xbmc.executebuiltin('Dialog.Close(all, true)') #FIXME stupid hack we need to do as the AddonInfo dialog won't go away
         xbmc.executebuiltin('Dialog.Close(all, true)')
         gui_utils.get_pin()
 
