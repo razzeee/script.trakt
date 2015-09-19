@@ -378,23 +378,22 @@ class traktPlayer(xbmc.Player):
         xbmc.sleep(1000)
         self.type = None
         self.id = None
-        abort = False
 
         # take the user start scrobble offset into account
         scrobbleStartOffset = utilities.getSettingAsInt('scrobble_start_offset')*60
         if scrobbleStartOffset > 0:
+            waitFor = 10
             waitedFor = 0
             # check each 10 seconds if we can abort or proceed
             while not xbmc.abortRequested and scrobbleStartOffset > waitedFor:
-                waitedFor += scrobbleStartOffset/(scrobbleStartOffset/6)
-                time.sleep(scrobbleStartOffset/(scrobbleStartOffset/6))
+                waitedFor += waitFor
+                time.sleep(waitFor)
                 if not self.isPlayingVideo():
-                    abort = True
                     logger.debug('[traktPlayer] Playback stopped before reaching the scrobble offset')
-                    break
+                    return
 
         # only do anything if we're playing a video
-        if self.isPlayingVideo() and not abort:
+        if self.isPlayingVideo():
             # get item data from json rpc
             result = utilities.kodiJsonRequest({'jsonrpc': '2.0', 'method': 'Player.GetItem', 'params': {'playerid': 1}, 'id': 1})
             if result:

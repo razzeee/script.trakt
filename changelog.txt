@@ -1,4 +1,6 @@
 version 3.0.5
+  - added scrobble start offset setting (default is 0)
+  - fixed a potential crash
   - updated language files from Transifex
 
 version 3.0.4
