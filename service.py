@@ -46,7 +46,7 @@ class traktService:
                 self.scrobbler.playbackResumed()
             elif action == 'seek' or action == 'seekchapter':
                 self.scrobbler.playbackSeek()
-            elif action == 'databaseUpdated':
+            elif action == 'scanFinished':
                 if utilities.getSettingAsBool('sync_on_update'):
                     logger.debug("Performing sync after library update.")
                     self.doSync()
@@ -74,8 +74,6 @@ class traktService:
                     logger.debug("There already is a sync in progress.")
             elif action == 'settings':
                 utilities.showSettings()
-            elif action == 'scanStarted':
-                pass
             else:
                 logger.debug("Unknown dispatch action, '%s'." % action)
         except Exception as ex:
@@ -107,14 +105,14 @@ class traktService:
         self.scrobbler = Scrobbler(globals.traktapi)
 
         # start loop for events
-        while not xbmc.abortRequested:
+        while not self.Monitor.abortRequested():
             if not utilities.getSetting('authorization'):
                 last_reminder = utilities.getSettingAsInt('last_reminder')
                 now = int(time.time())
                 if last_reminder >= 0 and last_reminder < now - (24 * 60 * 60):
                     gui_utils.get_pin()
                 
-            while len(self.dispatchQueue) and (not xbmc.abortRequested):
+            while len(self.dispatchQueue) and (not self.Monitor.abortRequested()):
                 data = self.dispatchQueue.get()
                 logger.debug("Queued dispatch: %s" % data)
                 self._dispatch(data)
@@ -122,7 +120,9 @@ class traktService:
             if xbmc.Player().isPlayingVideo():
                 self.scrobbler.transitionCheck()
 
-            xbmc.sleep(500)
+            if self.Monitor.waitForAbort(1):
+                # Abort was requested while waiting. We should exit
+                break
 
         # we are shutting down
         logger.debug("Beginning shut down.")
@@ -330,36 +330,22 @@ class syncThread(threading.Thread):
 
 class traktMonitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
-        xbmc.Monitor.__init__(self)
         self.action = kwargs['action']
-        # xbmc.getCondVisibility('Library.IsScanningVideo') returns false when cleaning during update...
-        self.scanning_video = False
         logger.debug("[traktMonitor] Initalized.")
 
     # called when database gets updated and return video or music to indicate which DB has been changed
-    def onDatabaseUpdated(self, database):
+    def onScanFinished(self, database):
         if database == 'video':
-            self.scanning_video = False
-            logger.debug("[traktMonitor] onDatabaseUpdated(database: %s)" % database)
-            data = {'action': 'databaseUpdated'}
-            self.action(data)
-
-    # called when database update starts and return video or music to indicate which DB is being updated
-    def onDatabaseScanStarted(self, database):
-        if database == "video":
-            self.scanning_video = True
-            logger.debug("[traktMonitor] onDatabaseScanStarted(database: %s)" % database)
-            data = {'action': 'scanStarted'}
+            logger.debug("[traktMonitor] onScanFinished(database: %s)" % database)
+            data = {'action': 'scanFinished'}
             self.action(data)
 
     def onSettingsChanged(self):
         data = {'action': 'settingsChanged'}
         self.action(data)
 
-    # Generic notification handler.  Only available in Gotham and later.
-    def onNotification(self, sender, method, data):
-        # onCleanFinished callback is only available in Helix and later.
-        if method == 'VideoLibrary.OnCleanFinished' and not self.scanning_video:  # Ignore clean on update.
+    def onCleanFinished(self, database):
+        if database == "video":
             data = {'action': 'databaseCleaned'}
             self.action(data)
 
@@ -369,7 +355,6 @@ class traktPlayer(xbmc.Player):
     plIndex = None
 
     def __init__(self, *args, **kwargs):
-        xbmc.Player.__init__(self)
         self.action = kwargs['action']
         logger.debug("[traktPlayer] Initalized.")
 
