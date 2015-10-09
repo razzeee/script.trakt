@@ -331,21 +331,30 @@ class syncThread(threading.Thread):
 class traktMonitor(xbmc.Monitor):
     def __init__(self, *args, **kwargs):
         self.action = kwargs['action']
+        # xbmc.getCondVisibility('Library.IsScanningVideo') returns false when cleaning during update...
+        self.scanning_video = False
         logger.debug("[traktMonitor] Initalized.")
 
     # called when database gets updated and return video or music to indicate which DB has been changed
     def onScanFinished(self, database):
         if database == 'video':
+            self.scanning_video = False
             logger.debug("[traktMonitor] onScanFinished(database: %s)" % database)
             data = {'action': 'scanFinished'}
             self.action(data)
+
+    # called when database update starts and return video or music to indicate which DB is being updated
+    def onDatabaseScanStarted(self, database):
+        if database == "video":
+            self.scanning_video = True
+            logger.debug("[traktMonitor] onDatabaseScanStarted(database: %s)" % database)
 
     def onSettingsChanged(self):
         data = {'action': 'settingsChanged'}
         self.action(data)
 
     def onCleanFinished(self, database):
-        if database == "video":
+        if database == "video" and not self.scanning_video:  # Ignore clean on update.
             data = {'action': 'databaseCleaned'}
             self.action(data)
 
