@@ -4,26 +4,47 @@
 		<setting id="user" type="text" label="32163" visible="true" enable="false"/>
 		<setting id="PIN_Info" type="action" label="32144" action="RunScript(script.trakt, action=pin_info)"/>
 		<setting id="authorization" type="text" label="authorization" visible="false" />
-        <setting id="last_reminder" type="number" default="0" visible="false"/>
+		<setting id="last_reminder" type="number" default="0" visible="false"/>
 		<setting id="startup_delay" type="slider" label="32003" range="0,30" default="0" option="int"/>
 		<setting id="debug" type="bool" label="32116" default="false"/>
 	</category>
 	<category label="32016"><!-- Exclusions -->
+		<!-- Live TV exclusion -->
 		<setting id="ExcludeLiveTV" type="bool" label="32017" default="false"/>
+		<!-- HTTP exclusion -->
 		<setting id="ExcludeHTTP" type="bool" label="32018" default="false"/>
+		<!-- Folder exclusions -->
 		<setting id="ExcludePathOption" type="bool" label="32019" default="false" />
 		<setting id="ExcludePath" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
 		<setting id="ExcludePathOption2" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
 		<setting id="ExcludePath2" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
 		<setting id="ExcludePathOption3" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
 		<setting id="ExcludePath3" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption4" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath4" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption5" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath5" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption6" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath6" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption7" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath7" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption8" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath8" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption9" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath9" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption10" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath10" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption11" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath11" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
+		<setting id="ExcludePathOption12" type="bool" label="32019" default="false" visible= "eq(-2,true)" enable="eq(-2,true)" />
+		<setting id="ExcludePath12" type="folder" source="video" label="32020" default="" visible= "eq(-1,true)" enable="eq(-1,true)" />
 	</category>
 	<category label="32011"><!-- Scrobbling -->
 		<setting id="scrobble_movie" type="bool" label="32012" default="true"/>
 		<setting id="scrobble_episode" type="bool" label="32013" default="true"/>
 		<setting id="scrobble_notification" type="bool" label="32014" default="false"/>
 		<setting id="scrobble_fallback" type="bool" label="32164" default="true"/>
-        <setting id="scrobble_start_offset" type="number" label="32167" default="0"/>
+		<setting id="scrobble_start_offset" type="number" label="32167" default="0"/>
 	</category>
 	<category label="32045"><!-- Synchronize -->
 		<setting label="32054" type="lsep"/><!-- Service -->
@@ -33,18 +54,17 @@
 		<setting type="sep"/>
 		<setting label="32046" type="lsep"/><!-- Movies -->
 		<setting id="add_movies_to_trakt" type="bool" label="32047" default="true"/>
-        <setting id="clean_trakt_movies" type="bool" label="32057" default="false"/>
+		<setting id="clean_trakt_movies" type="bool" label="32057" default="false"/>
 		<setting id="trakt_movie_playcount" type="bool" label="32048" default="true"/>
 		<setting id="kodi_movie_playcount" type="bool" label="32049" default="true"/>
-        <setting id="trakt_movie_playback" type="bool" label="32117" default="false"/>
+		<setting id="trakt_movie_playback" type="bool" label="32117" default="false"/>
 		<setting type="sep"/>
 		<setting label="32050" type="lsep"/><!-- Episodes -->
 		<setting id="add_episodes_to_trakt" type="bool" label="32051" default="true"/>
-        <setting id="clean_trakt_episodes" type="bool" label="32058" default="false"/>
+		<setting id="clean_trakt_episodes" type="bool" label="32058" default="false"/>
 		<setting id="trakt_episode_playcount" type="bool" label="32052" default="true"/>
 		<setting id="kodi_episode_playcount" type="bool" label="32053" default="true"/>
-        <setting id="trakt_episode_playback" type="bool" label="32118" default="false"/>
-
+		<setting id="trakt_episode_playback" type="bool" label="32118" default="false"/>
 	</category>
 	<category label="32004"><!-- Rating -->
 		<setting id="rate_movie" type="bool" label="32005" default="true"/>
