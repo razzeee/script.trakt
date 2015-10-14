@@ -117,74 +117,74 @@ def checkExclusion(fullpath):
         return True
 
     # Live TV exclusion
-    if (fullpath.find("pvr://") > -1) and getSettingAsBool('ExcludeLiveTV'):
+    if (fullpath.startswith("pvr://") > -1) and getSettingAsBool('ExcludeLiveTV'):
         logger.debug("checkExclusion(): Video is playing via Live TV, which is currently set as excluded location.")
         return True
 
     # HTTP exclusion
-    if (fullpath.find("http://") > -1) and getSettingAsBool('ExcludeHTTP'):
+    if (fullpath.startswith("http://") > -1) and getSettingAsBool('ExcludeHTTP'):
         logger.debug("checkExclusion(): Video is playing via HTTP source, which is currently set as excluded location.")
         return True
 
     # Path exclusions
     ExcludePath = getSetting('ExcludePath')
     if ExcludePath != "" and getSettingAsBool('ExcludePathOption'):
-        if fullpath.find(ExcludePath) > -1:
+        if fullpath.startswith(ExcludePath) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 1.")
             return True
     ExcludePath2 = getSetting('ExcludePath2')
     if ExcludePath2 != "" and getSettingAsBool('ExcludePathOption2'):
-        if fullpath.find(ExcludePath2) > -1:
+        if fullpath.startswith(ExcludePath2) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 2.")
             return True
     ExcludePath3 = getSetting('ExcludePath3')
     if ExcludePath3 != "" and getSettingAsBool('ExcludePathOption3'):
-        if fullpath.find(ExcludePath3) > -1:
+        if fullpath.startswith(ExcludePath3) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 3.")
             return True
     ExcludePath4 = getSetting('ExcludePath4')
     if ExcludePath4 != "" and getSettingAsBool('ExcludePathOption4'):
-        if fullpath.find(ExcludePath4) > -1:
+        if fullpath.startswith(ExcludePath4) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 4.")
             return True
     ExcludePath5 = getSetting('ExcludePath5')
     if ExcludePath5 != "" and getSettingAsBool('ExcludePathOption5'):
-        if fullpath.find(ExcludePath5) > -1:
+        if fullpath.startswith(ExcludePath5) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 5.")
             return True
     ExcludePath6 = getSetting('ExcludePath6')
     if ExcludePath6 != "" and getSettingAsBool('ExcludePathOption6'):
-        if fullpath.find(ExcludePath6) > -1:
+        if fullpath.startswith(ExcludePath6) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 6.")
             return True
     ExcludePath7 = getSetting('ExcludePath7')
     if ExcludePath7 != "" and getSettingAsBool('ExcludePathOption7'):
-        if fullpath.find(ExcludePath7) > -1:
+        if fullpath.startswith(ExcludePath7) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 7.")
             return True
     ExcludePath8 = getSetting('ExcludePath8')
     if ExcludePath8 != "" and getSettingAsBool('ExcludePathOption8'):
-        if fullpath.find(ExcludePath8) > -1:
+        if fullpath.startswith(ExcludePath8) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 8.")
             return True
     ExcludePath9 = getSetting('ExcludePath9')
     if ExcludePath9 != "" and getSettingAsBool('ExcludePathOption9'):
-        if fullpath.find(ExcludePath9) > -1:
+        if fullpath.startswith(ExcludePath9) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 9.")
             return True
     ExcludePath10 = getSetting('ExcludePath10')
     if ExcludePath10 != "" and getSettingAsBool('ExcludePathOption10'):
-        if fullpath.find(ExcludePath10) > -1:
+        if fullpath.startswith(ExcludePath10) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 10.")
             return True
     ExcludePath11 = getSetting('ExcludePath11')
     if ExcludePath11 != "" and getSettingAsBool('ExcludePathOption11'):
-        if fullpath.find(ExcludePath11) > -1:
+        if fullpath.startswith(ExcludePath11) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 11.")
             return True
     ExcludePath12 = getSetting('ExcludePath12')
     if ExcludePath12 != "" and getSettingAsBool('ExcludePathOption12'):
-        if fullpath.find(ExcludePath12) > -1:
+        if fullpath.startswith(ExcludePath12) > -1:
             logger.debug("checkExclusion(): Video is from location, which is currently set as excluded path 12.")
             return True
 
