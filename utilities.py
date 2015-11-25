@@ -477,17 +477,14 @@ def kodiRpcToTraktMediaObjects(data, mode='collected'):
 def convertDateTimeToUTC(toConvert):
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
-        try:
-            naive = datetime.strptime(toConvert, dateFormat)
-        except TypeError:
-            naive = datetime(*(time.strptime(toConvert, dateFormat)[0:6]))
-        if 2038 < naive.year  or 1970 > naive.year:
+        try: naive = datetime.strptime(toConvert, dateFormat)
+        except TypeError: naive = datetime(*(time.strptime(toConvert, dateFormat)[0:6]))
+        if naive.year < 1970 or naive.year > 2038:
             logger.debug('convertDateTimeToUTC() Movie/show was collected/watched outside of the unix timespan. Fallback to datetime now')
-            naive = datetime.strptime(str(datetime.now()).split(".")[0], dateFormat)
+            naive = datetime.now()
         local = naive.replace(tzinfo=tzlocal())
         utc = local.astimezone(tzutc())
         return unicode(utc)
-
     else:
         return toConvert
 
@@ -495,12 +492,11 @@ def convertUtcToDateTime(toConvert):
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
         naive = dateutil.parser.parse(toConvert)
-        if 2038 < naive.year  or 1970 > naive.year:
+        if naive.year < 1970 or naive.year > 2038:
             logger.debug('convertUtcToDateTime() Movie/show was collected/watched outside of the unix timespan. Fallback to datetime now')
-            naive = datetime.strptime(str(datetime.now()).split(".")[0], dateFormat)
+            naive = datetime.now()
         utc = naive.replace(tzinfo=tzutc())
         local = utc.astimezone(tzlocal())
-
         return local.strftime(dateFormat)
     else:
         return toConvert
