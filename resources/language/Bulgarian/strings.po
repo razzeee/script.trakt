@@ -36,6 +36,14 @@ msgctxt "#32046"
 msgid "Movies"
 msgstr "Филми"
 
+msgctxt "#32048"
+msgid "Add watched movies to Trakt history"
+msgstr "Добавяй изгледаните филми към историята в Trakt"
+
+msgctxt "#32049"
+msgid "Mark movies from Trakt history as watched in Kodi"
+msgstr "Маркирай филмите от историята в Trakt като изгледани в Kodi"
+
 msgctxt "#32054"
 msgid "Service"
 msgstr "Услуга"
@@ -51,6 +59,14 @@ msgstr "Синхронизирането на филми завърши"
 msgctxt "#32075"
 msgid "Episode Sync Complete"
 msgstr "Синхронизирането на епизоди завърши"
+
+msgctxt "#32082"
+msgid "Retrieving watched movies from Trakt"
+msgstr "Извличане на списъка с изгледани филми от Trakt"
+
+msgctxt "#32101"
+msgid "Retrieving watched episodes from Trakt"
+msgstr "Извличане на списъка с изгледани епизоди от Trakt"
 
 msgctxt "#32116"
 msgid "Enable debug mode"

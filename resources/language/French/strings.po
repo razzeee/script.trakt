@@ -34,11 +34,11 @@ msgstr "Evaluer le Film après visionnage"
 
 msgctxt "#32006"
 msgid "Rate TV show Episode after watching"
-msgstr "Evaluer l'Episode de Série TV après visionnage"
+msgstr "Évaluer l'Épisode de la série TV après visionnage"
 
 msgctxt "#32007"
 msgid "Rate each playlist item"
-msgstr "Evaluer chaque élément de liste de lecture"
+msgstr "Évaluer chaque élément de liste de lecture"
 
 msgctxt "#32008"
 msgid "Minimum percent watched to display rating dialog"
@@ -50,7 +50,7 @@ msgstr "Permettre la réévaluation du média"
 
 msgctxt "#32010"
 msgid "Default rating"
-msgstr "Note par défault"
+msgstr "Note par défaut"
 
 msgctxt "#32011"
 msgid "Scrobbling"
@@ -102,7 +102,7 @@ msgstr "Erreur"
 
 msgctxt "#32026"
 msgid "What Did You Think?"
-msgstr "Qu'en avez-vous pensé?"
+msgstr "Qu'en avez-vous pensé ?"
 
 msgctxt "#32027"
 msgid "Totally Ninja!"
@@ -158,7 +158,7 @@ msgstr "Supprimer l'évaluation de cet épisode"
 
 msgctxt "#32040"
 msgid "Trakt - Rating submitted successfully"
-msgstr "Trakt - Evaluation envoyée avec succès"
+msgstr "Trakt - valuation envoyée avec succès"
 
 msgctxt "#32041"
 msgid "Trakt - Already rated"
@@ -166,7 +166,7 @@ msgstr "Trakt - Déjà évalué"
 
 msgctxt "#32042"
 msgid "Trakt - Unrated successfully"
-msgstr "Trakt - Evaluation supprimée avec succès"
+msgstr "Trakt - Évaluation supprimée avec succès"
 
 msgctxt "#32043"
 msgid "Trakt - Already has the same rating"
@@ -274,7 +274,7 @@ msgstr "%i de %i série(s) ont des épisodes qui ont été ajoutés à la collec
 
 msgctxt "#32070"
 msgid "Going to update %i show(s) missing watched status"
-msgstr "%i série(s) vue(s) vont être mis-à-jour"
+msgstr "%i série(s) vue(s) vont être mises à jour"
 
 msgctxt "#32071"
 msgid "Checking watched episodes on Trakt"
@@ -306,7 +306,7 @@ msgstr "Nettoyage de la collection de séries TV sur Trakt"
 
 msgctxt "#32078"
 msgid "episodes are being removed"
-msgstr "Episodes en cours de retrait"
+msgstr "Épisodes en cours de retrait"
 
 msgctxt "#32079"
 msgid "Loading movies from Kodi"
@@ -330,7 +330,7 @@ msgstr "Récupération des données du film depuis Trakt"
 
 msgctxt "#32084"
 msgid "Trakt movie collection is up to date, no movies to add"
-msgstr "la collection de films Trakt est à jour, il n'y a pas de film à ajouter"
+msgstr "La collection de films Trakt est à jour, il n'y a pas de film à ajouter"
 
 msgctxt "#32085"
 msgid "%i movie(s) were added to your Trakt collection"
@@ -338,7 +338,7 @@ msgstr "%i film(s) ont été ajoutés à votre collection Trakt"
 
 msgctxt "#32086"
 msgid "Trakt movie playcounts are up to date"
-msgstr "les compteurs de lecture Trakt sont à jour"
+msgstr "Les compteurs de lecture Trakt sont à jour"
 
 msgctxt "#32087"
 msgid "Playcounts updated for %i movie(s) on Trakt"
@@ -358,11 +358,11 @@ msgstr "Les compteurs de lecture de %i film(s) ont été mis à jour dans Kodi"
 
 msgctxt "#32091"
 msgid "Trakt movie collection is up to date, no movies removed"
-msgstr "la collection de films de Trakt est à jour, aucun film n'a été retiré"
+msgstr "La collection de films de Trakt est à jour, aucun film n'a été retiré"
 
 msgctxt "#32092"
 msgid "%i movie(s) were removed from your Trakt collection"
-msgstr "%i film(s) ont été retirés de votre collection Trakt"
+msgstr "%i film(s) ont été retirés de la collection Trakt"
 
 msgctxt "#32093"
 msgid "Updating %i of %i movie playcount(s) on Trakt"
@@ -410,7 +410,7 @@ msgstr "Récupération des données d'épisodes depuis Trakt"
 
 msgctxt "#32104"
 msgid "Trakt episode collection is up to date, no episodes to add"
-msgstr "la collection d'épisodes de Trakt est à jour, aucun épisode à ajouter"
+msgstr "La collection d'épisodes de Trakt est à jour, aucun épisode à ajouter"
 
 msgctxt "#32105"
 msgid "%i episode(s) were added to your Trakt collection"
@@ -418,11 +418,11 @@ msgstr "%i épisode(s) ont été ajouté(s) à votre collection Trakt"
 
 msgctxt "#32106"
 msgid "Trakt episode playcounts are up to date"
-msgstr "les compteurs de lecture d'épisodes de Trakt sont à jour"
+msgstr "Les compteurs de lecture d'épisodes de Trakt sont à jour"
 
 msgctxt "#32107"
 msgid "Kodi episode playcounts are up to date"
-msgstr "les compteurs de lecture d'épisodes de Kodi sont à jour"
+msgstr "Les compteurs de lecture d'épisodes de Kodi sont à jour"
 
 msgctxt "#32108"
 msgid "Updating %i of %i episode playcount(s) in Kodi"
@@ -434,15 +434,15 @@ msgstr "Compteurs de lecture mis à jour pour %i série(s) dans Kodi"
 
 msgctxt "#32110"
 msgid "Trakt episode collection is clean, no episodes to remove"
-msgstr "la collection d'épisodes de Trakt est propre, aucun épisode à retirer"
+msgstr "La collection d'épisodes de Trakt est propre, aucun épisode à retirer"
 
 msgctxt "#32111"
 msgid "%i episode(s) are being removed from your Trakt collection"
-msgstr "Retrait de %i épisode(s) de votre collection Trakt"
+msgstr "Retrait de %i épisode(s) de la collection Trakt"
 
 msgctxt "#32112"
 msgid "%i episode(s) were removed from your Trakt collection"
-msgstr "%i épisode(s) ont été retirés de votre collection Trakt"
+msgstr "%i épisode(s) ont été retirés de la collection Trakt"
 
 msgctxt "#32113"
 msgid "Trakt - Marked as watched"
@@ -450,11 +450,11 @@ msgstr "Trakt - Marqué comme vu"
 
 msgctxt "#32114"
 msgid "Trakt - Failed marking as watched"
-msgstr "Trakt - Echec du marquage comme vu"
+msgstr "Trakt - Échec du marquage comme vu"
 
 msgctxt "#32115"
 msgid "%d episode(s) of '%s'"
-msgstr "%d épisode(s) de '%s'"
+msgstr "%d épisode(s) de « %s »"
 
 msgctxt "#32116"
 msgid "Enable debug mode"
@@ -530,7 +530,7 @@ msgstr "Gérer les listes Films"
 
 msgctxt "#32134"
 msgid "Manage Show's Lists"
-msgstr "Gérer la liste des émissions"
+msgstr "Gérer la Liste des émissions"
 
 msgctxt "#32135"
 msgid "Remove from Watchlist"
@@ -538,7 +538,7 @@ msgstr "Retirer de la liste"
 
 msgctxt "#32136"
 msgid "Add to watchlist"
-msgstr "Ajouter à une liste de Lecture"
+msgstr "Ajouter à une liste de lecture"
 
 msgctxt "#32137"
 msgid "Rate this movie"
@@ -554,7 +554,7 @@ msgstr "Noter cet épisode"
 
 msgctxt "#32140"
 msgid "Toggle watched"
-msgstr "Activer le \"vu\""
+msgstr "Activer le « Vu »"
 
 msgctxt "#32141"
 msgid "Manage all lists"
@@ -562,7 +562,7 @@ msgstr "Gérer toutes les listes"
 
 msgctxt "#32142"
 msgid "Update all tags"
-msgstr "Mettre à jour toutes mes étiquettes"
+msgstr "Mettre à jour toutes les étiquettes"
 
 msgctxt "#32143"
 msgid "Synchronize library"
@@ -570,7 +570,7 @@ msgstr "Synchroniser votre médiathèque"
 
 msgctxt "#32144"
 msgid "How do I authorize the trakt addon to access my trakt.tv account?"
-msgstr "Comment dois-je autoriser l'extension trakt pour accéder à mon compte trakt.tv ?"
+msgstr "Comment faut-il autoriser l'extension trakt pour accéder à mon compte trakt.tv ?"
 
 msgctxt "#32147"
 msgid "Trakt.tv PIN Authorization Failed"
@@ -582,11 +582,11 @@ msgstr "Noter cette saison"
 
 msgctxt "#32150"
 msgid "You will be reminded in 24 hours"
-msgstr "Un rappel vous sera notifié dans 24 heures"
+msgstr "Un rappel sera notifié dans 24 heures"
 
 msgctxt "#32151"
 msgid "Use Addon Settings later if you change your mind"
-msgstr "Utiliser les réglages d'extensions plus tard si vous changez d'avis"
+msgstr "Utiliser les réglages d'extensions plus tard en cas de changement d'avis"
 
 msgctxt "#32152"
 msgid "Trakt Authorization Complete"
@@ -614,7 +614,7 @@ msgstr "Autorisation de compte"
 
 msgctxt "#32159"
 msgid "Visit {0} or scan the QR Code below."
-msgstr "Suivez {0} or scannez le QR Code ci-dessous."
+msgstr "Suivre {0} ou scanner le code QR ci-dessous."
 
 msgctxt "#32160"
 msgid "Authorize the trakt addon to access your account."
@@ -622,7 +622,7 @@ msgstr "Autorise l'extension trakt à accéder à votre compte."
 
 msgctxt "#32161"
 msgid "Enter the PIN provided in the box below."
-msgstr "Rentrer le code PIN fourni dans la boîte de dialogue ci-dessous."
+msgstr "Saisir le code PIN fourni dans la boîte de dialogue ci-dessous :"
 
 msgctxt "#32162"
 msgid "The trakt addon CAN NOT be used without authorizing it to access your trakt.tv account."
@@ -634,7 +634,7 @@ msgstr "Utilisateur"
 
 msgctxt "#32164"
 msgid "Fallback to Title/Year matching if necessary"
-msgstr "Revenir au Titre/Année par défaut correspondant si nécessaire"
+msgstr "Revenir au Titre / Année par défaut correspondant si nécessaire"
 
 msgctxt "#32165"
 msgid "Trakt - Added to watchlist"
