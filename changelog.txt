@@ -1,7 +1,8 @@
 version 3.0.5
   - added scrobble start offset setting (default is 0)
-  - fixed a potential crash
   - changed up/down buttons in rating dialog to go to 10/1 instead of right/left
+  - you can now exclude up to 12 paths
+  - fixed multiple potential crashs
   - updated language files from Transifex
 
 version 3.0.4
