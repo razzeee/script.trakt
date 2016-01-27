@@ -43,6 +43,8 @@ class SyncMovies():
 
         self.__syncMovieRatings(traktMovies, kodiMovies, 92, 99)
 
+        self.__syncWatchlist(traktMovies, kodiMovies, 98, 99)
+
         if sync.show_progress and not sync.run_silent:
             self.sync.UpdateProgress(100, line1=utilities.getString(32066), line2=" ", line3=" ")
             progress.close()
@@ -53,7 +55,7 @@ class SyncMovies():
         logger.debug("[Movies Sync] Movies on Trakt.tv (%d), movies in Kodi (%d)." % (len(traktMovies), len(kodiMovies)))
         logger.debug("[Movies Sync] Complete.")
 
-    def __compareMovies(self, movies_col1, movies_col2, watched=False, restrict=False, playback=False, rating=False):
+    def __compareMovies(self, movies_col1, movies_col2, watched=False, restrict=False, playback=False, rating=False, watchlist=False):
         movies = []
 
         for movie_col1 in movies_col1:
@@ -75,6 +77,11 @@ class SyncMovies():
                         movies.append(movie_col1)
                     elif rating:
                         if 'rating' in movie_col1 and movie_col1['rating'] <> 0 and ('rating' not in movie_col2 or movie_col2['rating'] == 0):
+                            if 'movieid' not in movie_col1:
+                                movie_col1['movieid'] = movie_col2['movieid']
+                            movies.append(movie_col1)
+                    elif watchlist:
+                        if 'in_watchlist' in movie_col1 and movie_col1['in_watchlist'] == 1:
                             if 'movieid' not in movie_col1:
                                 movie_col1['movieid'] = movie_col2['movieid']
                             movies.append(movie_col1)
@@ -119,6 +126,7 @@ class SyncMovies():
         self.sync.UpdateProgress(17, line2=utilities.getString(32082))
         traktMovies = self.sync.traktapi.getMoviesWatched(traktMovies)
         traktMovies = self.sync.traktapi.getMoviesRated(traktMovies)
+        traktMovies = self.sync.traktapi.getMoviesWatchlist(traktMovies)
         traktMovies = traktMovies.items()
 
         self.sync.UpdateProgress(24, line2=utilities.getString(32083))
@@ -375,6 +383,38 @@ class SyncMovies():
                     utilities.kodiJsonRequest(chunk)
 
                 self.sync.UpdateProgress(toPercent, line2=utilities.getString(32172) % len(kodiMoviesToUpdate))
+
+    def __syncWatchlist(self, traktMovies, kodiMovies, fromPercent, toPercent):
+        if utilities.getSettingAsBool('sync_watchlist') and not self.sync.IsCanceled():
+            updateKodiTraktMovies = copy.deepcopy(traktMovies)
+            updateKodiKodiMovies = copy.deepcopy(kodiMovies)
+
+            kodiMoviesToUpdate = self.__compareMovies(updateKodiKodiMovies, updateKodiTraktMovies, restrict=True, watchlist=True)
+            if len(kodiMoviesToUpdate) == 0:
+                self.sync.UpdateProgress(toPercent, line1='', line2=utilities.getString(32169))
+                logger.debug("[Movies Sync] Kodi movie watchlist is up to date.")
+            else:
+                logger.debug("[Movies Sync] %i movie(s) watchlist will be updated in Kodi" % len(kodiMoviesToUpdate))
+
+                self.sync.UpdateProgress(fromPercent, line1='', line2=utilities.getString(32170) % len(kodiMoviesToUpdate))
+                # split movie list into chunks of 50
+                chunksize = 50
+                chunked_movies = utilities.chunks([{"jsonrpc": "2.0", "id": i, "method": "VideoLibrary.SetMovieDetails",
+                                                    "params": {"movieid": kodiMoviesToUpdate[i]['movieid'],
+                                                               "userrating": kodiMoviesToUpdate[i]['rating']}} for i in range(len(kodiMoviesToUpdate))],
+                                                  chunksize)
+                i = 0
+                x = float(len(kodiMoviesToUpdate))
+                for chunk in chunked_movies:
+                    if self.sync.IsCanceled():
+                        return
+                    i += 1
+                    y = ((i / x) * (toPercent-fromPercent)) + fromPercent
+                    self.sync.UpdateProgress(int(y), line2=utilities.getString(32171) % ((i) * chunksize if (i) * chunksize < x else x, x))
+                    utilities.kodiJsonRequest(chunk)
+
+                self.sync.UpdateProgress(toPercent, line2=utilities.getString(32172) % len(kodiMoviesToUpdate))
+
 
 
     @staticmethod
