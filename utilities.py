@@ -568,14 +568,14 @@ def getMediaType():
 
 def best_id(ids):
     if 'trakt' in ids:
-        return ids['trakt'], 'trakt'
+        return ids['trakt']
     elif 'imdb' in ids:
-        return ids['imdb'], 'imdb'
+        return ids['imdb']
     elif 'tmdb' in ids:
-        return ids['tmdb'], 'tmdb'
+        return ids['tmdb']
     elif 'tvdb' in ids:
-        return ids['tvdb'], 'tvdb'
+        return ids['tvdb']
     elif 'tvrage' in ids:
-        return ids['tvrage'], 'tvrage'
+        return ids['tvrage']
     elif 'slug' in ids:
-        return ids['slug'], 'slug'
+        return ids['slug']
