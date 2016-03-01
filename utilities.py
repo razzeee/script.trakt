@@ -26,21 +26,6 @@ time.strptime("1970-01-01 12:00:00", "%Y-%m-%d %H:%M:%S")
 
 logger = logging.getLogger(__name__)
 
-REGEX_EXPRESSIONS = ['[Ss]([0-9]+)[][._-]*[Ee]([0-9]+)([^\\\\/]*)$',
-                      '[\._ \-]([0-9]+)x([0-9]+)([^\\/]*)',  # foo.1x09
-                      '[\._ \-]([0-9]+)([0-9][0-9])([\._ \-][^\\/]*)',  # foo.109
-                      '([0-9]+)([0-9][0-9])([\._ \-][^\\/]*)',
-                      '[\\\\/\\._ -]([0-9]+)([0-9][0-9])[^\\/]*',
-                      'Season ([0-9]+) - Episode ([0-9]+)[^\\/]*',  # Season 01 - Episode 02
-                      'Season ([0-9]+) Episode ([0-9]+)[^\\/]*',  # Season 01 Episode 02
-                      '[\\\\/\\._ -][0]*([0-9]+)x[0]*([0-9]+)[^\\/]*',
-                      '[[Ss]([0-9]+)\]_\[[Ee]([0-9]+)([^\\/]*)',  # foo_[s01]_[e01]
-                      '[\._ \-][Ss]([0-9]+)[\.\-]?[Ee]([0-9]+)([^\\/]*)',  # foo, s01e01, foo.s01.e01, foo.s01-e01
-                      's([0-9]+)ep([0-9]+)[^\\/]*',  # foo - s01ep03, foo - s1ep03
-                      '[Ss]([0-9]+)[][ ._-]*[Ee]([0-9]+)([^\\\\/]*)$',
-                      '[\\\\/\\._ \\[\\(-]([0-9]+)x([0-9]+)([^\\\\/]*)$'
-                     ]
-
 REGEX_YEAR = '^(.+) \((\d{4})\)$'
 
 REGEX_URL = '(^https?://)(.+)'
@@ -311,38 +296,26 @@ def findMediaObject(mediaObjectToMatch, listToSearch):
         result = __findInList(listToSearch, title=mediaObjectToMatch['title'], year=mediaObjectToMatch['year'])
     return result
 
-def regex_tvshow(compare, file, sub=""):
-    tvshow = 0
-
-    for regex in REGEX_EXPRESSIONS:
-        response_file = re.findall(regex, file)
-        if len(response_file) > 0:
-            logger.debug("regex_tvshow(): Regex File Se: %s, Ep: %s," % (str(response_file[0][0]), str(response_file[0][1]),))
-            tvshow = 1
-            if not compare:
-                title = re.split(regex, file)[0]
-                for char in ['[', ']', '_', '(', ')', '.', '-']:
-                    title = title.replace(char, ' ')
-                if title.endswith(" "):
-                    title = title[:-1]
-                return title, response_file[0][0], response_file[0][1]
-            else:
-                break
-
-    if tvshow == 1:
-        for regex in REGEX_EXPRESSIONS:
-            response_sub = re.findall(regex, sub)
-            if len(response_sub) > 0:
-                try:
-                    if int(response_sub[0][1]) == int(response_file[0][1]):
-                        return True
-                except:
-                    pass
-        return False
-    if compare:
-        return True
-    else:
-        return "", "", ""
+def regex_tvshow(label):
+    regexes = [
+        '(.*?)[._ -]s([0-9]+)[._ -]*e([0-9]+)',  # ShowTitle.S01E09; s01e09, s01.e09, s01-e09
+        '(.*?)[._ -]([0-9]+)x([0-9]+)',  # Showtitle.1x09
+        '(.*?)[._ -]([0-9]+)([0-9][0-9])',  # ShowTitle.109
+        '(.*?)[._ -]?season[._ -]*([0-9]+)[._ -]*-?[._ -]*episode[._ -]*([0-9]+)',  # ShowTitle.Season 01 - Episode 02, Season 01 Episode 02
+        '(.*?)[._ -]\[s([0-9]+)\][._ -]*\[[e]([0-9]+)',  # ShowTitle_[s01]_[e01]
+        '(.*?)[._ -]s([0-9]+)[._ -]*ep([0-9]+)']  # ShowTitle - s01ep03, ShowTitle - s1ep03
+    
+    for regex in regexes:
+        match = re.search(regex, label, re.I)
+        if match:
+            show_title, season, episode = match.groups()
+            if show_title:
+                show_title = re.sub('[\[\]_\(\).-]', ' ', show_title)
+                show_title = re.sub('\s\s+', ' ', show_title)
+                show_title = show_title.strip()
+            return show_title, int(season), int(episode)
+    
+    return '', -1, -1
 
 def regex_year(title):
     prog = re.compile(REGEX_YEAR)

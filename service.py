@@ -450,10 +450,9 @@ class traktPlayer(xbmc.Player):
                     elif showtitle:
                         title, season, episode = utilities.regex_tvshow(False, showtitle)
                         data['type'] = 'episode'
-                        data['season'] = int(season)
-                        data['episode'] = int(episode)
-                        data['showtitle'] = title
-                        data['title'] = title
+                        data['season'] = season
+                        data['episode'] = episode
+                        data['title'] = data['showtitle'] = title
                         logger.debug("[traktPlayer] onPlayBackStarted() - Title: %s, showtitle: %s, season: %d, episode: %d" % (title, showtitle, season, episode))
                     else:
                         logger.debug("[traktPlayer] onPlayBackStarted() - Non-library file, not enough data for scrobbling, skipping.")
