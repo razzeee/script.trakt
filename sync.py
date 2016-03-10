@@ -3,10 +3,10 @@
 
 import xbmc
 import xbmcgui
-import utilities
 import logging
 import syncEpisodes
 import syncMovies
+from kodiUtilities import getSettingAsBool
 
 progress = xbmcgui.DialogProgress()
 logger = logging.getLogger(__name__)
@@ -19,9 +19,9 @@ class Sync():
         self.library = library
         if self.show_progress and self.run_silent:
             logger.debug("Sync is being run silently.")
-        self.sync_on_update = utilities.getSettingAsBool('sync_on_update')
-        self.notify = utilities.getSettingAsBool('show_sync_notifications')
-        self.notify_during_playback = not (xbmc.Player().isPlayingVideo() and utilities.getSettingAsBool("hide_notifications_playback"))
+        self.sync_on_update = getSettingAsBool('sync_on_update')
+        self.notify = getSettingAsBool('show_sync_notifications')
+        self.notify_during_playback = not (xbmc.Player().isPlayingVideo() and getSettingAsBool("hide_notifications_playback"))
 
 
     def __syncCheck(self, media_type):
@@ -29,24 +29,24 @@ class Sync():
 
     def __syncPlaybackCheck(self, media_type):
         if media_type == 'movies':
-            return utilities.getSettingAsBool('trakt_movie_playback')
+            return getSettingAsBool('trakt_movie_playback')
         else:
-            return utilities.getSettingAsBool('trakt_episode_playback')
+            return getSettingAsBool('trakt_episode_playback')
 
     def __syncCollectionCheck(self, media_type):
         if media_type == 'movies':
-            return utilities.getSettingAsBool('add_movies_to_trakt') or utilities.getSettingAsBool('clean_trakt_movies')
+            return getSettingAsBool('add_movies_to_trakt') or getSettingAsBool('clean_trakt_movies')
         else:
-            return utilities.getSettingAsBool('add_episodes_to_trakt') or utilities.getSettingAsBool('clean_trakt_episodes')
+            return getSettingAsBool('add_episodes_to_trakt') or getSettingAsBool('clean_trakt_episodes')
 
     def __syncRatingsCheck(self):
-        return utilities.getSettingAsBool('trakt_sync_ratings')
+        return getSettingAsBool('trakt_sync_ratings')
 
     def __syncWatchedCheck(self, media_type):
         if media_type == 'movies':
-            return utilities.getSettingAsBool('trakt_movie_playcount') or utilities.getSettingAsBool('kodi_movie_playcount')
+            return getSettingAsBool('trakt_movie_playcount') or getSettingAsBool('kodi_movie_playcount')
         else:
-            return utilities.getSettingAsBool('trakt_episode_playcount') or utilities.getSettingAsBool('kodi_episode_playcount')
+            return getSettingAsBool('trakt_episode_playcount') or getSettingAsBool('kodi_episode_playcount')
 
     def sync(self):
         logger.debug("Starting synchronization with Trakt.tv")

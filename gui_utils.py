@@ -2,7 +2,7 @@ import xbmcgui
 import time
 import os
 import xbmcaddon
-from utilities import notification, setSetting, getString
+from kodiUtilities import notification, setSetting, getString
 import traktapi
 import logging
 

@@ -4,7 +4,8 @@ import xbmcaddon
 import logging
 from trakt import Trakt, ClientError, ServerError
 from trakt.objects import Movie, Episode, Show
-from utilities import getSetting, setSetting, findMovieMatchInList, findShowMatchInList, findEpisodeMatchInList, findSeasonMatchInList, notification, getString, createError, checkAndConfigureProxy
+from utilities import findMovieMatchInList, findShowMatchInList, findEpisodeMatchInList, findSeasonMatchInList, createError
+from kodiUtilities import getSetting, setSetting, notification, getString, checkAndConfigureProxy
 from sys import version_info
 
 if version_info >= (2, 7):
