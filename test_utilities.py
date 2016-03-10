@@ -1,5 +1,5 @@
 import unittest
-import utilities
+from utilities import isMovie, isEpisode, isShow, isSeason
 
 class TestUtilities(unittest.TestCase):
  
@@ -10,10 +10,10 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual( utilities.isMovie('movie'), 'movie')
  
     def test_isEpisode(self):
-        self.assertEqual( utilities.isMovie('episode'), 'episode')
+        self.assertEqual( utilities.isEpisode('episode'), 'episode')
 
     def test_isShow(self):
-        self.assertEqual( utilities.isMovie('show'), 'show')
+        self.assertEqual( utilities.isShow('show'), 'show')
  
-    def test_isSeasone(self):
-        self.assertEqual( utilities.isMovie('season'), 'season')
+    def test_isSeason(self):
+        self.assertEqual( utilities.isSeason('season'), 'season')
