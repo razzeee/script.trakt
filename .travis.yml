@@ -8,7 +8,7 @@ python:
   
 # command to install dependencies
 install: 
-  - pip install python-dateutil
+  - pip install python-dateutil pytest
 # command to run tests
 script: python -m unittest discover
 
