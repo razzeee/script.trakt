@@ -5,7 +5,12 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-
+  
+# command to install dependencies
+install: 
+  - pip install dateutil
+  - pip install requests
+  - pip install trakt.py
 # command to run tests
 script: python -m unittest discover
 
