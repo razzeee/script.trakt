@@ -52,6 +52,7 @@
 		<setting id="show_sync_notifications" type="bool" label="32056" default="false"/>
 		<setting id="hide_notifications_playback" type="bool" label="32060" default="false"/>
 		<setting id="trakt_sync_ratings" type="bool" label="32168" default="true"/>
+		<setting id="sync_watchlist" type="bool" label="32183" default="false"/>
 		<setting type="sep"/>
 		<setting label="32046" type="lsep"/><!-- Movies -->
 		<setting id="add_movies_to_trakt" type="bool" label="32047" default="true"/>
@@ -65,7 +66,7 @@
 		<setting id="clean_trakt_episodes" type="bool" label="32058" default="false"/>
 		<setting id="trakt_episode_playcount" type="bool" label="32052" default="true"/>
 		<setting id="kodi_episode_playcount" type="bool" label="32053" default="true"/>
-        <setting id="trakt_episode_playback" type="bool" label="32118" default="false"/>
+		<setting id="trakt_episode_playback" type="bool" label="32118" default="false"/>
 		<setting type="sep"/>
 	</category>
 	<category label="32004"><!-- Rating -->
