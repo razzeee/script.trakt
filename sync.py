@@ -35,7 +35,7 @@ class Sync():
 
     def __syncCollectionCheck(self, media_type):
         if media_type == 'movies':
-            return utilities.getSettingAsBool('add_movies_to_trakt') or utilities.getSettingAsBool('clean_trakt_movies')
+            return utilities.getSettingAsBool('add_movies_to_trakt') or utilities.getSettingAsBool('clean_trakt_movies') or utilities.getSettingAsBool('sync_watchlist')
         else:
             return utilities.getSettingAsBool('add_episodes_to_trakt') or utilities.getSettingAsBool('clean_trakt_episodes')
 

@@ -725,3 +725,7 @@ msgstr ""
 msgctxt "#32182"
 msgid "%i show ratings will be updated on Trakt"
 msgstr ""
+
+msgctxt "#32183"
+msgid "Sync watchlist"
+msgstr ""msgstr ""
