@@ -631,15 +631,7 @@ msgstr ""
 #empty string with id 32158
 
 msgctxt "#32159"
-msgid "Visit {0} or scan the QR Code below."
-msgstr ""
-
-msgctxt "#32160"
-msgid "Authorize the trakt addon to access your account."
-msgstr ""
-
-msgctxt "#32161"
-msgid "Enter the PIN provided in the box below."
+msgid "Visit {0} or scan the QR code."
 msgstr ""
 
 msgctxt "#32162"

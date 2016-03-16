@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import utilities
 import kodiUtilities
-import gui_utils
+import traktapi
 import xbmc
 import sqlitequeue
 import sys
@@ -33,9 +33,9 @@ def Main():
     args = __getArguments()
     data = {}
 
-    if args['action'] == 'pin_info':
+    if args['action'] == 'auth_info':
         xbmc.executebuiltin('Dialog.Close(all, true)')
-        gui_utils.get_pin()
+        traktapi.login()
 
     if args['action'] == 'contextmenu':
         buttons = []

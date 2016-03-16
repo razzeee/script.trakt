@@ -13,7 +13,6 @@ from sync import Sync
 import utilities
 import kodiUtilities
 import time
-import gui_utils
 import xbmcgui
 import json
 import AddonSignals
@@ -114,7 +113,7 @@ class traktService:
                 last_reminder = kodiUtilities.getSettingAsInt('last_reminder')
                 now = int(time.time())
                 if last_reminder >= 0 and last_reminder < now - (24 * 60 * 60):
-                    gui_utils.get_pin()
+                    traktapi.login()
                 
             while len(self.dispatchQueue) and (not self.Monitor.abortRequested()):
                 data = self.dispatchQueue.get()

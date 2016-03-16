@@ -76,23 +76,6 @@
 			<aspectratio>keep</aspectratio>
 		</control>
 		<control type="group" id="9001">
-			<control type="button" id="200">
-				<description>Authorize Button</description>
-				<posx>211</posx>
-				<posy>293</posy>
-				<width>170</width>
-				<height>40</height>
-				<align>center</align>
-				<aligny>center</aligny>
-				<label>$ADDON[script.trakt 32154]</label>
-				<font>font12_title</font>
-				<textcolor>AA000000</textcolor>
-				<texturenofocus>button-nofo.png</texturenofocus>
-				<texturefocus>button-fo.png</texturefocus>
-				<textoffsetx>10</textoffsetx>
-				<ondown>201</ondown>
-				<onright>201</onright>
-			</control>
 			<control type="button" id="201">
 				<description>Later Button</description>
 				<posx>411</posx>
