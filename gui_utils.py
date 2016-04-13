@@ -14,6 +14,8 @@ def get_auth(code, url):
     ACTION_PREVIOUS_MENU = 10
     ACTION_BACK = 92
     INSTRUCTION_LABEL = 203
+    AUTHCODE_LABEL = 204
+    WARNING_LABEL = 205
     CENTER_Y = 6
     CENTER_X = 2
 
@@ -25,7 +27,11 @@ def get_auth(code, url):
         def onInit(self):
             never = self.getControl(NEVER_BUTTON)
             instuction = self.getControl(INSTRUCTION_LABEL)
-            instuction.setLabel( getString(32159).format("[COLOR red]"+ url +"[/COLOR]") + "\n\n" + code + "\n\n" + getString(32162))
+            authcode = self.getControl(AUTHCODE_LABEL)
+            warning = self.getControl(WARNING_LABEL)
+            instuction.setLabel(getString(32159).format("[COLOR red]"+ url +"[/COLOR]"))
+            authcode.setLabel(code)
+            warning.setLabel(getString(32162))
             
         def onAction(self, action):
             #print 'Action: %s' % (action.getId())

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window id="9999">
-	<defaultcontrol always="false">200</defaultcontrol>
+	<defaultcontrol always="true">9001</defaultcontrol>
 	<coordinates>
-		<system>1</system>
 		<posx>240</posx>
 		<posy>170</posy>
 	</coordinates>
-	<include>dialogeffect</include>
+	<animation effect="fade" start="0" end="100" time="300">WindowOpen</animation>
+	<animation effect="fade" start="100" end="0" time="300">WindowClose</animation>
 	<controls>
 		<control type="image">
 			<description>Fade</description>
@@ -25,7 +25,7 @@
 				<height>340</height>
 				<texture>trakt-auth-bg.png</texture>
 			</control>
-			<control type="label" id="100">
+			<control type="label">
 				<description>header label</description>
 				<posx>780</posx>
 				<posy>15</posy>
@@ -57,13 +57,35 @@
 				<posx>206</posx>
 				<posy>73</posy>
 				<width>360</width>
-				<height>200</height>
+				<height>60</height>
 				<font>font12</font>
 				<wrapmultiline>true</wrapmultiline>
 				<label></label><!-- this is set from the code -->
 				<textcolor>AA000000</textcolor>
-				<align>left</align>
-				<aligny>top</aligny>
+				<aligny>center</aligny>
+			</control>
+			<control type="label" id="204">
+				<description>Code Label</description>
+				<posx>206</posx>
+				<posy>133</posy>
+				<width>360</width>
+				<height>60</height>
+				<font>font16</font>
+				<label></label><!-- this is set from the code -->
+				<textcolor>AA000000</textcolor>
+				<aligny>center</aligny>
+			</control>
+			<control type="label" id="205">
+				<description>Warning Label</description>
+				<posx>206</posx>
+				<posy>173</posy>
+				<width>360</width>
+				<height>80</height>
+				<font>font12</font>
+				<wrapmultiline>true</wrapmultiline>
+				<label></label><!-- this is set from the code -->
+				<textcolor>AA000000</textcolor>
+				<aligny>center</aligny>
 			</control>
 		</control>
 		<control type="image">
@@ -75,11 +97,16 @@
 			<texture>qr_code.png</texture>
 			<aspectratio>keep</aspectratio>
 		</control>
-		<control type="group" id="9001">
+		<control type="grouplist" id="9001">
+			<posx>0</posx>
+			<posy>293</posy>
+			<width>800</width>
+			<height>40</height>
+			<align>center</align>
+			<itemgap>30</itemgap>
+			<orientation>horizontal</orientation>
 			<control type="button" id="201">
 				<description>Later Button</description>
-				<posx>411</posx>
-				<posy>293</posy>
 				<width>170</width>
 				<height>40</height>
 				<align>center</align>
@@ -90,15 +117,9 @@
 				<texturenofocus>button-nofo.png</texturenofocus>
 				<texturefocus>button-fo.png</texturefocus>				
 				<textoffsetx>10</textoffsetx>
-				<onup>200</onup>
-				<onleft>200</onleft>
-				<ondown>202</ondown>
-				<onright>202</onright>
 			</control>
 			<control type="button" id="202">
 				<description>Never Button</description>
-				<posx>611</posx>
-				<posy>293</posy>
 				<width>170</width>
 				<height>40</height>
 				<align>center</align>
@@ -109,8 +130,6 @@
 				<texturefocus>button-fo.png</texturefocus>				
 				<font>font12_title</font>
 				<textoffsetx>10</textoffsetx>
-				<onup>201</onup>
-				<onleft>201</onleft>
 			</control>
 		</control>
 	</controls>
