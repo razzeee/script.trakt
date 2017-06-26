@@ -80,7 +80,7 @@ class SyncMovies():
         self.sync.UpdateProgress(17, line2=kodiUtilities.getString(32082))
         traktMovies = self.sync.traktapi.getMoviesWatched(traktMovies)
         traktMovies = self.sync.traktapi.getMoviesRated(traktMovies)
-        traktMovies = traktMovies.items()
+        traktMovies = list(traktMovies.items())
 
         self.sync.UpdateProgress(24, line2=kodiUtilities.getString(32083))
         movies = []

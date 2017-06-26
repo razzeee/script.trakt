@@ -6,13 +6,13 @@ matrix:
     - python: "2.7.11"
     - python: "2.7.12"
     - python: "2.7.13"
+    - python: "3.6"
   allow_failures:
     - python: "2.6"
     - python: "3.2"
     - python: "3.3"
     - python: "3.4"
     - python: "3.5"
-    - python: "3.6"
     - python: "nightly"
 
 # command to install dependencies

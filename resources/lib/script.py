@@ -241,7 +241,7 @@ def run():
                         logger.debug("'%s' is already marked as watched." % showTitle)
                         return
 
-                    data['seasons'] = dict((k, v) for k, v in s.iteritems() if v)
+                    data['seasons'] = dict((k, v) for k, v in s.items() if v)
                 else:
                     logger.debug("Error getting episode details for '%s' from Kodi." % showTitle)
                     return
@@ -338,7 +338,7 @@ def run():
                             if e['playcount'] == 0:
                                 s[season].append(e['episode'])
 
-                        data['seasons'] = dict((k, v) for k, v in s.iteritems() if v)
+                        data['seasons'] = dict((k, v) for k, v in s.items() if v)
                     else:
                         logger.debug("Error getting episode details for '%s' from Kodi." % showTitle)
                         return
