@@ -1,0 +1,3 @@
+files:
+  - source: /resources/language/English/strings.po
+    translation: /resources/language/%locale_with_underscore%/strings.po
