@@ -63,7 +63,7 @@ class Scrobbler():
             if (time.time() > (self.lastMPCheck + 60)) or isSeek:
                 self.lastMPCheck = time.time()
                 watchedPercent = self.__calculateWatchedPercent()
-                
+
                 if 'id' in self.curVideo and self.isMultiPartEpisode:
                     epIndex = self._currentEpisode(watchedPercent, self.curVideo['multi_episode_count'])
                     if self.curMPEpisode != epIndex:
@@ -78,7 +78,7 @@ class Scrobbler():
                             logger.debug("Multi episode transition - call start for next episode")
                             response = self.__scrobble('start')
                             self.__preFetchUserRatings(response)
-                            
+
                 elif self.isPVR:
                     activePlayers = kodiUtilities.kodiJsonRequest({"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1})
                     logger.debug("Scrobble - activePlayers: %s" % activePlayers)
@@ -101,7 +101,7 @@ class Scrobbler():
                                     else:
                                         logger.debug("Scrobble Couldn't set curVideoInfo for movie type")
                                     logger.debug("Scrobble Movie type, curVideoInfo: %s" % self.curVideoInfo)
-                                
+
                                 elif utilities.isEpisode(self.curVideo['type']):
                                     if 'title' in self.curVideo and 'season' in self.curVideo and 'episode' in self.curVideo:
                                         self.curVideoInfo = {'title': self.curVideo['title'], 'season': self.curVideo['season'],
@@ -120,10 +120,10 @@ class Scrobbler():
                                 logger.debug("Scrobble Episode type, curVideoInfo: %s" % self.curVideoInfo)
                                 logger.debug("Scrobble Episode type, traktShowSummary: %s" % self.traktShowSummary)
                                 response = self.__scrobble('start')
-                                
+
                 elif isSeek:
                     self.__scrobble('start')
-                    
+
     def playbackStarted(self, data):
         logger.debug("playbackStarted(data: %s)" % data)
         if not data:
@@ -227,10 +227,11 @@ class Scrobbler():
             if kodiUtilities.getSettingAsBool('scrobble_movie') or kodiUtilities.getSettingAsBool('scrobble_episode'):
                 result = self.__scrobble('start')
             elif kodiUtilities.getSettingAsBool('rate_movie') and utilities.isMovie(self.curVideo['type']) and 'ids' in self.curVideoInfo:
-                best_id = utilities.best_id(self.curVideoInfo['ids'])
+                best_id = utilities.best_id(
+                    self.curVideoInfo['ids'], self.curVideo['type'])
                 result = {'movie': self.traktapi.getMovieSummary(best_id).to_dict()}
             elif kodiUtilities.getSettingAsBool('rate_episode') and utilities.isEpisode(self.curVideo['type']) and 'ids' in self.traktShowSummary:
-                best_id = utilities.best_id(self.traktShowSummary['ids'])
+                best_id = utilities.best_id(self.traktShowSummary['ids'], self.curVideo['type'])
                 result = {'show': self.traktapi.getShowSummary(best_id).to_dict(),
                           'episode': self.traktapi.getEpisodeSummary(best_id, self.curVideoInfo['season'],
                                                                      self.curVideoInfo['number']).to_dict()}
@@ -313,7 +314,11 @@ class Scrobbler():
         self.playlistIndex = 0
 
     def __calculateWatchedPercent(self):
-        return (self.watchedTime / math.floor(self.videoDuration)) * 100  # we need to floor this, so this calculation yields the same result as the playback progress calculation
+        floored = math.floor(self.videoDuration) # we need to floor this, so this calculation yields the same result as the playback progress calculation
+        if floored != 0:
+            return (self.watchedTime / floored) * 100
+        else:
+            return 0
 
     def __scrobble(self, status):
         if not self.curVideoInfo:
@@ -369,7 +374,7 @@ class Scrobbler():
                 if self.isPVR and not utilities._fuzzyMatch(self.curVideoInfo['title'], response['episode']['title'], 60.0):
                     logger.debug("scrobble sending incorrect scrobbleEpisode stopping: %sx%s - %s != %s" % (self.curVideoInfo['season'],self.curVideoInfo['number'],self.curVideoInfo['title'],response['episode']['title']))
                     self.stopScrobbler = True
-                        
+
                 self.__scrobbleNotification(response)
                 logger.debug("Scrobble response: %s" % str(response))
                 return response
@@ -377,8 +382,8 @@ class Scrobbler():
                 logger.debug("Failed to scrobble episode: %s | %s | %s | %s" % (self.traktShowSummary,
                                                                                 self.curVideoInfo, watchedPercent,
                                                                                 status))
-                
-                
+
+
     def __scrobbleNotification(self, info):
         if not self.curVideoInfo:
             return

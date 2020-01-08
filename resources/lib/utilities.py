@@ -246,10 +246,10 @@ def parseIdToTraktIds(id, type):
     return data, id_type
 
 
-def best_id(ids):
+def best_id(ids, type):
     if 'trakt' in ids:
         return ids['trakt']
-    elif 'imdb' in ids:
+    elif 'imdb' in ids and isMovie(type):
         return ids['imdb']
     elif 'tmdb' in ids:
         return ids['tmdb']

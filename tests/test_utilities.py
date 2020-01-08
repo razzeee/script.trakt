@@ -189,7 +189,7 @@ def test_parseIdToTraktIds_Tvdb():
 
 def test_best_id_trakt():
     data = load_params_from_json('tests/fixtures/shows.json')
-    assert utilities.best_id(data[1]['show']['ids']) == 1395
+    assert utilities.best_id(data[1]['show']['ids'], 'show') == 1395
 
 
 def test_checkExcludePath_Path_Excluded():
