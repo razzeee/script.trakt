@@ -47,7 +47,7 @@ jobs:
         working-directory: ./project
 
       - name: Create PR for sync-addon-metadata-translations changes
-        uses: peter-evans/create-pull-request@v7.0.8
+        uses: peter-evans/create-pull-request@v7.0.9
         with:
           commit-message: Sync of addon metadata translations
           title: Sync of addon metadata translations
