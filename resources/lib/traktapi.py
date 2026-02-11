@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 import logging
+import os
 import time
 from json import dumps, loads
 
@@ -44,9 +45,16 @@ class traktAPI(object):
             Trakt.http.proxies = {"http": proxyURL, "https": proxyURL}
 
         # Configure
+        client_id = os.environ.get("TRAKT_CLIENT_ID")
+        client_secret = os.environ.get("TRAKT_CLIENT_SECRET")
+
+        if not client_id or not client_secret:
+            client_id = deobfuscate(self.__client_id)
+            client_secret = deobfuscate(self.__client_secret)
+
         Trakt.configuration.defaults.client(
-            id=deobfuscate(self.__client_id),
-            secret=deobfuscate(self.__client_secret),
+            id=client_id,
+            secret=client_secret,
         )
 
         # Bind event
