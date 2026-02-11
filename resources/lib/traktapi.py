@@ -20,6 +20,7 @@ from resources.lib.utilities import (
     findSeasonMatchInList,
     findShowMatchInList,
 )
+from resources.lib.obfuscation import deobfuscate
 from trakt import Trakt
 from trakt.objects import Movie, Show
 
@@ -31,8 +32,9 @@ logger = logging.getLogger(__name__)
 
 
 class traktAPI(object):
-    __client_id = "d4161a7a106424551add171e5470112e4afdaf2438e6ef2fe0548edc75924868"
-    __client_secret = "b5fcd7cb5d9bb963784d11bbf8535bc0d25d46225016191eb48e50792d2155c0"
+    # Placeholders for build-time injection
+    __client_id = "TRAKT_CLIENT_ID_PLACEHOLDER"
+    __client_secret = "TRAKT_CLIENT_SECRET_PLACEHOLDER"
 
     def __init__(self, force=False):
         logger.debug("Initializing.")
@@ -43,7 +45,8 @@ class traktAPI(object):
 
         # Configure
         Trakt.configuration.defaults.client(
-            id=self.__client_id, secret=self.__client_secret
+            id=deobfuscate(self.__client_id),
+            secret=deobfuscate(self.__client_secret),
         )
 
         # Bind event
