@@ -57,6 +57,12 @@ class traktAPI(object):
             secret=client_secret,
         )
 
+        user_agent = "Kodi script.trakt/%s" % __addonversion__
+        if getattr(Trakt.http, "headers", None) is None:
+            Trakt.http.headers = {"User-Agent": user_agent}
+        else:
+            Trakt.http.headers["User-Agent"] = user_agent
+
         # Bind event
         Trakt.on("oauth.token_refreshed", self.on_token_refreshed)
 
