@@ -1,3 +1,6 @@
+version 3.8.1
+- Changes to user agent and api key handling
+
 version 3.8.0
 - Add support for script.trakt.exclude listitem property
 - Translation updates (Irish, Bosnian, Polish, Portuguese, Swedish, Chinese, and more)
