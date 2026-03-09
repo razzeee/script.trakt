@@ -17,7 +17,11 @@ jobs:
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
           TRAKT_CLIENT_SECRET: ${{ secrets.TRAKT_CLIENT_SECRET }}
-        run: python3 scripts/inject_keys.py
+        run: |
+          python3 scripts/inject_keys.py
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "Inject obfuscated keys for build [skip ci]"
       - name: Generate distribution zip and submit to official kodi repository
         id: kodi-addon-submitter
         uses: xbmc/action-kodi-addon-submitter@v1.3
