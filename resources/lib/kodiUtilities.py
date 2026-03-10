@@ -7,6 +7,7 @@ import xbmcaddon
 import json
 import re
 import logging
+from typing import Tuple, List, Dict, Union, Optional
 from resources.lib import utilities
 
 
@@ -19,46 +20,46 @@ REGEX_URL = "(^https?://)(.+)"
 
 
 def notification(
-    header: str, message: str, time=5000, icon=__addon__.getAddonInfo("icon")
-):
+    header: str, message: str, time: int = 5000, icon: str = __addon__.getAddonInfo("icon")
+) -> None:
     xbmcgui.Dialog().notification(header, message, icon, time)
 
 
-def showSettings():
+def showSettings() -> None:
     __addon__.openSettings()
 
 
-def getSetting(setting):
+def getSetting(setting: str) -> str:
     return __addon__.getSetting(setting).strip()
 
 
-def setSetting(setting, value):
+def setSetting(setting: str, value: Union[str, int, float, bool]) -> None:
     __addon__.setSetting(setting, str(value))
 
 
-def getSettingAsBool(setting):
+def getSettingAsBool(setting: str) -> bool:
     return getSetting(setting).lower() == "true"
 
 
-def getSettingAsFloat(setting):
+def getSettingAsFloat(setting: str) -> float:
     try:
         return float(getSetting(setting))
     except ValueError:
         return 0
 
 
-def getSettingAsInt(setting):
+def getSettingAsInt(setting: str) -> int:
     try:
         return int(getSettingAsFloat(setting))
     except ValueError:
         return 0
 
 
-def getString(string_id):
+def getString(string_id: int) -> str:
     return __addon__.getLocalizedString(string_id)
 
 
-def kodiJsonRequest(params):
+def kodiJsonRequest(params: Dict) -> Optional[Union[Dict, List]]:
     data = json.dumps(params)
     request = xbmc.executeJSONRPC(data)
 
@@ -131,7 +132,7 @@ def checkExclusion(fullpath: str) -> bool:
     return found
 
 
-def kodiRpcToTraktMediaObject(type, data, mode="collected"):
+def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") -> Optional[Dict]:
     if type == "show":
         if "uniqueid" in data:
             data["ids"] = data.pop("uniqueid")
@@ -230,7 +231,7 @@ def kodiRpcToTraktMediaObject(type, data, mode="collected"):
         return
 
 
-def kodiRpcToTraktMediaObjects(data, mode="collected"):
+def kodiRpcToTraktMediaObjects(data: Dict, mode: str = "collected") -> Optional[List]:
     if "tvshows" in data:
         shows = data["tvshows"]
 
@@ -270,7 +271,7 @@ def kodiRpcToTraktMediaObjects(data, mode="collected"):
         return
 
 
-def getShowDetailsFromKodi(showID, fields):
+def getShowDetailsFromKodi(showID: int, fields: List) -> Optional[Dict]:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -292,7 +293,7 @@ def getShowDetailsFromKodi(showID, fields):
         return None
 
 
-def getSeasonDetailsFromKodi(seasonID, fields):
+def getSeasonDetailsFromKodi(seasonID: int, fields: List) -> Optional[Dict]:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -317,7 +318,7 @@ def getSeasonDetailsFromKodi(seasonID, fields):
 # get a single episode from kodi given the id
 
 
-def getEpisodeDetailsFromKodi(libraryId, fields):
+def getEpisodeDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -358,7 +359,7 @@ def getEpisodeDetailsFromKodi(libraryId, fields):
 # get a single movie from kodi given the id
 
 
-def getMovieDetailsFromKodi(libraryId, fields):
+def getMovieDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -380,7 +381,7 @@ def getMovieDetailsFromKodi(libraryId, fields):
         return None
 
 
-def checkAndConfigureProxy():
+def checkAndConfigureProxy() -> Optional[str]:
     proxyActive = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -480,7 +481,7 @@ def checkAndConfigureProxy():
     return None
 
 
-def getMediaType():
+def getMediaType() -> Optional[str]:
     listType = xbmc.getInfoLabel("ListItem.DBTYPE")
 
     xbmc.log("list item type: %s" % listType, xbmc.LOGINFO)
@@ -497,7 +498,7 @@ def getMediaType():
         return None
 
 
-def getInfoLabelDetails(result):
+def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
     type = result["item"]["type"]
     data = {"action": "started"}
     # check type of item
