@@ -18,32 +18,26 @@ from typing import Any, Iterator, Optional, Dict
 
 logger = logging.getLogger(__name__)
 
-__addon__ = xbmcaddon.Addon('script.trakt')
+__addon__ = xbmcaddon.Addon("script.trakt")
+
 
 # code from http://flask.pocoo.org/snippets/88/ with some modifications
 class SqliteQueue(object):
-
     _create = (
-                'CREATE TABLE IF NOT EXISTS queue '
-                '('
-                '  id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                '  item BLOB'
-                ')'
-                )
-    _count = 'SELECT COUNT(*) FROM queue'
-    _iterate = 'SELECT id, item FROM queue'
-    _append = 'INSERT INTO queue (item) VALUES (?)'
-    _write_lock = 'BEGIN IMMEDIATE'
-    _get = (
-            'SELECT id, item FROM queue '
-            'ORDER BY id LIMIT 1'
-            )
-    _del = 'DELETE FROM queue WHERE id = ?'
-    _peek = (
-            'SELECT item FROM queue '
-            'ORDER BY id LIMIT 1'
-            )
-    _purge = 'DELETE FROM queue'
+        "CREATE TABLE IF NOT EXISTS queue "
+        "("
+        "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  item BLOB"
+        ")"
+    )
+    _count = "SELECT COUNT(*) FROM queue"
+    _iterate = "SELECT id, item FROM queue"
+    _append = "INSERT INTO queue (item) VALUES (?)"
+    _write_lock = "BEGIN IMMEDIATE"
+    _get = "SELECT id, item FROM queue ORDER BY id LIMIT 1"
+    _del = "DELETE FROM queue WHERE id = ?"
+    _peek = "SELECT item FROM queue ORDER BY id LIMIT 1"
+    _purge = "DELETE FROM queue"
 
     path: str
     _connection_cache: Dict[int, sqlite3.Connection]
@@ -53,7 +47,7 @@ class SqliteQueue(object):
         if not xbmcvfs.exists(self.path):
             logger.debug("Making path structure: %s" % repr(self.path))
             xbmcvfs.mkdir(self.path)
-        self.path = os.path.join(self.path, 'queue.db')
+        self.path = os.path.join(self.path, "queue.db")
         self._connection_cache = {}
         with self._get_conn() as conn:
             conn.execute(self._create)

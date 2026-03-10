@@ -24,7 +24,9 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
     buttons: List[str]
     media_type: str
 
-    def __new__(cls, media_type: Optional[str] = None, buttons: Optional[List[str]] = None) -> Any:
+    def __new__(
+        cls, media_type: Optional[str] = None, buttons: Optional[List[str]] = None
+    ) -> Any:
         return super(traktContextMenu, cls).__new__(
             cls,
             "script-trakt-ContextMenu.xml",
@@ -78,7 +80,9 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
 
         self.setFocus(actionList)
 
-    def newListItem(self, label: str, selected: bool = False, *args: Any, **kwargs: Any) -> xbmcgui.ListItem:
+    def newListItem(
+        self, label: str, selected: bool = False, *args: Any, **kwargs: Any
+    ) -> xbmcgui.ListItem:
         item = xbmcgui.ListItem(label)
         item.select(selected)
         for key in kwargs:

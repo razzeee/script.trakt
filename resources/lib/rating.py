@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 __addon__ = xbmcaddon.Addon("script.trakt")
 
 
-def ratingCheck(media_type: str, items_to_rate: List[Dict], watched_time: float, total_time: float) -> None:
+def ratingCheck(
+    media_type: str, items_to_rate: List[Dict], watched_time: float, total_time: float
+) -> None:
     """Check if a video should be rated and if so launches the rating dialog"""
     logger.debug("Rating Check called for '%s'" % media_type)
     if not kodiUtilities.getSettingAsBool("rate_%s" % media_type):
@@ -27,11 +29,22 @@ def ratingCheck(media_type: str, items_to_rate: List[Dict], watched_time: float,
     if watched >= kodiUtilities.getSettingAsFloat("rate_min_view_time"):
         rateMedia(media_type, items_to_rate)
     else:
-        logger.debug("'%s' does not meet minimum view time for rating (watched: %0.2f%%, minimum: %0.2f%%)" % (
-            media_type, watched, kodiUtilities.getSettingAsFloat("rate_min_view_time")))
+        logger.debug(
+            "'%s' does not meet minimum view time for rating (watched: %0.2f%%, minimum: %0.2f%%)"
+            % (
+                media_type,
+                watched,
+                kodiUtilities.getSettingAsFloat("rate_min_view_time"),
+            )
+        )
 
 
-def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, rating: Optional[Union[int, str]] = None) -> None:
+def rateMedia(
+    media_type: str,
+    itemsToRate: List[Dict],
+    unrate: bool = False,
+    rating: Optional[Union[int, str]] = None,
+) -> None:
     """Launches the rating dialog"""
     for summary_info in itemsToRate:
         if summary_info is None:
@@ -39,7 +52,7 @@ def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, ra
         if not utilities.isValidMediaType(media_type):
             logger.debug("Not a valid media type")
             return
-        elif 'user' not in summary_info:
+        elif "user" not in summary_info:
             logger.debug("No user data")
             return
 
@@ -50,7 +63,7 @@ def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, ra
         if unrate:
             rating = None
 
-            if summary_info['user']['ratings']['rating'] > 0:
+            if summary_info["user"]["ratings"]["rating"] > 0:
                 rating = 0
 
             if rating is not None:
@@ -61,30 +74,33 @@ def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, ra
 
             return
 
-        rerate = kodiUtilities.getSettingAsBool('rate_rerate')
+        rerate = kodiUtilities.getSettingAsBool("rate_rerate")
         if rating is not None:
-            if summary_info['user']['ratings']['rating'] == 0:
+            if summary_info["user"]["ratings"]["rating"] == 0:
                 logger.debug(
-                    "Rating for '%s' is being set to '%d' manually." % (s, rating))
+                    "Rating for '%s' is being set to '%d' manually." % (s, rating)
+                )
                 __rateOnTrakt(rating, media_type, summary_info)
             else:
                 if rerate:
-                    if not summary_info['user']['ratings']['rating'] == rating:
+                    if not summary_info["user"]["ratings"]["rating"] == rating:
                         logger.debug(
-                            "Rating for '%s' is being set to '%d' manually." % (s, rating))
+                            "Rating for '%s' is being set to '%d' manually."
+                            % (s, rating)
+                        )
                         __rateOnTrakt(rating, media_type, summary_info)
                     else:
-                        kodiUtilities.notification(
-                            kodiUtilities.getString(32043), s)
-                        logger.debug(
-                            "'%s' already has a rating of '%d'." % (s, rating))
+                        kodiUtilities.notification(kodiUtilities.getString(32043), s)
+                        logger.debug("'%s' already has a rating of '%d'." % (s, rating))
                 else:
-                    kodiUtilities.notification(
-                        kodiUtilities.getString(32041), s)
+                    kodiUtilities.notification(kodiUtilities.getString(32041), s)
                     logger.debug("'%s' is already rated." % s)
             return
 
-        if summary_info['user']['ratings'] and summary_info['user']['ratings']['rating']:
+        if (
+            summary_info["user"]["ratings"]
+            and summary_info["user"]["ratings"]["rating"]
+        ):
             if not rerate:
                 logger.debug("'%s' has already been rated." % s)
                 kodiUtilities.notification(kodiUtilities.getString(32041), s)
@@ -94,17 +110,21 @@ def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, ra
 
         gui = RatingDialog(
             "script-trakt-RatingDialog.xml",
-            __addon__.getAddonInfo('path'),
+            __addon__.getAddonInfo("path"),
             media_type,
             summary_info,
-            rerate
+            rerate,
         )
 
         gui.doModal()
         if gui.rating:
             rating = gui.rating
             if rerate:
-                if summary_info['user']['ratings'] and summary_info['user']['ratings']['rating'] > 0 and rating == summary_info['user']['ratings']['rating']:
+                if (
+                    summary_info["user"]["ratings"]
+                    and summary_info["user"]["ratings"]["rating"] > 0
+                    and rating == summary_info["user"]["ratings"]["rating"]
+                ):
                     rating = 0
 
             if rating == 0 or rating == "unrate":
@@ -120,33 +140,53 @@ def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, ra
         rating = None
 
 
-def __rateOnTrakt(rating: Union[int, str], media_type: str, media: Dict, unrate: bool = False) -> None:
+def __rateOnTrakt(
+    rating: Union[int, str], media_type: str, media: Dict, unrate: bool = False
+) -> None:
     logger.debug("Sending rating (%s) to Trakt.tv" % rating)
 
     params = media
     if utilities.isMovie(media_type):
-        key = 'movies'
-        params['rating'] = rating
-        if 'movieid' in media:
-            kodiUtilities.kodiJsonRequest({"jsonrpc": "2.0", "id": 1, "method": "VideoLibrary.SetMovieDetails", "params": {
-                                          "movieid": media['movieid'], "userrating": rating}})
+        key = "movies"
+        params["rating"] = rating
+        if "movieid" in media:
+            kodiUtilities.kodiJsonRequest(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "VideoLibrary.SetMovieDetails",
+                    "params": {"movieid": media["movieid"], "userrating": rating},
+                }
+            )
     elif utilities.isShow(media_type):
-        key = 'shows'
+        key = "shows"
         # we need to remove this key or trakt will be confused
-        del(params["seasons"])
-        params['rating'] = rating
-        if 'tvshowid' in media:
-            kodiUtilities.kodiJsonRequest({"jsonrpc": "2.0", "id": 1, "method": "VideoLibrary.SetTVShowDetails", "params": {
-                                          "tvshowid": media['tvshowid'], "userrating": rating}})
+        del params["seasons"]
+        params["rating"] = rating
+        if "tvshowid" in media:
+            kodiUtilities.kodiJsonRequest(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "VideoLibrary.SetTVShowDetails",
+                    "params": {"tvshowid": media["tvshowid"], "userrating": rating},
+                }
+            )
     elif utilities.isSeason(media_type):
-        key = 'shows'
-        params['seasons'] = [{'rating': rating, 'number': media['season']}]
+        key = "shows"
+        params["seasons"] = [{"rating": rating, "number": media["season"]}]
     elif utilities.isEpisode(media_type):
-        key = 'episodes'
-        params['rating'] = rating
-        if 'episodeid' in media:
-            kodiUtilities.kodiJsonRequest({"jsonrpc": "2.0", "id": 1, "method": "VideoLibrary.SetEpisodeDetails", "params": {
-                                          "episodeid": media['episodeid'], "userrating": rating}})
+        key = "episodes"
+        params["rating"] = rating
+        if "episodeid" in media:
+            kodiUtilities.kodiJsonRequest(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "VideoLibrary.SetEpisodeDetails",
+                    "params": {"episodeid": media["episodeid"], "userrating": rating},
+                }
+            )
     else:
         return
     root = {key: [params]}
@@ -158,8 +198,12 @@ def __rateOnTrakt(rating: Union[int, str], media_type: str, media: Dict, unrate:
 
     if data:
         s = utilities.getFormattedItemName(media_type, media)
-        if 'not_found' in data and not data['not_found']['movies'] and not data['not_found']['episodes'] and not data['not_found']['shows']:
-
+        if (
+            "not_found" in data
+            and not data["not_found"]["movies"]
+            and not data["not_found"]["episodes"]
+            and not data["not_found"]["shows"]
+        ):
             if not unrate:
                 kodiUtilities.notification(kodiUtilities.getString(32040), s)
             else:
@@ -185,7 +229,7 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
         11036: 7,
         11037: 8,
         11038: 9,
-        11039: 10
+        11039: 10,
     }
 
     focus_labels = {
@@ -198,17 +242,26 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
         11036: 32034,
         11037: 32035,
         11038: 32036,
-        11039: 32027
+        11039: 32027,
     }
 
-    def __init__(self, xmlFile: str, resourcePath: str, media_type: str, media: Dict, rerate: bool) -> None:
+    def __init__(
+        self,
+        xmlFile: str,
+        resourcePath: str,
+        media_type: str,
+        media: Dict,
+        rerate: bool,
+    ) -> None:
         self.media_type = media_type
         self.media = media
         self.rating = None
         self.rerate = rerate
-        self.default_rating = kodiUtilities.getSettingAsInt('rating_default')
+        self.default_rating = kodiUtilities.getSettingAsInt("rating_default")
 
-    def __new__(cls, xmlFile: str, resourcePath: str, media_type: str, media: Dict, rerate: bool) -> Any:
+    def __new__(
+        cls, xmlFile: str, resourcePath: str, media_type: str, media: Dict, rerate: bool
+    ) -> Any:
         return super(RatingDialog, cls).__new__(cls, xmlFile, resourcePath)
 
     def onInit(self) -> None:
@@ -216,8 +269,12 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
         self.getControl(10012).setLabel(s)
 
         rateID = 11029 + self.default_rating
-        if self.rerate and self.media['user']['ratings'] and int(self.media['user']['ratings']['rating']) > 0:
-            rateID = 11029 + int(self.media['user']['ratings']['rating'])
+        if (
+            self.rerate
+            and self.media["user"]["ratings"]
+            and int(self.media["user"]["ratings"]["rating"]) > 0
+        ):
+            rateID = 11029 + int(self.media["user"]["ratings"]["rating"])
         self.setFocus(self.getControl(rateID))
 
     def onClick(self, controlID: int) -> None:
@@ -230,7 +287,11 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
             s = kodiUtilities.getString(self.focus_labels[controlID])
 
             if self.rerate:
-                if self.media['user']['ratings'] and self.media['user']['ratings']['rating'] == self.buttons[controlID]:
+                if (
+                    self.media["user"]["ratings"]
+                    and self.media["user"]["ratings"]["rating"]
+                    == self.buttons[controlID]
+                ):
                     if utilities.isMovie(self.media_type):
                         s = kodiUtilities.getString(32037)
                     elif utilities.isShow(self.media_type):
@@ -244,4 +305,4 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
 
             self.getControl(10013).setLabel(s)
         else:
-            self.getControl(10013).setLabel('')
+            self.getControl(10013).setLabel("")
