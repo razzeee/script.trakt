@@ -5,7 +5,7 @@ import logging
 from resources.lib import utilities
 from resources.lib import kodiUtilities
 from resources.lib import sqlitequeue
-from typing import Dict, Optional
+from typing import Dict
 from resources.lib.traktContextMenu import traktContextMenu
 
 logger = logging.getLogger(__name__)

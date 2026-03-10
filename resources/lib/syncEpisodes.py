@@ -2,7 +2,7 @@
 
 import copy
 import logging
-from typing import Dict, List, Tuple, Union, Optional, Any
+from typing import Dict, Tuple, Union, Optional, Any
 
 from resources.lib import kodiUtilities, utilities
 
