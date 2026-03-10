@@ -34,6 +34,8 @@ def ratingCheck(media_type: str, items_to_rate: List[Dict], watched_time: float,
 def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, rating: Optional[Union[int, str]] = None) -> None:
     """Launches the rating dialog"""
     for summary_info in itemsToRate:
+        if summary_info is None:
+            continue
         if not utilities.isValidMediaType(media_type):
             logger.debug("Not a valid media type")
             return

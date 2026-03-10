@@ -322,7 +322,7 @@ class traktAPI(object):
                 playback = Trakt["sync/playback"].movies(exceptions=True)
 
                 for _, item in list(playback.items()):
-                    if type(item) is Movie:
+                    if isinstance(item, Movie):
                         progressMovies.append(item)
 
         return progressMovies
@@ -336,7 +336,7 @@ class traktAPI(object):
                 playback = Trakt["sync/playback"].episodes(exceptions=True)
 
                 for _, item in list(playback.items()):
-                    if type(item) is Show:
+                    if isinstance(item, Show):
                         progressEpisodes.append(item)
 
         return progressEpisodes

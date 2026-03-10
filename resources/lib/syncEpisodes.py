@@ -147,7 +147,7 @@ class SyncEpisodes:
         logger.debug("[Episodes Sync] Getting episode data from Kodi")
         for show_col1 in tvshows:
             i += 1
-            y = ((i / x) * 8) + 2
+            y = ((i / x) * 8) + 2 if x > 0 else 0
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32097) % (i, x)
             )
@@ -263,7 +263,7 @@ class SyncEpisodes:
         showsCollected = {"shows": []}
         for _, show in traktShowsCollected:
             i += 1
-            y = ((i / x) * 4) + 12
+            y = ((i / x) * 4) + 12 if x > 0 else 12
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
             )
@@ -278,7 +278,7 @@ class SyncEpisodes:
         showsWatched = {"shows": []}
         for _, show in traktShowsWatched:
             i += 1
-            y = ((i / x) * 4) + 16
+            y = ((i / x) * 4) + 16 if x > 0 else 16
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
             )
@@ -293,7 +293,7 @@ class SyncEpisodes:
         showsRated = {"shows": []}
         for _, show in traktShowsRated:
             i += 1
-            y = ((i / x) * 4) + 20
+            y = ((i / x) * 4) + 20 if x > 0 else 20
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
             )
@@ -308,7 +308,7 @@ class SyncEpisodes:
         episodesRated = {"shows": []}
         for _, show in traktEpisodesRated:
             i += 1
-            y = ((i / x) * 4) + 20
+            y = ((i / x) * 4) + 20 if x > 0 else 20
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
             )
@@ -348,7 +348,7 @@ class SyncEpisodes:
             showsProgress = {"shows": []}
             for show in traktProgressShows:
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y), line2=kodiUtilities.getString(32120) % (i, x)
                 )
@@ -417,7 +417,7 @@ class SyncEpisodes:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32069)
@@ -552,7 +552,7 @@ class SyncEpisodes:
                 epCount = utilities.countEpisodes([show])
                 title = show["title"]
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y), line2=title, line3=kodiUtilities.getString(32073) % epCount
                 )
@@ -646,7 +646,7 @@ class SyncEpisodes:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32108)
@@ -703,15 +703,13 @@ class SyncEpisodes:
                         # If library item doesn't have a runtime set get it from
                         # Trakt to avoid later using 0 in runtime * progress_pct.
                         if not episode["runtime"]:
-                            episode["runtime"] = (
-                                self.sync.traktapi.getEpisodeSummary(
-                                    show["ids"]["trakt"],
-                                    season["number"],
-                                    episode["number"],
-                                    extended="full",
-                                ).runtime
-                                * 60
-                            )
+                            trakt_runtime = self.sync.traktapi.getEpisodeSummary(
+                                show["ids"]["trakt"],
+                                season["number"],
+                                episode["number"],
+                                extended="full",
+                            ).runtime
+                            episode["runtime"] = (trakt_runtime * 60) if trakt_runtime else 0
                         episodes.append(
                             {
                                 "episodeid": episode["ids"]["episodeid"],
@@ -750,7 +748,7 @@ class SyncEpisodes:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32130)
@@ -847,7 +845,7 @@ class SyncEpisodes:
                     if self.sync.IsCanceled():
                         return
                     i += 1
-                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                     self.sync.UpdateProgress(
                         int(y),
                         line1="",
@@ -952,7 +950,7 @@ class SyncEpisodes:
                     if self.sync.IsCanceled():
                         return
                     i += 1
-                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                     self.sync.UpdateProgress(
                         int(y),
                         line1="",
@@ -980,9 +978,9 @@ class SyncEpisodes:
                     )
                 else:
                     episodes = ", ".join(
-                        [str(i) for i in show["shows"]["seasons"][season]]
+                        [str(i["number"]) for i in season["episodes"]]
                     )
-                    s = "Season: %d, Episodes: %s" % (season, episodes)
+                    s = "Season: %d, Episodes: %s" % (season["number"], episodes)
                 p.append(s)
         else:
             p = ["All"]

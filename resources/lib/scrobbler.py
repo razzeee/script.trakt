@@ -83,7 +83,8 @@ class Scrobbler:
                         response = self.__scrobble("stop")
                         if response is not None:
                             logger.debug("Scrobble response: %s" % str(response))
-                            self.videosToRate.append(self.curVideoInfo)
+                            if self.curVideoInfo:
+                                self.videosToRate.append(self.curVideoInfo)
                             # update current information
                             self.curMPEpisode = epIndex
                             self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
@@ -475,7 +476,7 @@ class Scrobbler:
         self.transitionCheck(isSeek=True)
 
     def playbackEnded(self) -> None:
-        if not self.isPVR:
+        if not self.isPVR and self.curVideoInfo:
             self.videosToRate.append(self.curVideoInfo)
         if not self.isPlaying:
             return
@@ -543,10 +544,13 @@ class Scrobbler:
                 adjustedDuration = int(
                     self.videoDuration / self.curVideo["multi_episode_count"]
                 )
-                watchedPercent = (
-                    (self.watchedTime - (adjustedDuration * self.curMPEpisode))
-                    / adjustedDuration
-                ) * 100
+                if adjustedDuration > 0:
+                    watchedPercent = (
+                        (self.watchedTime - (adjustedDuration * self.curMPEpisode))
+                        / adjustedDuration
+                    ) * 100
+                else:
+                    watchedPercent = 0
 
             logger.debug(
                 "scrobble sending show object: %s" % str(self.traktShowSummary)

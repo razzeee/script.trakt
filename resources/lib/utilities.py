@@ -175,7 +175,14 @@ def findMovieMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
         (
             item.to_dict()
             for key, item in list(listToMatch.items())
-            if any(idType in key for key, value in item.keys if str(value) == str(id))
+            if hasattr(item, "keys")
+            and any(
+                idType in key
+                for key, value in (
+                    item.keys.items() if hasattr(item.keys, "items") else item.keys
+                )
+                if str(value) == str(id)
+            )
         ),
         {},
     )
@@ -186,7 +193,14 @@ def findShowMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
         (
             item.to_dict()
             for key, item in list(listToMatch.items())
-            if any(idType in key for key, value in item.keys if str(value) == str(id))
+            if hasattr(item, "keys")
+            and any(
+                idType in key
+                for key, value in (
+                    item.keys.items() if hasattr(item.keys, "items") else item.keys
+                )
+                if str(value) == str(id)
+            )
         ),
         {},
     )

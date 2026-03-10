@@ -161,7 +161,7 @@ class SyncMovies:
             moviesProgress = {"movies": []}
             for movie in traktProgressMovies:
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y), line2=kodiUtilities.getString(32123) % (i, x)
                 )
@@ -330,7 +330,7 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32093)
@@ -413,7 +413,7 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32089)
@@ -464,12 +464,10 @@ class SyncMovies:
             # Trakt to avoid later using 0 in runtime * progress_pct.
             for movie in kodiMoviesToUpdate:
                 if not movie["runtime"]:
-                    movie["runtime"] = (
-                        self.sync.traktapi.getMovieSummary(
-                            movie["ids"]["trakt"], extended="full"
-                        ).runtime
-                        * 60
-                    )
+                    trakt_runtime = self.sync.traktapi.getMovieSummary(
+                        movie["ids"]["trakt"], extended="full"
+                    ).runtime
+                    movie["runtime"] = (trakt_runtime * 60) if trakt_runtime else 0
             # need to calculate the progress in int from progress in percent from Trakt
             # split movie list into chunks of 50
             chunksize = 50
@@ -500,7 +498,7 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                 self.sync.UpdateProgress(
                     int(y),
                     line2=kodiUtilities.getString(32127)
@@ -595,7 +593,7 @@ class SyncMovies:
                     if self.sync.IsCanceled():
                         return
                     i += 1
-                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    y = (((i / x) * (toPercent - fromPercent)) + fromPercent) if x > 0 else fromPercent
                     self.sync.UpdateProgress(
                         int(y),
                         line2=kodiUtilities.getString(32171)
