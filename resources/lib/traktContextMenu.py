@@ -2,6 +2,7 @@
 
 import xbmcaddon
 import xbmcgui
+from typing import List, Optional, Any
 from resources.lib.utilities import isMovie, isShow, isSeason, isEpisode
 from resources.lib.kodiUtilities import getString
 
@@ -19,9 +20,11 @@ ACTION_ITEM_SELECT = [ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK]
 
 
 class traktContextMenu(xbmcgui.WindowXMLDialog):
-    action = None
+    action: Optional[str] = None
+    buttons: List[str]
+    media_type: str
 
-    def __new__(cls, media_type=None, buttons=None):
+    def __new__(cls, media_type: Optional[str] = None, buttons: Optional[List[str]] = None) -> Any:
         return super(traktContextMenu, cls).__new__(
             cls,
             "script-trakt-ContextMenu.xml",
@@ -30,12 +33,12 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
             buttons=None,
         )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.buttons = kwargs["buttons"]
         self.media_type = kwargs["media_type"]
         super(traktContextMenu, self).__init__()
 
-    def onInit(self):
+    def onInit(self) -> None:
         mange_string = (
             getString(32133) if isMovie(self.media_type) else getString(32134)
         )
@@ -75,14 +78,14 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
 
         self.setFocus(actionList)
 
-    def newListItem(self, label, selected=False, *args, **kwargs):
+    def newListItem(self, label: str, selected: bool = False, *args: Any, **kwargs: Any) -> xbmcgui.ListItem:
         item = xbmcgui.ListItem(label)
         item.select(selected)
         for key in kwargs:
             item.setProperty(key, str(kwargs[key]))
         return item
 
-    def onAction(self, action):
+    def onAction(self, action: xbmcgui.Action) -> None:
         if action.getId() not in ACTION_ITEM_SELECT:
             if action in ACTION_CLOSE_LIST:
                 self.close()

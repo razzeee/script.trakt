@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 #
+from typing import Any
 
-traktapi = None
+traktapi: Any = None

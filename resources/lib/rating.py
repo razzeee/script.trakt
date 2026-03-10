@@ -5,6 +5,7 @@ import xbmcaddon
 import xbmcgui
 from resources.lib import utilities
 from resources.lib import kodiUtilities
+from typing import Dict, List, Optional, Any, Union
 from resources.lib import globals
 import logging
 
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 __addon__ = xbmcaddon.Addon("script.trakt")
 
 
-def ratingCheck(media_type, items_to_rate, watched_time, total_time):
+def ratingCheck(media_type: str, items_to_rate: List[Dict], watched_time: float, total_time: float) -> None:
     """Check if a video should be rated and if so launches the rating dialog"""
     logger.debug("Rating Check called for '%s'" % media_type)
     if not kodiUtilities.getSettingAsBool("rate_%s" % media_type):
@@ -30,7 +31,7 @@ def ratingCheck(media_type, items_to_rate, watched_time, total_time):
             media_type, watched, kodiUtilities.getSettingAsFloat("rate_min_view_time")))
 
 
-def rateMedia(media_type, itemsToRate, unrate=False, rating=None):
+def rateMedia(media_type: str, itemsToRate: List[Dict], unrate: bool = False, rating: Optional[Union[int, str]] = None) -> None:
     """Launches the rating dialog"""
     for summary_info in itemsToRate:
         if not utilities.isValidMediaType(media_type):
@@ -117,7 +118,7 @@ def rateMedia(media_type, itemsToRate, unrate=False, rating=None):
         rating = None
 
 
-def __rateOnTrakt(rating, media_type, media, unrate=False):
+def __rateOnTrakt(rating: Union[int, str], media_type: str, media: Dict, unrate: bool = False) -> None:
     logger.debug("Sending rating (%s) to Trakt.tv" % rating)
 
     params = media
@@ -166,6 +167,12 @@ def __rateOnTrakt(rating, media_type, media, unrate=False):
 
 
 class RatingDialog(xbmcgui.WindowXMLDialog):
+    media_type: str
+    media: Dict
+    rating: Optional[Union[int, str]]
+    rerate: bool
+    default_rating: int
+
     buttons = {
         11030: 1,
         11031: 2,
@@ -192,17 +199,17 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
         11039: 32027
     }
 
-    def __init__(self, xmlFile, resourcePath, media_type, media, rerate):
+    def __init__(self, xmlFile: str, resourcePath: str, media_type: str, media: Dict, rerate: bool) -> None:
         self.media_type = media_type
         self.media = media
         self.rating = None
         self.rerate = rerate
         self.default_rating = kodiUtilities.getSettingAsInt('rating_default')
 
-    def __new__(cls, xmlFile, resourcePath, media_type, media, rerate):
+    def __new__(cls, xmlFile: str, resourcePath: str, media_type: str, media: Dict, rerate: bool) -> Any:
         return super(RatingDialog, cls).__new__(cls, xmlFile, resourcePath)
 
-    def onInit(self):
+    def onInit(self) -> None:
         s = utilities.getFormattedItemName(self.media_type, self.media)
         self.getControl(10012).setLabel(s)
 
@@ -211,12 +218,12 @@ class RatingDialog(xbmcgui.WindowXMLDialog):
             rateID = 11029 + int(self.media['user']['ratings']['rating'])
         self.setFocus(self.getControl(rateID))
 
-    def onClick(self, controlID):
+    def onClick(self, controlID: int) -> None:
         if controlID in self.buttons:
             self.rating = self.buttons[controlID]
             self.close()
 
-    def onFocus(self, controlID):
+    def onFocus(self, controlID: int) -> None:
         if controlID in self.focus_labels:
             s = kodiUtilities.getString(self.focus_labels[controlID])
 

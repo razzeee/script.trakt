@@ -20,12 +20,14 @@ logger = logging.getLogger(__name__)
 
 
 class DeviceAuthDialog(xbmcgui.WindowXMLDialog):
+    code: str
+    url: str
 
-    def __init__(self, xmlFile, resourcePath, code, url):
+    def __init__(self, xmlFile: str, resourcePath: str, code: str, url: str) -> None:
         self.code = code
         self.url = url
 
-    def onInit(self):
+    def onInit(self) -> None:
         instuction = self.getControl(INSTRUCTION_LABEL)
         authcode = self.getControl(AUTHCODE_LABEL)
         warning = self.getControl(WARNING_LABEL)
@@ -34,17 +36,17 @@ class DeviceAuthDialog(xbmcgui.WindowXMLDialog):
         authcode.setLabel(self.code)
         warning.setLabel(getString(32162))
 
-    def onAction(self, action):
+    def onAction(self, action: xbmcgui.Action) -> None:
         if action == ACTION_PREVIOUS_MENU or action == ACTION_BACK:
             self.close()
 
-    def onControl(self, control):
+    def onControl(self, control: xbmcgui.Control) -> None:
         pass
 
-    def onFocus(self, control):
+    def onFocus(self, control: xbmcgui.Control) -> None:
         pass
 
-    def onClick(self, control):
+    def onClick(self, control: xbmcgui.Control) -> None:
         logger.debug('onClick: %s' % (control))
 
         if control == LATER_BUTTON:

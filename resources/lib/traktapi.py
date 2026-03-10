@@ -4,6 +4,7 @@ import logging
 import os
 import time
 from json import dumps, loads
+from typing import Any, Dict, List, Optional
 
 import xbmcaddon
 from resources.lib import deviceAuthDialog
@@ -34,10 +35,12 @@ logger = logging.getLogger(__name__)
 
 class traktAPI(object):
     # Placeholders for build-time injection
-    __client_id = "TRAKT_CLIENT_ID_PLACEHOLDER"
-    __client_secret = "TRAKT_CLIENT_SECRET_PLACEHOLDER"
+    __client_id: str = "TRAKT_CLIENT_ID_PLACEHOLDER"
+    __client_secret: str = "TRAKT_CLIENT_SECRET_PLACEHOLDER"
+    authorization: Optional[Dict] = None
+    authDialog: Optional[deviceAuthDialog.DeviceAuthDialog] = None
 
-    def __init__(self, force=False):
+    def __init__(self, force: bool = False) -> None:
         logger.debug("Initializing.")
 
         proxyURL = checkAndConfigureProxy()
@@ -76,7 +79,7 @@ class traktAPI(object):
             if last_reminder >= 0 and last_reminder < now - (24 * 60 * 60) or force:
                 self.login()
 
-    def login(self):
+    def login(self) -> None:
         # Request new device code
         with Trakt.configuration.http(timeout=90):
             code = Trakt["oauth/device"].code()
@@ -113,14 +116,15 @@ class traktAPI(object):
 
                 del self.authDialog
 
-    def on_aborted(self):
+    def on_aborted(self) -> None:
         """Triggered when device authentication was aborted (either with `DeviceOAuthPoller.stop()`
         or via the "poll" event)"""
 
         logger.debug("Authentication aborted")
-        self.authDialog.close()
+        if self.authDialog:
+            self.authDialog.close()
 
-    def on_authenticated(self, token):
+    def on_authenticated(self, token: Dict) -> None:
         """Triggered when device authentication has been completed
 
         :param token: Authentication token details
@@ -129,17 +133,19 @@ class traktAPI(object):
         self.authorization = token
         setSetting("authorization", dumps(self.authorization))
         logger.debug("Authentication complete: %r" % token)
-        self.authDialog.close()
+        if self.authDialog:
+            self.authDialog.close()
         notification(getString(32157), getString(32152), 3000)
         self.updateUser()
 
-    def on_expired(self):
+    def on_expired(self) -> None:
         """Triggered when the device authentication code has expired"""
 
         logger.debug("Authentication expired")
-        self.authDialog.close()
+        if self.authDialog:
+            self.authDialog.close()
 
-    def on_poll(self, callback):
+    def on_poll(self, callback: Any) -> None:
         """Triggered before each poll
 
         :param callback: Call with `True` to continue polling, or `False` to abort polling
@@ -149,21 +155,21 @@ class traktAPI(object):
         # Continue polling
         callback(True)
 
-    def on_token_refreshed(self, response):
+    def on_token_refreshed(self, response: Dict) -> None:
         # OAuth token refreshed, save token for future calls
         self.authorization = response
         setSetting("authorization", dumps(self.authorization))
 
         logger.debug("Token refreshed")
 
-    def updateUser(self):
+    def updateUser(self) -> None:
         user = self.getUser()
         if user and "user" in user:
             setSetting("user", user["user"]["username"])
         else:
             setSetting("user", "")
 
-    def scrobbleEpisode(self, show, episode, percent, status):
+    def scrobbleEpisode(self, show: Dict, episode: Dict, percent: float, status: str) -> Optional[Dict]:
         result = None
 
         with Trakt.configuration.oauth.from_response(self.authorization):
@@ -184,7 +190,7 @@ class traktAPI(object):
                     logger.debug("scrobble() Bad scrobble status")
         return result
 
-    def scrobbleMovie(self, movie, percent, status):
+    def scrobbleMovie(self, movie: Dict, percent: float, status: str) -> Optional[Dict]:
         result = None
 
         with Trakt.configuration.oauth.from_response(self.authorization):
@@ -199,94 +205,94 @@ class traktAPI(object):
                     logger.debug("scrobble() Bad scrobble status")
         return result
 
-    def getShowsCollected(self, shows):
+    def getShowsCollected(self, shows: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/collection"].shows(shows, exceptions=True)
         return shows
 
-    def getMoviesCollected(self, movies):
+    def getMoviesCollected(self, movies: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/collection"].movies(movies, exceptions=True)
         return movies
 
-    def getShowsWatched(self, shows):
+    def getShowsWatched(self, shows: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/watched"].shows(shows, exceptions=True)
         return shows
 
-    def getMoviesWatched(self, movies):
+    def getMoviesWatched(self, movies: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/watched"].movies(movies, exceptions=True)
         return movies
 
-    def getShowsRated(self, shows):
+    def getShowsRated(self, shows: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/ratings"].shows(store=shows, exceptions=True)
         return shows
 
-    def getEpisodesRated(self, shows):
+    def getEpisodesRated(self, shows: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/ratings"].episodes(store=shows, exceptions=True)
         return shows
 
-    def getMoviesRated(self, movies):
+    def getMoviesRated(self, movies: Dict) -> Dict:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True, timeout=90):
                 Trakt["sync/ratings"].movies(store=movies, exceptions=True)
         return movies
 
-    def addToCollection(self, mediaObject):
+    def addToCollection(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["sync/collection"].add(mediaObject)
         return result
 
-    def removeFromCollection(self, mediaObject):
+    def removeFromCollection(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["sync/collection"].remove(mediaObject)
         return result
 
-    def addToHistory(self, mediaObject):
+    def addToHistory(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             # don't try this call it may cause multiple watches
             result = Trakt["sync/history"].add(mediaObject)
         return result
 
-    def addToWatchlist(self, mediaObject):
+    def addToWatchlist(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["sync/watchlist"].add(mediaObject)
         return result
 
-    def getShowRatingForUser(self, showId, idType="tvdb"):
+    def getShowRatingForUser(self, showId: str, idType: str = "tvdb") -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 Trakt["sync/ratings"].shows(store=ratings)
         return findShowMatchInList(showId, ratings, idType)
 
-    def getSeasonRatingForUser(self, showId, season, idType="tvdb"):
+    def getSeasonRatingForUser(self, showId: str, season: int, idType: str = "tvdb") -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 Trakt["sync/ratings"].seasons(store=ratings)
         return findSeasonMatchInList(showId, season, ratings, idType)
 
-    def getEpisodeRatingForUser(self, showId, season, episode, idType="tvdb"):
+    def getEpisodeRatingForUser(self, showId: str, season: int, episode: int, idType: str = "tvdb") -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 Trakt["sync/ratings"].episodes(store=ratings)
         return findEpisodeMatchInList(showId, season, episode, ratings, idType)
 
-    def getMovieRatingForUser(self, movieId, idType="imdb"):
+    def getMovieRatingForUser(self, movieId: str, idType: str = "imdb") -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
@@ -294,20 +300,20 @@ class traktAPI(object):
         return findMovieMatchInList(movieId, ratings, idType)
 
     # Send a rating to Trakt as mediaObject so we can add the rating
-    def addRating(self, mediaObject):
+    def addRating(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["sync/ratings"].add(mediaObject)
         return result
 
     # Send a rating to Trakt as mediaObject so we can remove the rating
-    def removeRating(self, mediaObject):
+    def removeRating(self, mediaObject: Dict) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["sync/ratings"].remove(mediaObject)
         return result
 
-    def getMoviePlaybackProgress(self):
+    def getMoviePlaybackProgress(self) -> List["Movie"]:
         progressMovies = []
 
         # Fetch playback
@@ -321,7 +327,7 @@ class traktAPI(object):
 
         return progressMovies
 
-    def getEpisodePlaybackProgress(self):
+    def getEpisodePlaybackProgress(self) -> List["Show"]:
         progressEpisodes = []
 
         # Fetch playback
@@ -335,37 +341,37 @@ class traktAPI(object):
 
         return progressEpisodes
 
-    def getMovieSummary(self, movieId, extended=None):
+    def getMovieSummary(self, movieId: str, extended: Optional[str] = None) -> "Movie":
         with Trakt.configuration.http(retry=True):
             return Trakt["movies"].get(movieId, extended=extended)
 
-    def getShowSummary(self, showId):
+    def getShowSummary(self, showId: str) -> "Show":
         with Trakt.configuration.http(retry=True):
             return Trakt["shows"].get(showId)
 
-    def getShowWithAllEpisodesList(self, showId):
+    def getShowWithAllEpisodesList(self, showId: str) -> List:
         with Trakt.configuration.http(retry=True, timeout=90):
             return Trakt["shows"].seasons(showId, extended="episodes")
 
-    def getEpisodeSummary(self, showId, season, episode, extended=None):
+    def getEpisodeSummary(self, showId: str, season: int, episode: int, extended: Optional[str] = None) -> Any:
         with Trakt.configuration.http(retry=True):
             return Trakt["shows"].episode(showId, season, episode, extended=extended)
 
-    def getIdLookup(self, id, id_type):
+    def getIdLookup(self, id: str, id_type: str) -> Optional[List]:
         with Trakt.configuration.http(retry=True):
             result = Trakt["search"].lookup(id, id_type)
             if result and not isinstance(result, list):
                 result = [result]
             return result
 
-    def getTextQuery(self, query, type, year):
+    def getTextQuery(self, query: str, type: str, year: Optional[int]) -> Optional[List]:
         with Trakt.configuration.http(retry=True, timeout=90):
             result = Trakt["search"].query(query, type, year)
             if result and not isinstance(result, list):
                 result = [result]
             return result
 
-    def getUser(self):
+    def getUser(self) -> Optional[Dict]:
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 result = Trakt["users/settings"].get()
