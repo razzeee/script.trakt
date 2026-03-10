@@ -632,3 +632,26 @@ def test_createError():
         error_msg = utilities.createError(e)
         assert "ValueError" in error_msg
         assert "test error" in error_msg
+
+
+def test_findEpisodeMatchInList():
+    # Mocking a structure that would be returned by Trakt API
+    class MockItem:
+        def __init__(self, data, keys):
+            self.data = data
+            self.keys = keys
+
+        def to_dict(self):
+            return self.data
+
+    episode_data = {"number": 1, "title": "Winter Is Coming"}
+    season_data = {"number": 1, "episodes": [episode_data]}
+    show_data = {"title": "Game of Thrones", "seasons": [season_data]}
+
+    mock_show = MockItem(show_data, [("tvdb", "121361")])
+    list_data = {"121361": mock_show}
+
+    # This should trigger the bug where 'list' is passed instead of 'list_data'
+    # and fail with AttributeError: type object 'list' has no attribute 'items'
+    result = utilities.findEpisodeMatchInList("121361", 1, 1, list_data, "tvdb")
+    assert result == episode_data

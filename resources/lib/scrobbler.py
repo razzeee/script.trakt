@@ -240,7 +240,7 @@ class Scrobbler:
                 else:
                     self.videoDuration = xbmc.Player().getTotalTime()
             except Exception as e:
-                logger.debug("Suddenly stopped watching item: %s" % e.message)
+                logger.debug("Suddenly stopped watching item: %s" % str(e))
                 self.curVideo = None
                 return
 
@@ -409,9 +409,11 @@ class Scrobbler:
 
     def __preFetchUserRatings(self, result: Dict) -> None:
         if result:
-            if utilities.isMovie(
-                self.curVideo["type"]
-            ) and kodiUtilities.getSettingAsBool("rate_movie"):
+            if (
+                utilities.isMovie(self.curVideo["type"])
+                and kodiUtilities.getSettingAsBool("rate_movie")
+                and "movie" in result
+            ):
                 # pre-get summary information, for faster rating dialog.
                 logger.debug(
                     "Movie rating is enabled, pre-fetching summary information."
@@ -422,9 +424,12 @@ class Scrobbler:
                         result["movie"]["ids"]["trakt"], "trakt"
                     )
                 }
-            elif utilities.isEpisode(
-                self.curVideo["type"]
-            ) and kodiUtilities.getSettingAsBool("rate_episode"):
+            elif (
+                utilities.isEpisode(self.curVideo["type"])
+                and kodiUtilities.getSettingAsBool("rate_episode")
+                and "episode" in result
+                and "show" in result
+            ):
                 # pre-get summary information, for faster rating dialog.
                 logger.debug(
                     "Episode rating is enabled, pre-fetching summary information."

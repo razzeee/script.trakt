@@ -204,7 +204,7 @@ def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType:
 
 
 def findEpisodeMatchInList(id: str, seasonNumber: int, episodeNumber: int, list_data: Dict, idType: str) -> Dict:
-    season = findSeasonMatchInList(id, seasonNumber, list, idType)
+    season = findSeasonMatchInList(id, seasonNumber, list_data, idType)
     if season:
         for episode in season["episodes"]:
             if episode["number"] == episodeNumber:
