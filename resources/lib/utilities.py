@@ -6,7 +6,7 @@ import time
 import re
 import logging
 import traceback
-from typing import Tuple
+from typing import Tuple, List, Dict, Union, Optional
 import dateutil.parser
 from datetime import datetime
 from dateutil.tz import tzutc, tzlocal
@@ -18,31 +18,31 @@ time.strptime("1970-01-01 12:00:00", "%Y-%m-%d %H:%M:%S")
 logger = logging.getLogger(__name__)
 
 
-def isMovie(type):
+def isMovie(type: str) -> bool:
     return type == "movie"
 
 
-def isEpisode(type):
+def isEpisode(type: str) -> bool:
     return type == "episode"
 
 
-def isShow(type):
+def isShow(type: str) -> bool:
     return type == "show"
 
 
-def isSeason(type):
+def isSeason(type: str) -> bool:
     return type == "season"
 
 
-def isValidMediaType(type):
+def isValidMediaType(type: str) -> bool:
     return type in ["movie", "show", "season", "episode"]
 
 
-def chunks(list, n):
-    return [list[i : i + n] for i in range(0, len(list), n)]
+def chunks(list_data: List, n: int) -> List:
+    return [list_data[i : i + n] for i in range(0, len(list_data), n)]
 
 
-def getFormattedItemName(type, info):
+def getFormattedItemName(type: str, info: Dict) -> str:
     s = ""
     try:
         if isShow(type):
@@ -63,8 +63,8 @@ def getFormattedItemName(type, info):
     return s
 
 
-def __findInList(list, case_sensitive=True, **kwargs):
-    for item in list:
+def __findInList(list_data: List, case_sensitive: bool = True, **kwargs) -> Optional[Dict]:
+    for item in list_data:
         i = 0
         for key in kwargs:
             # because we can need to find at the root level and inside ids this
@@ -88,7 +88,7 @@ def __findInList(list, case_sensitive=True, **kwargs):
     return None
 
 
-def findMediaObject(mediaObjectToMatch, listToSearch, matchByTitleAndYear):
+def findMediaObject(mediaObjectToMatch: Dict, listToSearch: List, matchByTitleAndYear: bool) -> Optional[Dict]:
     result = None
     if (
         result is None
@@ -134,7 +134,7 @@ def findMediaObject(mediaObjectToMatch, listToSearch, matchByTitleAndYear):
     return result
 
 
-def regex_tvshow(label):
+def regex_tvshow(label: str) -> Tuple[str, int, int]:
     regexes = [
         # ShowTitle.S01E09; s01e09, s01.e09, s01-e09
         r"(.*?)[._ -]s([0-9]+)[._ -]*e([0-9]+)",
@@ -160,7 +160,7 @@ def regex_tvshow(label):
     return "", -1, -1
 
 
-def regex_year(title):
+def regex_year(title: str) -> Tuple[str, str]:
     prog = re.compile(r"^(.+) \((\d{4})\)$")
     result = prog.match(title)
 
@@ -170,7 +170,7 @@ def regex_year(title):
         return "", ""
 
 
-def findMovieMatchInList(id, listToMatch, idType):
+def findMovieMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
     return next(
         (
             item.to_dict()
@@ -181,7 +181,7 @@ def findMovieMatchInList(id, listToMatch, idType):
     )
 
 
-def findShowMatchInList(id, listToMatch, idType):
+def findShowMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
     return next(
         (
             item.to_dict()
@@ -192,7 +192,7 @@ def findShowMatchInList(id, listToMatch, idType):
     )
 
 
-def findSeasonMatchInList(id, seasonNumber, listToMatch, idType):
+def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType: str) -> Dict:
     show = findShowMatchInList(id, listToMatch, idType)
     logger.debug("findSeasonMatchInList %s" % show)
     if "seasons" in show:
@@ -203,7 +203,7 @@ def findSeasonMatchInList(id, seasonNumber, listToMatch, idType):
     return {}
 
 
-def findEpisodeMatchInList(id, seasonNumber, episodeNumber, list, idType):
+def findEpisodeMatchInList(id: str, seasonNumber: int, episodeNumber: int, list_data: Dict, idType: str) -> Dict:
     season = findSeasonMatchInList(id, seasonNumber, list, idType)
     if season:
         for episode in season["episodes"]:
@@ -213,7 +213,7 @@ def findEpisodeMatchInList(id, seasonNumber, episodeNumber, list, idType):
     return {}
 
 
-def convertDateTimeToUTC(toConvert):
+def convertDateTimeToUTC(toConvert: Optional[str]) -> Optional[str]:
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
         try:
@@ -234,7 +234,7 @@ def convertDateTimeToUTC(toConvert):
         return toConvert
 
 
-def convertUtcToDateTime(toConvert):
+def convertUtcToDateTime(toConvert: Optional[str]) -> Optional[str]:
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
         try:
@@ -251,7 +251,7 @@ def convertUtcToDateTime(toConvert):
         return toConvert
 
 
-def createError(ex):
+def createError(ex: Exception) -> str:
     template = (
         "EXCEPTION Thrown (PythonToCppException) : -->Python callback/script returned the following error<--\n"
         " - NOTE: IGNORING THIS CAN LEAD TO MEMORY LEAKS!\n"
@@ -263,7 +263,7 @@ def createError(ex):
     return template.format(type(ex).__name__, ex.args, traceback.format_exc())
 
 
-def guessBestTraktId(id, type) -> Tuple[dict, str]:
+def guessBestTraktId(id: str, type: str) -> Tuple[Dict, str]:
     data = {}
     id_type = ""
     if id.startswith("tt"):
@@ -281,7 +281,7 @@ def guessBestTraktId(id, type) -> Tuple[dict, str]:
     return data, id_type
 
 
-def best_id(ids, type) -> Tuple[str, str]:
+def best_id(ids: Dict, type: str) -> Tuple[str, str]:
     if "trakt" in ids:
         return ids["trakt"], "trakt"
     elif "imdb" in ids and isMovie(type):
@@ -296,7 +296,7 @@ def best_id(ids, type) -> Tuple[str, str]:
         return ids["slug"], "slug"
 
 
-def checkExcludePath(excludePath, excludePathEnabled, fullpath, x):
+def checkExcludePath(excludePath: str, excludePathEnabled: bool, fullpath: str, x: int) -> bool:
     if excludePath != "" and excludePathEnabled and fullpath.startswith(excludePath):
         logger.debug(
             "checkExclusion(): Video is from location, which is currently set as excluded path %i."
@@ -307,7 +307,7 @@ def checkExcludePath(excludePath, excludePathEnabled, fullpath, x):
         return False
 
 
-def sanitizeMovies(movies):
+def sanitizeMovies(movies: List) -> None:
     # do not remove watched_at and collected_at may cause problems between the
     # 4 sync types (would probably have to deepcopy etc)
     for movie in movies:
@@ -326,7 +326,7 @@ def sanitizeMovies(movies):
 # todo add tests
 
 
-def sanitizeShows(shows):
+def sanitizeShows(shows: Dict) -> None:
     # do not remove watched_at and collected_at may cause problems between the
     # 4 sync types (would probably have to deepcopy etc)
     for show in shows["shows"]:
@@ -345,14 +345,14 @@ def sanitizeShows(shows):
 
 
 def compareMovies(
-    movies_col1,
-    movies_col2,
-    matchByTitleAndYear,
-    watched=False,
-    restrict=False,
-    playback=False,
-    rating=False,
-):
+    movies_col1: List,
+    movies_col2: List,
+    matchByTitleAndYear: bool,
+    watched: bool = False,
+    restrict: bool = False,
+    playback: bool = False,
+    rating: bool = False,
+) -> List:
     movies = []
     for movie_col1 in movies_col1:
         if movie_col1:
@@ -396,8 +396,8 @@ def compareMovies(
 
 
 def compareShows(
-    shows_col1, shows_col2, matchByTitleAndYear, rating=False, restrict=False
-):
+    shows_col1: Dict, shows_col2: Dict, matchByTitleAndYear: bool, rating: bool = False, restrict: bool = False
+) -> Dict:
     shows = []
     # logger.debug("shows_col1 %s" % shows_col1)
     # logger.debug("shows_col2 %s" % shows_col2)
@@ -454,15 +454,15 @@ def compareShows(
 
 # always return shows_col1 if you have enrich it, but don't return shows_col2
 def compareEpisodes(
-    shows_col1,
-    shows_col2,
-    matchByTitleAndYear,
-    watched=False,
-    restrict=False,
-    collected=False,
-    playback=False,
-    rating=False,
-):
+    shows_col1: Dict,
+    shows_col2: Dict,
+    matchByTitleAndYear: bool,
+    watched: bool = False,
+    restrict: bool = False,
+    collected: Union[Dict, bool] = False,
+    playback: bool = False,
+    rating: bool = False,
+) -> Dict:
     shows = []
     # logger.debug("epi shows_col1 %s" % shows_col1)
     # logger.debug("epi shows_col2 %s" % shows_col2)
@@ -640,7 +640,7 @@ def compareEpisodes(
     return result
 
 
-def countEpisodes(shows, collection=True):
+def countEpisodes(shows: Union[Dict, List], collection: bool = True) -> int:
     count = 0
     if "shows" in shows:
         shows = shows["shows"]
@@ -659,7 +659,7 @@ def countEpisodes(shows, collection=True):
     return count
 
 
-def __getEpisodes(seasons):
+def __getEpisodes(seasons: List) -> Dict:
     data = {}
     for season in seasons:
         episodes = {}
@@ -670,7 +670,7 @@ def __getEpisodes(seasons):
     return data
 
 
-def checkIfNewVersion(old, new):
+def checkIfNewVersion(old: str, new: str) -> bool:
     # Check if old is empty, it might be the first time we check
     if old == "":
         return True
@@ -686,7 +686,7 @@ def checkIfNewVersion(old, new):
     return False
 
 
-def _to_sec(timedelta_string, factors=(1, 60, 3600, 86400)):
+def _to_sec(timedelta_string: str, factors: Tuple[int, ...] = (1, 60, 3600, 86400)) -> float:
     """[[[days:]hours:]minutes:]seconds -> seconds"""
     return sum(
         x * y
@@ -694,7 +694,7 @@ def _to_sec(timedelta_string, factors=(1, 60, 3600, 86400)):
     )
 
 
-def _fuzzyMatch(string1, string2, match_percent=55.0):
+def _fuzzyMatch(string1: str, string2: str, match_percent: float = 55.0) -> bool:
     s = difflib.SequenceMatcher(None, string1, string2)
     s.find_longest_match(0, len(string1), 0, len(string2))
     return (

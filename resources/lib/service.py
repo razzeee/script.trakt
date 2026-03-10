@@ -433,7 +433,7 @@ class traktMonitor(xbmc.Monitor):
 
     def onNotification(self, sender, method, data):
         # method looks like Other.NEXTUPWATCHEDSIGNAL
-        if method.split(".")[1].upper() != "NEXTUPWATCHEDSIGNAL":
+        if "." not in method or method.split(".")[1].upper() != "NEXTUPWATCHEDSIGNAL":
             return
 
         logger.debug("Callback received - Upnext skipped to the next episode")
