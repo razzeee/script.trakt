@@ -5,12 +5,13 @@ import logging
 from resources.lib import utilities
 from resources.lib import kodiUtilities
 from resources.lib import sqlitequeue
+from typing import Dict, Optional
 from resources.lib.traktContextMenu import traktContextMenu
 
 logger = logging.getLogger(__name__)
 
 
-def __getArguments():
+def __getArguments() -> Dict:
     data = None
     default_actions = {0: "sync"}
     if len(sys.argv) == 1:
@@ -26,7 +27,7 @@ def __getArguments():
     return data
 
 
-def run():
+def run() -> None:
     args = __getArguments()
     data = {}
 

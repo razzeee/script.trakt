@@ -2,6 +2,7 @@
 
 import copy
 import logging
+from typing import Dict, List, Optional, Any, Union
 
 from resources.lib import kodiUtilities, utilities
 
@@ -9,7 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class SyncMovies:
-    def __init__(self, sync, progress):
+    sync: Any
+
+    def __init__(self, sync: Any, progress: Any) -> None:
         self.sync = sync
         if self.sync.show_notification:
             kodiUtilities.notification(
@@ -73,7 +76,7 @@ class SyncMovies:
         )
         logger.debug("[Movies Sync] Complete.")
 
-    def __kodiLoadMovies(self):
+    def __kodiLoadMovies(self) -> Optional[List[Dict]]:
         self.sync.UpdateProgress(1, line2=kodiUtilities.getString(32079))
 
         logger.debug("[Movies Sync] Getting movie data from Kodi")
@@ -108,7 +111,7 @@ class SyncMovies:
 
         return kodi_movies
 
-    def __traktLoadMovies(self):
+    def __traktLoadMovies(self) -> List[Dict]:
         self.sync.UpdateProgress(
             10,
             line1=kodiUtilities.getString(32079),
@@ -137,7 +140,7 @@ class SyncMovies:
 
         return movies
 
-    def __traktLoadMoviesPlaybackProgress(self, fromPercent, toPercent):
+    def __traktLoadMoviesPlaybackProgress(self, fromPercent: int, toPercent: int) -> Union[Dict, bool]:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playback")
             and not self.sync.IsCanceled()
@@ -173,8 +176,8 @@ class SyncMovies:
             return moviesProgress
 
     def __addMoviesToTraktCollection(
-        self, kodiMovies, traktMovies, fromPercent, toPercent
-    ):
+        self, kodiMovies: List[Dict], traktMovies: List[Dict], fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("add_movies_to_trakt")
             and not self.sync.IsCanceled()
@@ -225,8 +228,8 @@ class SyncMovies:
             )
 
     def __deleteMoviesFromTraktCollection(
-        self, traktMovies, kodiMovies, fromPercent, toPercent
-    ):
+        self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("clean_trakt_movies")
             and not self.sync.IsCanceled()
@@ -280,8 +283,8 @@ class SyncMovies:
             )
 
     def __addMoviesToTraktWatched(
-        self, kodiMovies, traktMovies, fromPercent, toPercent
-    ):
+        self, kodiMovies: List[Dict], traktMovies: List[Dict], fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playcount")
             and not self.sync.IsCanceled()
@@ -349,7 +352,7 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32087) % len(traktMoviesToUpdate),
             )
 
-    def __addMoviesToKodiWatched(self, traktMovies, kodiMovies, fromPercent, toPercent):
+    def __addMoviesToKodiWatched(self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
         if (
             kodiUtilities.getSettingAsBool("kodi_movie_playcount")
             and not self.sync.IsCanceled()
@@ -424,7 +427,7 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32090) % len(kodiMoviesToUpdate),
             )
 
-    def __addMovieProgressToKodi(self, traktMovies, kodiMovies, fromPercent, toPercent):
+    def __addMovieProgressToKodi(self, traktMovies: Dict, kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playback")
             and traktMovies
@@ -510,7 +513,7 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32128) % len(kodiMoviesToUpdate),
             )
 
-    def __syncMovieRatings(self, traktMovies, kodiMovies, fromPercent, toPercent):
+    def __syncMovieRatings(self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktMovies

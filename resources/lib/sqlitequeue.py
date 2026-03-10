@@ -14,7 +14,7 @@ except ImportError:
 import xbmcvfs
 import xbmcaddon
 import logging
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,10 @@ class SqliteQueue(object):
             )
     _purge = 'DELETE FROM queue'
 
-    def __init__(self):
+    path: str
+    _connection_cache: Dict[int, sqlite3.Connection]
+
+    def __init__(self) -> None:
         self.path = xbmcvfs.translatePath(__addon__.getAddonInfo("profile"))
         if not xbmcvfs.exists(self.path):
             logger.debug("Making path structure: %s" % repr(self.path))

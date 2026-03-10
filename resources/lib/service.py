@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import threading
 import logging
+from typing import Any, Dict, Optional, Callable
 import xbmc
 import time
 import xbmcgui
@@ -22,19 +23,19 @@ logger = logging.getLogger(__name__)
 
 
 class traktService:
-    scrobbler = None
-    updateTagsThread = None
-    syncThread = None
-    dispatchQueue = sqlitequeue.SqliteQueue()
+    scrobbler: Optional[Scrobbler] = None
+    updateTagsThread: Optional[threading.Thread] = None
+    syncThread: Optional[threading.Thread] = None
+    dispatchQueue: sqlitequeue.SqliteQueue = sqlitequeue.SqliteQueue()
 
-    def __init__(self):
+    def __init__(self) -> None:
         threading.Thread.name = "trakt"
 
-    def _dispatchQueue(self, data):
+    def _dispatchQueue(self, data: Dict) -> None:
         logger.debug("Queuing for dispatch: %s" % data)
         self.dispatchQueue.append(data)
 
-    def _dispatch(self, data):
+    def _dispatch(self, data: Dict) -> None:
         try:
             logger.debug("Dispatch: %s" % data)
             action = data["action"]
@@ -89,7 +90,7 @@ class traktService:
             message = utilities.createError(ex)
             logger.fatal(message)
 
-    def run(self):
+    def run(self) -> None:
         startup_delay = kodiUtilities.getSettingAsInt("startup_delay")
         if startup_delay:
             logger.debug("Delaying startup by %d seconds." % startup_delay)
@@ -138,7 +139,7 @@ class traktService:
         if self.syncThread.is_alive():
             self.syncThread.join()
 
-    def doManualRating(self, data):
+    def doManualRating(self, data: Dict) -> None:
         action = data["action"]
         media_type = data["media_type"]
         summaryInfo = None
@@ -234,7 +235,7 @@ class traktService:
                 "doManualRating(): Summary info was empty, possible problem retrieving data from Trakt.tv"
             )
 
-    def doAddToWatchlist(self, data):
+    def doAddToWatchlist(self, data: Dict) -> None:
         media_type = data["media_type"]
 
         if utilities.isMovie(media_type):
@@ -303,7 +304,7 @@ class traktService:
             else:
                 kodiUtilities.notification(kodiUtilities.getString(32166), s)
 
-    def doMarkWatched(self, data):
+    def doMarkWatched(self, data: Dict) -> None:
         media_type = data["media_type"]
 
         if utilities.isMovie(media_type):
@@ -386,7 +387,7 @@ class traktService:
 
                 self.addEpisodesToHistory(summaryInfo, s)
 
-    def addEpisodesToHistory(self, summaryInfo, s):
+    def addEpisodesToHistory(self, summaryInfo: Dict, s: str) -> None:
         if len(summaryInfo["shows"][0]["seasons"][0]["episodes"]) > 0:
             logger.debug("doMarkWatched(): %s" % str(summaryInfo))
 
@@ -399,22 +400,24 @@ class traktService:
             else:
                 kodiUtilities.notification(kodiUtilities.getString(32114), s)
 
-    def doSync(self, manual=False, silent=False, library="all"):
+    def doSync(self, manual: bool = False, silent: bool = False, library: str = "all") -> None:
         self.syncThread = syncThread(manual, silent, library)
         self.syncThread.start()
 
 
 class syncThread(threading.Thread):
-    _isManual = False
+    _isManual: bool = False
+    _runSilent: bool = False
+    _library: str = "all"
 
-    def __init__(self, isManual=False, runSilent=False, library="all"):
+    def __init__(self, isManual: bool = False, runSilent: bool = False, library: str = "all") -> None:
         threading.Thread.__init__(self)
         self.name = "trakt-sync"
         self._isManual = isManual
         self._runSilent = runSilent
         self._library = library
 
-    def run(self):
+    def run(self) -> None:
         sync = Sync(
             show_progress=self._isManual,
             run_silent=self._runSilent,
@@ -425,13 +428,16 @@ class syncThread(threading.Thread):
 
 
 class traktMonitor(xbmc.Monitor):
-    def __init__(self, *args, **kwargs):
+    action: Callable[[Dict], None]
+    scanning_video: bool = False
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.action = kwargs["action"]
         # xbmc.getCondVisibility('Library.IsScanningVideo') returns false when cleaning during update...
         self.scanning_video = False
         logger.debug("[traktMonitor] Initalized.")
 
-    def onNotification(self, sender, method, data):
+    def onNotification(self, sender: str, method: str, data: str) -> None:
         # method looks like Other.NEXTUPWATCHEDSIGNAL
         if "." not in method or method.split(".")[1].upper() != "NEXTUPWATCHEDSIGNAL":
             return
@@ -441,7 +447,7 @@ class traktMonitor(xbmc.Monitor):
         self.action(data)
 
     # called when database gets updated and return video or music to indicate which DB has been changed
-    def onScanFinished(self, database):
+    def onScanFinished(self, database: str) -> None:
         if database == "video":
             self.scanning_video = False
             logger.debug("[traktMonitor] onScanFinished(database: %s)" % database)
@@ -449,29 +455,32 @@ class traktMonitor(xbmc.Monitor):
             self.action(data)
 
     # called when database update starts and return video or music to indicate which DB is being updated
-    def onDatabaseScanStarted(self, database):
+    def onDatabaseScanStarted(self, database: str) -> None:
         if database == "video":
             self.scanning_video = True
             logger.debug(
                 "[traktMonitor] onDatabaseScanStarted(database: %s)" % database
             )
 
-    def onCleanFinished(self, database):
+    def onCleanFinished(self, database: str) -> None:
         if database == "video" and not self.scanning_video:  # Ignore clean on update.
             data = {"action": "databaseCleaned"}
             self.action(data)
 
 
 class traktPlayer(xbmc.Player):
-    _playing = False
-    plIndex = None
+    _playing: bool = False
+    plIndex: Optional[int] = None
+    action: Callable[[Dict], None]
+    type: Optional[str] = None
+    id: Optional[int] = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.action = kwargs["action"]
         logger.debug("[traktPlayer] Initalized.")
 
     # called when kodi starts playing a file
-    def onAVStarted(self):
+    def onAVStarted(self) -> None:
         xbmc.sleep(1000)
         self.type = None
         self.id = None
@@ -940,7 +949,7 @@ class traktPlayer(xbmc.Player):
                 self.action(data)
 
     # called when kodi stops playing a file
-    def onPlayBackEnded(self):
+    def onPlayBackEnded(self) -> None:
         xbmcgui.Window(10000).clearProperty("script.trakt.ids")
         xbmcgui.Window(10000).clearProperty("script.trakt.paused")
         if self._playing:
@@ -951,7 +960,7 @@ class traktPlayer(xbmc.Player):
             self.action(data)
 
     # called when user stops kodi playing a file
-    def onPlayBackStopped(self):
+    def onPlayBackStopped(self) -> None:
         xbmcgui.Window(10000).clearProperty("script.trakt.ids")
         xbmcgui.Window(10000).clearProperty("script.trakt.paused")
         if self._playing:
@@ -964,7 +973,7 @@ class traktPlayer(xbmc.Player):
             self.action(data)
 
     # called when user pauses a playing file
-    def onPlayBackPaused(self):
+    def onPlayBackPaused(self) -> None:
         if self._playing:
             logger.debug(
                 "[traktPlayer] onPlayBackPaused() - %s" % self.isPlayingVideo()
@@ -973,7 +982,7 @@ class traktPlayer(xbmc.Player):
             self.action(data)
 
     # called when user resumes a paused file
-    def onPlayBackResumed(self):
+    def onPlayBackResumed(self) -> None:
         if self._playing:
             logger.debug(
                 "[traktPlayer] onPlayBackResumed() - %s" % self.isPlayingVideo()
@@ -982,12 +991,12 @@ class traktPlayer(xbmc.Player):
             self.action(data)
 
     # called when user queues the next item
-    def onQueueNextItem(self):
+    def onQueueNextItem(self) -> None:
         if self._playing:
             logger.debug("[traktPlayer] onQueueNextItem() - %s" % self.isPlayingVideo())
 
     # called when players speed changes. (eg. user FF/RW)
-    def onPlayBackSpeedChanged(self, speed):
+    def onPlayBackSpeedChanged(self, speed: int) -> None:
         if self._playing:
             logger.debug(
                 "[traktPlayer] onPlayBackSpeedChanged(speed: %s) - %s"
@@ -995,7 +1004,7 @@ class traktPlayer(xbmc.Player):
             )
 
     # called when user seeks to a time
-    def onPlayBackSeek(self, time, offset):
+    def onPlayBackSeek(self, time: int, offset: int) -> None:
         if self._playing:
             logger.debug(
                 "[traktPlayer] onPlayBackSeek(time: %s, offset: %s) - %s"
@@ -1005,7 +1014,7 @@ class traktPlayer(xbmc.Player):
             self.action(data)
 
     # called when user performs a chapter seek
-    def onPlayBackSeekChapter(self, chapter):
+    def onPlayBackSeekChapter(self, chapter: int) -> None:
         if self._playing:
             logger.debug(
                 "[traktPlayer] onPlayBackSeekChapter(chapter: %s) - %s"
