@@ -567,3 +567,68 @@ def test_countEpisodes2():
     )
 
     assert utilities.countEpisodes(data1) == 5
+
+
+def test_to_sec():
+    assert utilities._to_sec("1:01:01") == 3661
+    assert utilities._to_sec("01:01") == 61
+    assert utilities._to_sec("01") == 1
+
+
+def test_fuzzyMatch():
+    assert utilities._fuzzyMatch("The Dark Knight", "The Dark Knight")
+    assert utilities._fuzzyMatch("The Dark Knight", "Dark Knight")
+    assert not utilities._fuzzyMatch("The Dark Knight", "The Joker")
+
+
+def test_sanitizeShows():
+    shows = {
+        "shows": [
+            {
+                "title": "Batman",
+                "seasons": [
+                    {
+                        "number": 1,
+                        "episodes": [
+                            {
+                                "number": 1,
+                                "collected": True,
+                                "watched": True,
+                                "season": 1,
+                                "plays": 1,
+                                "ids": {"trakt": 1, "episodeid": 1},
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
+    }
+    utilities.sanitizeShows(shows)
+    episode = shows["shows"][0]["seasons"][0]["episodes"][0]
+    assert "collected" not in episode
+    assert "watched" not in episode
+    assert "season" not in episode
+    assert "plays" not in episode
+    assert "episodeid" not in episode["ids"]
+
+
+def test_convertDateTimeToUTC():
+    # 2023-10-27 10:00:00 UTC
+    utc_str = utilities.convertDateTimeToUTC("2023-10-27 10:00:00")
+    assert "2023-10-27" in utc_str
+
+
+def test_convertUtcToDateTime():
+    # 2023-10-27T10:00:00.000Z
+    local_str = utilities.convertUtcToDateTime("2023-10-27T10:00:00.000Z")
+    assert "2023-10-27" in local_str
+
+
+def test_createError():
+    try:
+        raise ValueError("test error")
+    except ValueError as e:
+        error_msg = utilities.createError(e)
+        assert "ValueError" in error_msg
+        assert "test error" in error_msg
