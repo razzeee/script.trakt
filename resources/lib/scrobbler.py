@@ -86,23 +86,26 @@ class Scrobbler:
                             self.videosToRate.append(self.curVideoInfo)
                             # update current information
                             self.curMPEpisode = epIndex
-                            self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
-                                "episode",
-                                kodiUtilities.getEpisodeDetailsFromKodi(
-                                    self.curVideo["multi_episode_data"][
-                                        self.curMPEpisode
-                                    ],
-                                    [
-                                        "showtitle",
-                                        "season",
-                                        "episode",
-                                        "tvshowid",
-                                        "uniqueid",
-                                        "file",
-                                        "playcount",
-                                    ],
-                                ),
+                            episode_details = kodiUtilities.getEpisodeDetailsFromKodi(
+                                self.curVideo["multi_episode_data"][
+                                    self.curMPEpisode
+                                ],
+                                [
+                                    "showtitle",
+                                    "season",
+                                    "episode",
+                                    "tvshowid",
+                                    "uniqueid",
+                                    "file",
+                                    "playcount",
+                                ],
                             )
+                            if episode_details:
+                                self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
+                                    "episode", episode_details
+                                )
+                            else:
+                                self.curVideoInfo = None
 
                             logger.debug(
                                 "Multi episode transition - call start for next episode"
@@ -257,21 +260,24 @@ class Scrobbler:
             self.isMultiPartEpisode = False
             if utilities.isMovie(self.curVideo["type"]):
                 if "id" in self.curVideo:
-                    self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
-                        "movie",
-                        kodiUtilities.getMovieDetailsFromKodi(
-                            self.curVideo["id"],
-                            [
-                                "uniqueid",
-                                "imdbnumber",
-                                "title",
-                                "year",
-                                "file",
-                                "lastplayed",
-                                "playcount",
-                            ],
-                        ),
+                    movieDetailsKodi = kodiUtilities.getMovieDetailsFromKodi(
+                        self.curVideo["id"],
+                        [
+                            "uniqueid",
+                            "imdbnumber",
+                            "title",
+                            "year",
+                            "file",
+                            "lastplayed",
+                            "playcount",
+                        ],
                     )
+                    if movieDetailsKodi:
+                        self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
+                            "movie", movieDetailsKodi
+                        )
+                    else:
+                        self.curVideoInfo = None
                 elif "video_ids" in self.curVideo:
                     self.curVideoInfo = {"ids": self.curVideo["video_ids"]}
                 elif "title" in self.curVideo and "year" in self.curVideo:
@@ -297,19 +303,22 @@ class Scrobbler:
                             "playcount",
                         ],
                     )
-                    title, year = utilities.regex_year(episodeDetailsKodi["showtitle"])
-                    if not year:
-                        self.traktShowSummary = {
-                            "title": episodeDetailsKodi["showtitle"],
-                            "year": episodeDetailsKodi["year"],
-                        }
+                    if episodeDetailsKodi:
+                        title, year = utilities.regex_year(episodeDetailsKodi["showtitle"])
+                        if not year:
+                            self.traktShowSummary = {
+                                "title": episodeDetailsKodi["showtitle"],
+                                "year": episodeDetailsKodi.get("year"),
+                            }
+                        else:
+                            self.traktShowSummary = {"title": title, "year": year}
+                        if "show_ids" in episodeDetailsKodi:
+                            self.traktShowSummary["ids"] = episodeDetailsKodi["show_ids"]
+                        self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
+                            "episode", episodeDetailsKodi
+                        )
                     else:
-                        self.traktShowSummary = {"title": title, "year": year}
-                    if "show_ids" in episodeDetailsKodi:
-                        self.traktShowSummary["ids"] = episodeDetailsKodi["show_ids"]
-                    self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
-                        "episode", episodeDetailsKodi
-                    )
+                        self.curVideoInfo = None
                     if not self.curVideoInfo:  # getEpisodeDetailsFromKodi was empty
                         logger.debug(
                             "Episode details from Kodi was empty, ID (%d) seems invalid, aborting further scrobbling of this episode."
@@ -399,10 +408,10 @@ class Scrobbler:
                 }
                 result["episode"]["season"] = self.curVideoInfo["season"]
 
-            if "id" in self.curVideo:
-                if utilities.isMovie(self.curVideo["type"]):
+            if result and "id" in self.curVideo:
+                if utilities.isMovie(self.curVideo["type"]) and "movie" in result:
                     result["movie"]["movieid"] = self.curVideo["id"]
-                elif utilities.isEpisode(self.curVideo["type"]):
+                elif utilities.isEpisode(self.curVideo["type"]) and "episode" in result:
                     result["episode"]["episodeid"] = self.curVideo["id"]
 
             self.__preFetchUserRatings(result)
