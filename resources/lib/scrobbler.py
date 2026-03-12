@@ -180,9 +180,9 @@ class Scrobbler:
                                             }
 
                                         if "year" in self.curVideo:
-                                            self.traktShowSummary["year"] = (
-                                                self.curVideo["year"]
-                                            )
+                                            self.traktShowSummary[
+                                                "year"
+                                            ] = self.curVideo["year"]
                                 else:
                                     logger.debug(
                                         "Scrobble Couldn't set curVideoInfo/traktShowSummary for episode type"

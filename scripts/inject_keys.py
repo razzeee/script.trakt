@@ -6,7 +6,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from resources.lib.obfuscation import deobfuscate, obfuscate
 
-
 def main():
     client_id = os.environ.get("TRAKT_CLIENT_ID")
     client_secret = os.environ.get("TRAKT_CLIENT_SECRET")
@@ -43,7 +42,6 @@ def main():
         f.write(new_content)
 
     print(f"Successfully injected obfuscated keys into {target_file}")
-
 
 if __name__ == "__main__":
     main()

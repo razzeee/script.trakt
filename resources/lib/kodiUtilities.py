@@ -20,10 +20,7 @@ REGEX_URL = "(^https?://)(.+)"
 
 
 def notification(
-    header: str,
-    message: str,
-    time: int = 5000,
-    icon: str = __addon__.getAddonInfo("icon"),
+    header: str, message: str, time: int = 5000, icon: str = __addon__.getAddonInfo("icon")
 ) -> None:
     xbmcgui.Dialog().notification(header, message, icon, time)
 
@@ -135,9 +132,7 @@ def checkExclusion(fullpath: str) -> bool:
     return found
 
 
-def kodiRpcToTraktMediaObject(
-    type: str, data: Dict, mode: str = "collected"
-) -> Optional[Dict]:
+def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") -> Optional[Dict]:
     if type == "show":
         if "uniqueid" in data:
             data["ids"] = data.pop("uniqueid")
