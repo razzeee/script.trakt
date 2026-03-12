@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.trakt" name="Trakt" version="3.8.1" provider-name="Trakt.tv, Razzeee">
+<addon id="script.trakt" name="Trakt" version="3.8.2" provider-name="Trakt.tv, Razzeee">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.trakt" version="4.4.0"/>
@@ -15,7 +15,10 @@
         <forum>https://forum.kodi.tv/showthread.php?tid=220547</forum>
         <website>https://trakt.tv</website>
         <source>https://github.com/trakt/script.trakt</source>
-        <news>- Changes to user agent and api key handling</news>
+        <news>- Fix: Handle empty Kodi media details
+- Fix functional bugs in utilities and scrobbler
+- Add unit tests for utilities and obfuscation modules
+- Improve type hints</news>
         <assets>
             <icon>icon.png</icon>
             <fanart>fanart.jpg</fanart>

@@ -1,3 +1,9 @@
+version 3.8.2
+- Fix: Handle empty Kodi media details
+- Fix functional bugs in utilities and scrobbler
+- Add unit tests for utilities and obfuscation modules
+- Improve type hints
+
 version 3.8.1
 - Changes to user agent and api key handling
 
