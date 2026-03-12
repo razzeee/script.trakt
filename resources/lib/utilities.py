@@ -63,7 +63,9 @@ def getFormattedItemName(type: str, info: Dict) -> str:
     return s
 
 
-def __findInList(list_data: List, case_sensitive: bool = True, **kwargs) -> Optional[Dict]:
+def __findInList(
+    list_data: List, case_sensitive: bool = True, **kwargs
+) -> Optional[Dict]:
     for item in list_data:
         i = 0
         for key in kwargs:
@@ -88,7 +90,9 @@ def __findInList(list_data: List, case_sensitive: bool = True, **kwargs) -> Opti
     return None
 
 
-def findMediaObject(mediaObjectToMatch: Dict, listToSearch: List, matchByTitleAndYear: bool) -> Optional[Dict]:
+def findMediaObject(
+    mediaObjectToMatch: Dict, listToSearch: List, matchByTitleAndYear: bool
+) -> Optional[Dict]:
     result = None
     if (
         result is None
@@ -171,24 +175,30 @@ def regex_year(title: str) -> Tuple[str, str]:
 
 
 def findMovieMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
-    for _, item in list(listToMatch.items()):
-        item_keys = getattr(item, "keys", [])
-        for key_tuple in item_keys:
-            if idType == key_tuple[0] and str(key_tuple[1]) == str(id):
-                return item.to_dict()
-    return {}
+    return next(
+        (
+            item.to_dict()
+            for key, item in list(listToMatch.items())
+            if any(idType in key for key, value in item.keys if str(value) == str(id))
+        ),
+        {},
+    )
 
 
 def findShowMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
-    for _, item in list(listToMatch.items()):
-        item_keys = getattr(item, "keys", [])
-        for key_tuple in item_keys:
-            if idType == key_tuple[0] and str(key_tuple[1]) == str(id):
-                return item.to_dict()
-    return {}
+    return next(
+        (
+            item.to_dict()
+            for key, item in list(listToMatch.items())
+            if any(idType in key for key, value in item.keys if str(value) == str(id))
+        ),
+        {},
+    )
 
 
-def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType: str) -> Dict:
+def findSeasonMatchInList(
+    id: str, seasonNumber: int, listToMatch: Dict, idType: str
+) -> Dict:
     show = findShowMatchInList(id, listToMatch, idType)
     logger.debug("findSeasonMatchInList %s" % show)
     if "seasons" in show:
@@ -199,7 +209,9 @@ def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType:
     return {}
 
 
-def findEpisodeMatchInList(id: str, seasonNumber: int, episodeNumber: int, list_data: Dict, idType: str) -> Dict:
+def findEpisodeMatchInList(
+    id: str, seasonNumber: int, episodeNumber: int, list_data: Dict, idType: str
+) -> Dict:
     season = findSeasonMatchInList(id, seasonNumber, list_data, idType)
     if season:
         for episode in season["episodes"]:
@@ -292,7 +304,9 @@ def best_id(ids: Dict, type: str) -> Tuple[str, str]:
         return ids["slug"], "slug"
 
 
-def checkExcludePath(excludePath: str, excludePathEnabled: bool, fullpath: str, x: int) -> bool:
+def checkExcludePath(
+    excludePath: str, excludePathEnabled: bool, fullpath: str, x: int
+) -> bool:
     if excludePath != "" and excludePathEnabled and fullpath.startswith(excludePath):
         logger.debug(
             "checkExclusion(): Video is from location, which is currently set as excluded path %i."
@@ -392,7 +406,11 @@ def compareMovies(
 
 
 def compareShows(
-    shows_col1: Dict, shows_col2: Dict, matchByTitleAndYear: bool, rating: bool = False, restrict: bool = False
+    shows_col1: Dict,
+    shows_col2: Dict,
+    matchByTitleAndYear: bool,
+    rating: bool = False,
+    restrict: bool = False,
 ) -> Dict:
     shows = []
     # logger.debug("shows_col1 %s" % shows_col1)
@@ -682,7 +700,9 @@ def checkIfNewVersion(old: str, new: str) -> bool:
     return False
 
 
-def _to_sec(timedelta_string: str, factors: Tuple[int, ...] = (1, 60, 3600, 86400)) -> float:
+def _to_sec(
+    timedelta_string: str, factors: Tuple[int, ...] = (1, 60, 3600, 86400)
+) -> float:
     """[[[days:]hours:]minutes:]seconds -> seconds"""
     return sum(
         x * y

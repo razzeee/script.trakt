@@ -219,7 +219,11 @@ class SyncEpisodes:
         self.sync.UpdateProgress(10, line2=kodiUtilities.getString(32098))
         return resultCollected, resultWatched
 
-    def __traktLoadShows(self) -> Tuple[Union[Dict, bool], Union[Dict, bool], Union[Dict, bool], Union[Dict, bool]]:
+    def __traktLoadShows(
+        self,
+    ) -> Tuple[
+        Union[Dict, bool], Union[Dict, bool], Union[Dict, bool], Union[Dict, bool]
+    ]:
         self.sync.UpdateProgress(
             10,
             line1=kodiUtilities.getString(32099),
@@ -327,7 +331,9 @@ class SyncEpisodes:
 
         return showsCollected, showsWatched, showsRated, episodesRated
 
-    def __traktLoadShowsPlaybackProgress(self, fromPercent: int, toPercent: int) -> Union[Dict, bool, None]:
+    def __traktLoadShowsPlaybackProgress(
+        self, fromPercent: int, toPercent: int
+    ) -> Union[Dict, bool, None]:
         if (
             kodiUtilities.getSettingAsBool("trakt_episode_playback")
             and not self.sync.IsCanceled()
@@ -562,7 +568,9 @@ class SyncEpisodes:
                 if x > 0:
                     y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                     self.sync.UpdateProgress(
-                        int(y), line2=title, line3=kodiUtilities.getString(32073) % epCount
+                        int(y),
+                        line2=title,
+                        line3=kodiUtilities.getString(32073) % epCount,
                     )
 
                 s = {"shows": [show]}
@@ -582,7 +590,12 @@ class SyncEpisodes:
             )
 
     def __addEpisodesToKodiWatched(
-        self, traktShows: Dict, kodiShows: Dict, kodiShowsCollected: Dict, fromPercent: int, toPercent: int
+        self,
+        traktShows: Dict,
+        kodiShows: Dict,
+        kodiShowsCollected: Dict,
+        fromPercent: int,
+        toPercent: int,
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("kodi_episode_playcount")
@@ -670,7 +683,9 @@ class SyncEpisodes:
                 toPercent, line2=kodiUtilities.getString(32109) % len(episodes)
             )
 
-    def __addEpisodeProgressToKodi(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __addEpisodeProgressToKodi(
+        self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_episode_playback")
             and traktShows
@@ -774,7 +789,9 @@ class SyncEpisodes:
                 toPercent, line2=kodiUtilities.getString(32131) % len(episodes)
             )
 
-    def __syncShowsRatings(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __syncShowsRatings(
+        self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktShows
@@ -873,7 +890,9 @@ class SyncEpisodes:
                     toPercent, line2=kodiUtilities.getString(32178) % len(shows)
                 )
 
-    def __syncEpisodeRatings(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __syncEpisodeRatings(
+        self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktShows

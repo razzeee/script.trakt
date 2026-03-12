@@ -32,7 +32,8 @@ class DeviceAuthDialog(xbmcgui.WindowXMLDialog):
         authcode = self.getControl(AUTHCODE_LABEL)
         warning = self.getControl(WARNING_LABEL)
         instuction.setLabel(
-            getString(32159).format("[COLOR red]" + self.url + "[/COLOR]"))
+            getString(32159).format("[COLOR red]" + self.url + "[/COLOR]")
+        )
         authcode.setLabel(self.code)
         warning.setLabel(getString(32162))
 
@@ -47,15 +48,15 @@ class DeviceAuthDialog(xbmcgui.WindowXMLDialog):
         pass
 
     def onClick(self, control: xbmcgui.Control) -> None:
-        logger.debug('onClick: %s' % (control))
+        logger.debug("onClick: %s" % (control))
 
         if control == LATER_BUTTON:
             notification(getString(32157), getString(32150), 5000)
-            setSetting('last_reminder', str(int(time.time())))
+            setSetting("last_reminder", str(int(time.time())))
 
         if control == NEVER_BUTTON:
             notification(getString(32157), getString(32151), 5000)
-            setSetting('last_reminder', '-1')
+            setSetting("last_reminder", "-1")
 
         if control in [LATER_BUTTON, NEVER_BUTTON]:
             self.close()

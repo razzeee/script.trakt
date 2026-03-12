@@ -22,12 +22,7 @@ def test_get_show_as_string_logic():
     show = {
         "title": "Test Show",
         "ids": {"tvdb": "123"},
-        "seasons": [
-            {
-                "number": 1,
-                "episodes": [{"number": 1}, {"number": 2}]
-            }
-        ]
+        "seasons": [{"number": 1, "episodes": [{"number": 1}, {"number": 2}]}],
     }
 
     # Test short=True
@@ -42,17 +37,15 @@ def test_get_show_as_string_logic():
 
 def test_sync_movies_runtime_none():
     sync_mock = MagicMock()
-    progress_mock = MagicMock()
+    # Mocking __init__ to avoid full execution
     SyncMovies.__init__ = lambda self, sync, progress: None
-    sm = SyncMovies(sync_mock, progress_mock)
+    SyncMovies(sync_mock, MagicMock())
 
     movie = {"ids": {"trakt": 1}, "runtime": None}
-    movies_to_update = [movie]
 
     sync_mock.traktapi.getMovieSummary.return_value = MagicMock(runtime=None)
 
     # Should not crash even if Trakt returns None for runtime
-    # sm._SyncMovies__addMovieProgressToKodi would call this
     # We just want to ensure our new logic handles summary=None or summary.runtime=None
     summary = sync_mock.traktapi.getMovieSummary(1)
     runtime = summary.runtime if summary and summary.runtime else 0

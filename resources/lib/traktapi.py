@@ -169,7 +169,9 @@ class traktAPI(object):
         else:
             setSetting("user", "")
 
-    def scrobbleEpisode(self, show: Dict, episode: Dict, percent: float, status: str) -> Optional[Dict]:
+    def scrobbleEpisode(
+        self, show: Dict, episode: Dict, percent: float, status: str
+    ) -> Optional[Dict]:
         result = None
 
         with Trakt.configuration.oauth.from_response(self.authorization):
@@ -278,14 +280,18 @@ class traktAPI(object):
                 Trakt["sync/ratings"].shows(store=ratings)
         return findShowMatchInList(showId, ratings, idType)
 
-    def getSeasonRatingForUser(self, showId: str, season: int, idType: str = "tvdb") -> Dict:
+    def getSeasonRatingForUser(
+        self, showId: str, season: int, idType: str = "tvdb"
+    ) -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
                 Trakt["sync/ratings"].seasons(store=ratings)
         return findSeasonMatchInList(showId, season, ratings, idType)
 
-    def getEpisodeRatingForUser(self, showId: str, season: int, episode: int, idType: str = "tvdb") -> Dict:
+    def getEpisodeRatingForUser(
+        self, showId: str, season: int, episode: int, idType: str = "tvdb"
+    ) -> Dict:
         ratings = {}
         with Trakt.configuration.oauth.from_response(self.authorization):
             with Trakt.configuration.http(retry=True):
@@ -322,7 +328,7 @@ class traktAPI(object):
                 playback = Trakt["sync/playback"].movies(exceptions=True)
 
                 for _, item in list(playback.items()):
-                    if isinstance(item, Movie):
+                    if type(item) is Movie:
                         progressMovies.append(item)
 
         return progressMovies
@@ -336,7 +342,7 @@ class traktAPI(object):
                 playback = Trakt["sync/playback"].episodes(exceptions=True)
 
                 for _, item in list(playback.items()):
-                    if isinstance(item, Show):
+                    if type(item) is Show:
                         progressEpisodes.append(item)
 
         return progressEpisodes
@@ -353,7 +359,9 @@ class traktAPI(object):
         with Trakt.configuration.http(retry=True, timeout=90):
             return Trakt["shows"].seasons(showId, extended="episodes")
 
-    def getEpisodeSummary(self, showId: str, season: int, episode: int, extended: Optional[str] = None) -> Any:
+    def getEpisodeSummary(
+        self, showId: str, season: int, episode: int, extended: Optional[str] = None
+    ) -> Any:
         with Trakt.configuration.http(retry=True):
             return Trakt["shows"].episode(showId, season, episode, extended=extended)
 
@@ -364,7 +372,9 @@ class traktAPI(object):
                 result = [result]
             return result
 
-    def getTextQuery(self, query: str, type: str, year: Optional[int]) -> Optional[List]:
+    def getTextQuery(
+        self, query: str, type: str, year: Optional[int]
+    ) -> Optional[List]:
         with Trakt.configuration.http(retry=True, timeout=90):
             result = Trakt["search"].query(query, type, year)
             if result and not isinstance(result, list):

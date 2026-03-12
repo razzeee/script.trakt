@@ -1,2 +1,2 @@
-# Ignore line length for now
+[lint]
 ignore = ["E501"]
