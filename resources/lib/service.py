@@ -400,7 +400,9 @@ class traktService:
             else:
                 kodiUtilities.notification(kodiUtilities.getString(32114), s)
 
-    def doSync(self, manual: bool = False, silent: bool = False, library: str = "all") -> None:
+    def doSync(
+        self, manual: bool = False, silent: bool = False, library: str = "all"
+    ) -> None:
         self.syncThread = syncThread(manual, silent, library)
         self.syncThread.start()
 
@@ -410,7 +412,9 @@ class syncThread(threading.Thread):
     _runSilent: bool = False
     _library: str = "all"
 
-    def __init__(self, isManual: bool = False, runSilent: bool = False, library: str = "all") -> None:
+    def __init__(
+        self, isManual: bool = False, runSilent: bool = False, library: str = "all"
+    ) -> None:
         threading.Thread.__init__(self)
         self.name = "trakt-sync"
         self._isManual = isManual

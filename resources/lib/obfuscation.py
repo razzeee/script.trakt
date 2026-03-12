@@ -7,6 +7,7 @@ def deobfuscate(data: Union[List[int], str]) -> str:
         return ""
     return "".join(chr(b ^ 0x42) for b in data)
 
+
 def obfuscate(data: str) -> List[int]:
     if not data:
         return []

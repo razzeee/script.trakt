@@ -140,7 +140,9 @@ class SyncMovies:
 
         return movies
 
-    def __traktLoadMoviesPlaybackProgress(self, fromPercent: int, toPercent: int) -> Union[Dict, bool]:
+    def __traktLoadMoviesPlaybackProgress(
+        self, fromPercent: int, toPercent: int
+    ) -> Union[Dict, bool]:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playback")
             and not self.sync.IsCanceled()
@@ -161,10 +163,11 @@ class SyncMovies:
             moviesProgress = {"movies": []}
             for movie in traktProgressMovies:
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
-                self.sync.UpdateProgress(
-                    int(y), line2=kodiUtilities.getString(32123) % (i, x)
-                )
+                if x > 0:
+                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    self.sync.UpdateProgress(
+                        int(y), line2=kodiUtilities.getString(32123) % (i, x)
+                    )
 
                 # will keep the data in python structures - just like the KODI response
                 movie = movie.to_dict()
@@ -176,7 +179,11 @@ class SyncMovies:
             return moviesProgress
 
     def __addMoviesToTraktCollection(
-        self, kodiMovies: List[Dict], traktMovies: List[Dict], fromPercent: int, toPercent: int
+        self,
+        kodiMovies: List[Dict],
+        traktMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("add_movies_to_trakt")
@@ -228,7 +235,11 @@ class SyncMovies:
             )
 
     def __deleteMoviesFromTraktCollection(
-        self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int
+        self,
+        traktMovies: List[Dict],
+        kodiMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("clean_trakt_movies")
@@ -283,7 +294,11 @@ class SyncMovies:
             )
 
     def __addMoviesToTraktWatched(
-        self, kodiMovies: List[Dict], traktMovies: List[Dict], fromPercent: int, toPercent: int
+        self,
+        kodiMovies: List[Dict],
+        traktMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playcount")
@@ -330,12 +345,13 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
-                self.sync.UpdateProgress(
-                    int(y),
-                    line2=kodiUtilities.getString(32093)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
-                )
+                if x > 0:
+                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    self.sync.UpdateProgress(
+                        int(y),
+                        line2=kodiUtilities.getString(32093)
+                        % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    )
 
                 params = {"movies": chunk}
                 # logger.debug("moviechunk: %s" % params)
@@ -352,7 +368,13 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32087) % len(traktMoviesToUpdate),
             )
 
-    def __addMoviesToKodiWatched(self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
+    def __addMoviesToKodiWatched(
+        self,
+        traktMovies: List[Dict],
+        kodiMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("kodi_movie_playcount")
             and not self.sync.IsCanceled()
@@ -413,12 +435,13 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
-                self.sync.UpdateProgress(
-                    int(y),
-                    line2=kodiUtilities.getString(32089)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
-                )
+                if x > 0:
+                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    self.sync.UpdateProgress(
+                        int(y),
+                        line2=kodiUtilities.getString(32089)
+                        % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    )
 
                 kodiUtilities.kodiJsonRequest(chunk)
 
@@ -427,7 +450,13 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32090) % len(kodiMoviesToUpdate),
             )
 
-    def __addMovieProgressToKodi(self, traktMovies: Dict, kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
+    def __addMovieProgressToKodi(
+        self,
+        traktMovies: Dict,
+        kodiMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_movie_playback")
             and traktMovies
@@ -463,13 +492,12 @@ class SyncMovies:
             # If library item doesn't have a runtime set get it from
             # Trakt to avoid later using 0 in runtime * progress_pct.
             for movie in kodiMoviesToUpdate:
-                if not movie["runtime"]:
-                    movie["runtime"] = (
-                        self.sync.traktapi.getMovieSummary(
-                            movie["ids"]["trakt"], extended="full"
-                        ).runtime
-                        * 60
+                if not movie.get("runtime"):
+                    summary = self.sync.traktapi.getMovieSummary(
+                        movie["ids"]["trakt"], extended="full"
                     )
+                    runtime = summary.runtime if summary and summary.runtime else 0
+                    movie["runtime"] = runtime * 60
             # need to calculate the progress in int from progress in percent from Trakt
             # split movie list into chunks of 50
             chunksize = 50
@@ -500,12 +528,13 @@ class SyncMovies:
                 if self.sync.IsCanceled():
                     return
                 i += 1
-                y = ((i / x) * (toPercent - fromPercent)) + fromPercent
-                self.sync.UpdateProgress(
-                    int(y),
-                    line2=kodiUtilities.getString(32127)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
-                )
+                if x > 0:
+                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                    self.sync.UpdateProgress(
+                        int(y),
+                        line2=kodiUtilities.getString(32127)
+                        % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    )
                 kodiUtilities.kodiJsonRequest(chunk)
 
             self.sync.UpdateProgress(
@@ -513,7 +542,13 @@ class SyncMovies:
                 line2=kodiUtilities.getString(32128) % len(kodiMoviesToUpdate),
             )
 
-    def __syncMovieRatings(self, traktMovies: List[Dict], kodiMovies: List[Dict], fromPercent: int, toPercent: int) -> None:
+    def __syncMovieRatings(
+        self,
+        traktMovies: List[Dict],
+        kodiMovies: List[Dict],
+        fromPercent: int,
+        toPercent: int,
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktMovies
@@ -595,12 +630,13 @@ class SyncMovies:
                     if self.sync.IsCanceled():
                         return
                     i += 1
-                    y = ((i / x) * (toPercent - fromPercent)) + fromPercent
-                    self.sync.UpdateProgress(
-                        int(y),
-                        line2=kodiUtilities.getString(32171)
-                        % ((i) * chunksize if (i) * chunksize < x else x, x),
-                    )
+                    if x > 0:
+                        y = ((i / x) * (toPercent - fromPercent)) + fromPercent
+                        self.sync.UpdateProgress(
+                            int(y),
+                            line2=kodiUtilities.getString(32171)
+                            % ((i) * chunksize if (i) * chunksize < x else x, x),
+                        )
                     kodiUtilities.kodiJsonRequest(chunk)
 
                 self.sync.UpdateProgress(
