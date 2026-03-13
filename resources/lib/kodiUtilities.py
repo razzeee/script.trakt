@@ -186,9 +186,9 @@ def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") ->
             data["ids"] = utilities.guessBestTraktId(id, type)[0]
 
         if "lastplayed" in data:
-            episode["watched_at"] = utilities.convertDateTimeToUTC(data["lastplayed"])
+            episode["watched_at"] = utilities.toIso8601DateTime(utilities.fromDateTime(data["lastplayed"]))
         if "dateadded" in data:
-            episode["collected_at"] = utilities.convertDateTimeToUTC(data["dateadded"])
+            episode["collected_at"] = utilities.toIso8601DateTime(utilities.fromDateTime(data["dateadded"]))
         if "runtime" in data:
             episode["runtime"] = data["runtime"]
         episode["rating"] = (
@@ -205,9 +205,9 @@ def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") ->
         if checkExclusion(data.pop("file")):
             return
         if "lastplayed" in data:
-            data["watched_at"] = utilities.convertDateTimeToUTC(data.pop("lastplayed"))
+            data["watched_at"] = utilities.toIso8601DateTime(utilities.fromDateTime(data.pop("lastplayed")))
         if "dateadded" in data:
-            data["collected_at"] = utilities.convertDateTimeToUTC(data.pop("dateadded"))
+            data["collected_at"] = utilities.toIso8601DateTime(utilities.fromDateTime(data.pop("dateadded")))
         if data["playcount"] is None:
             data["plays"] = 0
         else:
