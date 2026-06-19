@@ -12,7 +12,7 @@ jobs:
     name: Kodi addon submitter
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Inject Trakt Keys
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
