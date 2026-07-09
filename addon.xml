@@ -2,7 +2,6 @@
 <addon id="script.trakt" name="Trakt" version="3.8.2" provider-name="Trakt.tv, Razzeee">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.trakt" version="4.4.0"/>
         <import addon="script.module.dateutil" version="2.8.1"/>
     </requires>
     <extension point="xbmc.python.script" library="defaultscript.py">
