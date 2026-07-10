@@ -404,6 +404,7 @@ class traktAPI(object):
         authorized: bool = False,
         timeout: int = 90,
         limit: int = 100,
+        params: Optional[Dict] = None,
     ) -> List:
         if not self.client:
             return []
@@ -412,7 +413,10 @@ class traktAPI(object):
         page = 1
         page_count = 1
         while page <= page_count:
-            page_path = self.client.build_path(path, {"page": page, "limit": limit})
+            query = {"page": page, "limit": limit}
+            if params:
+                query.update(params)
+            page_path = self.client.build_path(path, query)
             response = self._get(
                 page_path,
                 authorized=authorized,
@@ -595,8 +599,8 @@ class traktAPI(object):
         )
 
     def getShowsCollected(self, shows: Dict) -> Dict:
-        for item in (
-            self._get("/sync/collection/shows", authorized=True, timeout=90) or []
+        for item in self._get_all_pages(
+            "/sync/collection/shows", authorized=True, timeout=90
         ):
             self._merge_show(shows, item, ("collected_at",))
         return shows
@@ -609,15 +613,23 @@ class traktAPI(object):
         return movies
 
     def getShowsWatched(self, shows: Dict) -> Dict:
-        for item in self._get("/sync/watched/shows", authorized=True, timeout=90) or []:
+        # extended=progress is required for the season/episode breakdown; without
+        # it Trakt returns show-level plays only and episode watched-state can't
+        # be synced. All sync endpoints are also paginated, so page through them.
+        for item in self._get_all_pages(
+            "/sync/watched/shows",
+            authorized=True,
+            timeout=90,
+            params={"extended": "progress"},
+        ):
             self._merge_show(
                 shows, item, ("plays", "last_watched_at", "last_updated_at", "reset_at")
             )
         return shows
 
     def getMoviesWatched(self, movies: Dict) -> Dict:
-        for item in (
-            self._get("/sync/watched/movies", authorized=True, timeout=90) or []
+        for item in self._get_all_pages(
+            "/sync/watched/movies", authorized=True, timeout=90
         ):
             self._merge_object(
                 movies, item, "movie", ("plays", "last_watched_at", "last_updated_at")
