@@ -5,24 +5,25 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: XBMC Addons\n"
-"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Kodi Translation Team\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/xbmc-addons/language/cs/)\n"
-"Language: cs\n"
+"PO-Revision-Date: 2026-07-10 05:08+0000\n"
+"Last-Translator: Michal Várady <miko.vaji@gmail.com>\n"
+"Language-Team: Czech <https://kodi.weblate.cloud/projects/kodi-add-ons-scripts/script-trakt/cs_cz/>\n"
+"Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.7\n"
 
 msgctxt "Addon Summary"
 msgid "TV and movie scrobbler for Trakt.tv"
-msgstr ""
+msgstr "Scrobbler seriálů a filmů pro Trakt.tv"
 
 msgctxt "Addon Description"
 msgid "Automatically scrobble all TV episodes and movies you are watching to Trakt.tv! Keep a comprehensive history of everything you've watched and be part of a global community of TV and movie enthusiasts. Sign up for a free account at http://trakt.tv and get a ton of features:[CR][CR]- Automatically scrobble what you're watching[CR]- Mobile apps for iPhone, iPad, Android, and Windows Phone[CR]- Share what you're watching (in real time) and rating to facebook and twitter[CR]- Personalized calendar so you never miss a TV show[CR]- Follow your friends and people you're interesed in[CR]- Use watchlists so you don't forget to what to watch[CR]- Track your media collections and impress your friends[CR]- Create custom lists around any topics you choose[CR]- Easily track your TV show progress across all seasons and episodes[CR]- Track your progress against industry lists such as the IMDb Top 250[CR]- Discover new shows and movies based on your viewing habits[CR]- Widgets for your forum signature[CR][CR]What can this addon do?[CR][CR]- Automatically scrobble all TV episodes and movies you are watching[CR]- Sync your TV episode and movie collections to Trakt (triggered after a library update)[CR]- Auto clean your Trakt collection so that it matches up with Kodi[CR]- Keep watched statuses synced between Kodi and Trakt[CR]- Rate movies and episode after watching them[CR][CR]Special thanks to all who contributed to this plugin! Check the commit history and changelog to see these talented developers."
-msgstr ""
+msgstr "Automaticky scrobbluje všechny sledované epizody seriálů a filmy na Trakt.tv! Udržujte si úplnou historii všeho, co jste zhlédli, a staňte se součástí globální komunity fanoušků seriálů a filmů. Zaregistrujte si bezplatný účet na http://trakt.tv a získejte spoustu funkcí:[CR][CR]- Automaticky scrobblovat to, co sledujete[CR]- Mobilní aplikace pro iPhone, iPad, Android a Windows Phone[CR]- Sdílet to, co sledujete (v reálném čase), a svá hodnocení na Facebooku a Twitteru[CR]- Personalizovaný kalendář, abyste nezmeškali žádný seriál[CR]- Sledovat přátele a lidi, kteří vás zajímají[CR]- Používat seznamy ke zhlédnutí, abyste nezapomněli, na co se chcete podívat[CR]- Evidovat své sbírky médií a udělat dojem na přátele[CR]- Vytvářet vlastní seznamy na libovolná témata[CR]- Snadno sledovat postup sledování seriálů napříč všemi řadami a epizodami[CR]- Porovnávat svůj postup s oborovými seznamy, jako je IMDb Top 250[CR]- Objevovat nové seriály a filmy podle svých diváckých návyků[CR]- Widgety do podpisu na fóru[CR][CR]Co tento doplněk umí?[CR][CR]- Automaticky scrobblovat všechny sledované epizody seriálů a filmy[CR]- Synchronizovat sbírky epizod seriálů a filmů do Traktu (spouští se po aktualizaci knihovny)[CR]- Automaticky čistit sbírku Trakt tak, aby odpovídala Kodi[CR]- Udržovat stavy zhlédnutí synchronizované mezi Kodi a Traktem[CR]- Hodnotit filmy a epizody po zhlédnutí[CR][CR]Zvláštní poděkování všem, kdo se na tomto pluginu podíleli! Podívejte se do historie commitů a changelogu na tyto talentované vývojáře."
 
 msgctxt "#32000"
 msgid "General"
@@ -31,7 +32,7 @@ msgstr "Obecné"
 # empty strings from id 32001 to 32002
 msgctxt "#32003"
 msgid "Startup Delay (seconds)"
-msgstr ""
+msgstr "Prodleva při spuštění (sekundy)"
 
 msgctxt "#32004"
 msgid "Rating"
@@ -39,69 +40,69 @@ msgstr "Hodnocení"
 
 msgctxt "#32005"
 msgid "Rate Movie after watching"
-msgstr ""
+msgstr "Hodnotit film po zhlédnutí"
 
 msgctxt "#32006"
 msgid "Rate TV show Episode after watching"
-msgstr ""
+msgstr "Hodnotit epizodu seriálu po zhlédnutí"
 
 msgctxt "#32008"
 msgid "Minimum percent watched to display rating dialog"
-msgstr ""
+msgstr "Minimální procento zhlédnutí pro zobrazení dialogu hodnocení"
 
 msgctxt "#32009"
 msgid "Allow re-rating of media"
-msgstr ""
+msgstr "Povolit opětovné hodnocení médií"
 
 msgctxt "#32010"
 msgid "Default rating"
-msgstr ""
+msgstr "Výchozí hodnocení"
 
 # Scrobbling Settings
 msgctxt "#32011"
 msgid "Scrobbling"
-msgstr ""
+msgstr "Scrobblování"
 
 msgctxt "#32012"
 msgid "Scrobble movies"
-msgstr ""
+msgstr "Scrobblovat filmy"
 
 msgctxt "#32013"
 msgid "Scrobble TV show episodes"
-msgstr ""
+msgstr "Scrobblovat epizody seriálů"
 
 msgctxt "#32014"
 msgid "Show notification on scrobble"
-msgstr ""
+msgstr "Zobrazovat oznámení při scrobblování"
 
 msgctxt "#32015"
 msgid "Trakt - Scrobbled successfully"
-msgstr ""
+msgstr "Trakt - úspěšně scrobblováno"
 
 msgctxt "#32016"
 msgid "Exclusions"
-msgstr ""
+msgstr "Vyloučení"
 
 msgctxt "#32017"
 msgid "Exclude Live TV"
-msgstr ""
+msgstr "Vyloučit živou TV"
 
 msgctxt "#32018"
 msgid "Exclude HTTP sources"
-msgstr ""
+msgstr "Vyloučit zdroje HTTP"
 
 msgctxt "#32019"
 msgid "Exclude path"
-msgstr ""
+msgstr "Vyloučit cestu"
 
 msgctxt "#32020"
 msgid "Folder's path (including subfolders)"
-msgstr ""
+msgstr "Cesta ke složce (včetně podsložek)"
 
 # empty strings from id 32021 to 32022
 msgctxt "#32023"
 msgid "Can not connect to Trakt"
-msgstr ""
+msgstr "Nelze se připojit k Traktu"
 
 msgctxt "#32024"
 msgid "Error"
@@ -110,83 +111,83 @@ msgstr "Chyba"
 # empty string with id 32025
 msgctxt "#32026"
 msgid "What Did You Think?"
-msgstr ""
+msgstr "Jak se vám to líbilo?"
 
 msgctxt "#32027"
 msgid "Totally Ninja!"
-msgstr ""
+msgstr "Naprostá pecka!"
 
 msgctxt "#32028"
 msgid "Weak Sauce :("
-msgstr ""
+msgstr "Slabota :("
 
 msgctxt "#32029"
 msgid "Terrible"
-msgstr ""
+msgstr "Hrozné"
 
 msgctxt "#32030"
 msgid "Bad"
-msgstr ""
+msgstr "Špatné"
 
 msgctxt "#32031"
 msgid "Poor"
-msgstr ""
+msgstr "Slabé"
 
 msgctxt "#32032"
 msgid "Meh"
-msgstr ""
+msgstr "Nic moc"
 
 msgctxt "#32033"
 msgid "Fair"
-msgstr "Skoro jasno"
+msgstr "Ujde to"
 
 msgctxt "#32034"
 msgid "Good"
-msgstr ""
+msgstr "Dobré"
 
 msgctxt "#32035"
 msgid "Great"
-msgstr ""
+msgstr "Skvělé"
 
 msgctxt "#32036"
 msgid "Superb"
-msgstr ""
+msgstr "Vynikající"
 
 msgctxt "#32037"
 msgid "Unrate this movie"
-msgstr ""
+msgstr "Odebrat hodnocení tohoto filmu"
 
 msgctxt "#32038"
 msgid "Unrate this show"
-msgstr ""
+msgstr "Odebrat hodnocení tohoto seriálu"
 
 msgctxt "#32039"
 msgid "Unrate this episode"
-msgstr ""
+msgstr "Odebrat hodnocení této epizody"
 
 msgctxt "#32040"
 msgid "Trakt - Rating submitted successfully"
-msgstr ""
+msgstr "Trakt - hodnocení úspěšně odesláno"
 
 msgctxt "#32041"
 msgid "Trakt - Already rated"
-msgstr ""
+msgstr "Trakt - již ohodnoceno"
 
 msgctxt "#32042"
 msgid "Trakt - Unrated successfully"
-msgstr ""
+msgstr "Trakt - hodnocení úspěšně odebráno"
 
 msgctxt "#32043"
 msgid "Trakt - Already has the same rating"
-msgstr ""
+msgstr "Trakt - již má stejné hodnocení"
 
 msgctxt "#32044"
 msgid "Trakt - Problem submitting rating"
-msgstr ""
+msgstr "Trakt - problém při odesílání hodnocení"
 
 msgctxt "#32045"
 msgid "Synchronize"
-msgstr ""
+msgstr "Synchronizace"
 
 msgctxt "#32046"
 msgid "Movies"
@@ -194,31 +195,31 @@ msgstr "Filmy"
 
 msgctxt "#32047"
 msgid "Add new movies to Trakt collection"
-msgstr ""
+msgstr "Přidávat nové filmy do sbírky Trakt"
 
 msgctxt "#32048"
 msgid "Add watched movies to Trakt history"
-msgstr ""
+msgstr "Přidávat zhlédnuté filmy do historie Trakt"
 
 msgctxt "#32049"
 msgid "Mark movies from Trakt history as watched in Kodi"
-msgstr ""
+msgstr "Označovat filmy z historie Trakt jako zhlédnuté v Kodi"
 
 msgctxt "#32050"
 msgid "TV Episodes"
-msgstr ""
+msgstr "Epizody seriálů"
 
 msgctxt "#32051"
 msgid "Add new TV episodes to Trakt collection"
-msgstr ""
+msgstr "Přidávat nové epizody seriálů do sbírky Trakt"
 
 msgctxt "#32052"
 msgid "Add watched TV episodes to Trakt history"
-msgstr ""
+msgstr "Přidávat zhlédnuté epizody seriálů do historie Trakt"
 
 msgctxt "#32053"
 msgid "Mark TV episodes from Trakt history as watched in Kodi"
-msgstr ""
+msgstr "Označovat epizody seriálů z historie Trakt jako zhlédnuté v Kodi"
 
 msgctxt "#32054"
 msgid "Service"
@@ -226,411 +227,411 @@ msgstr "Služba"
 
 msgctxt "#32055"
 msgid "Sync collection on library update or cleaning"
-msgstr ""
+msgstr "Synchronizovat sbírku při aktualizaci nebo čištění knihovny"
 
 msgctxt "#32056"
 msgid "Show sync notifications"
-msgstr ""
+msgstr "Zobrazovat oznámení o synchronizaci"
 
 msgctxt "#32057"
 msgid "Remove deleted movies from Trakt collection"
-msgstr ""
+msgstr "Odebírat odstraněné filmy ze sbírky Trakt"
 
 msgctxt "#32058"
 msgid "Remove deleted TV episodes from Trakt collection"
-msgstr ""
+msgstr "Odebírat odstraněné epizody seriálů ze sbírky Trakt"
 
 # empty string with id 32059
 msgctxt "#32060"
 msgid "Hide notifications during playback"
-msgstr ""
+msgstr "Skrývat oznámení během přehrávání"
 
 msgctxt "#32061"
 msgid "Sync started"
-msgstr ""
+msgstr "Synchronizace spuštěna"
 
 msgctxt "#32062"
 msgid "Sync complete"
-msgstr ""
+msgstr "Synchronizace dokončena"
 
 msgctxt "#32063"
 msgid "%i movie(s) will be added to Trakt collection"
-msgstr ""
+msgstr "Do sbírky Trakt bude přidáno %i filmů"
 
 msgctxt "#32064"
 msgid "%i movie playcount(s) will be updated on Trakt"
-msgstr ""
+msgstr "Na Traktu bude aktualizován počet přehrání u %i filmů"
 
 msgctxt "#32065"
 msgid "%i movie(s) playcount will be updated in Kodi"
-msgstr ""
+msgstr "V Kodi bude aktualizován počet přehrání u %i filmů"
 
 msgctxt "#32066"
 msgid "Movie Sync Complete"
-msgstr ""
+msgstr "Synchronizace filmů dokončena"
 
 msgctxt "#32067"
 msgid "Going to add %i show(s) to Trakt collection"
-msgstr ""
+msgstr "Do sbírky Trakt bude přidáno %i seriálů"
 
 msgctxt "#32068"
 msgid "Checking for episodes missing from Trakt collection"
-msgstr ""
+msgstr "Kontrola epizod chybějících ve sbírce Trakt"
 
 msgctxt "#32069"
 msgid "%i of %i show(s) have episodes added to Trakt collection"
-msgstr ""
+msgstr "U %i z %i seriálů byly do sbírky Trakt přidány epizody"
 
 msgctxt "#32070"
 msgid "Going to update %i show(s) missing watched status"
-msgstr ""
+msgstr "Bude aktualizován chybějící stav zhlédnutí u %i seriálů"
 
 msgctxt "#32071"
 msgid "Checking watched episodes on Trakt"
-msgstr ""
+msgstr "Kontrola zhlédnutých epizod na Traktu"
 
 msgctxt "#32072"
 msgid "%i show(s) had missing watched status"
-msgstr ""
+msgstr "U %i seriálů chyběl stav zhlédnutí"
 
 msgctxt "#32073"
 msgid "%i episodes are being updated"
-msgstr ""
+msgstr "Aktualizuje se %i epizod"
 
 msgctxt "#32074"
 msgid "Checking watched episodes on Kodi"
-msgstr ""
+msgstr "Kontrola zhlédnutých epizod v Kodi"
 
 msgctxt "#32075"
 msgid "Episode Sync Complete"
-msgstr ""
+msgstr "Synchronizace epizod dokončena"
 
 msgctxt "#32076"
 msgid "%i movie(s) will be removed from Trakt collection"
-msgstr ""
+msgstr "Ze sbírky Trakt bude odebráno %i filmů"
 
 msgctxt "#32077"
 msgid "Cleaning Trakt TV show collection"
-msgstr ""
+msgstr "Čištění sbírky seriálů v Traktu"
 
 msgctxt "#32078"
 msgid "episodes are being removed"
-msgstr ""
+msgstr "Epizody se odebírají"
 
 msgctxt "#32079"
 msgid "Loading movies from Kodi"
-msgstr ""
+msgstr "Načítání filmů z Kodi"
 
 msgctxt "#32080"
 msgid "Movies loaded from Kodi"
-msgstr ""
+msgstr "Filmy z Kodi načteny"
 
 msgctxt "#32081"
 msgid "Retrieving movie collection from Trakt"
-msgstr ""
+msgstr "Načítání sbírky filmů z Traktu"
 
 msgctxt "#32082"
 msgid "Retrieving watched movies from Trakt"
-msgstr ""
+msgstr "Načítání zhlédnutých filmů z Traktu"
 
 msgctxt "#32083"
 msgid "Retrieved movie data from Trakt"
-msgstr ""
+msgstr "Data filmů z Traktu načtena"
 
 msgctxt "#32084"
 msgid "Trakt movie collection is up to date, no movies to add"
-msgstr ""
+msgstr "Sbírka filmů v Traktu je aktuální, není třeba přidat žádné filmy"
 
 msgctxt "#32085"
 msgid "%i movie(s) were added to your Trakt collection"
-msgstr ""
+msgstr "Do vaší sbírky Trakt bylo přidáno %i filmů"
 
 msgctxt "#32086"
 msgid "Trakt movie playcounts are up to date"
-msgstr ""
+msgstr "Počty přehrání filmů na Traktu jsou aktuální"
 
 msgctxt "#32087"
 msgid "Playcounts updated for %i movie(s) on Trakt"
-msgstr ""
+msgstr "Počty přehrání byly na Traktu aktualizovány u %i filmů"
 
 msgctxt "#32088"
 msgid "Kodi movie playcounts are up to date"
-msgstr ""
+msgstr "Počty přehrání filmů v Kodi jsou aktuální"
 
 msgctxt "#32089"
 msgid "Updating %i of %i movie playcount(s) in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují počty přehrání filmů %i z %i"
 
 msgctxt "#32090"
 msgid "Playcounts updated for %i movie(s) in Kodi"
-msgstr ""
+msgstr "Počty přehrání byly v Kodi aktualizovány u %i filmů"
 
 msgctxt "#32091"
 msgid "Trakt movie collection is up to date, no movies removed"
-msgstr ""
+msgstr "Sbírka filmů v Traktu je aktuální, nebyly odebrány žádné filmy"
 
 msgctxt "#32092"
 msgid "%i movie(s) were removed from your Trakt collection"
-msgstr ""
+msgstr "Z vaší sbírky Trakt bylo odebráno %i filmů"
 
 msgctxt "#32093"
 msgid "Updating %i of %i movie playcount(s) on Trakt"
-msgstr ""
+msgstr "Na Traktu se aktualizují počty přehrání filmů %i z %i"
 
 msgctxt "#32094"
 msgid "Loading episode data from Kodi"
-msgstr ""
+msgstr "Načítání dat epizod z Kodi"
 
 msgctxt "#32095"
 msgid "Loading shows from Kodi"
-msgstr ""
+msgstr "Načítání seriálů z Kodi"
 
 msgctxt "#32096"
 msgid "Shows loaded from Kodi"
-msgstr ""
+msgstr "Seriály z Kodi načteny"
 
 msgctxt "#32097"
 msgid "Parsing %i of %i episode data from Kodi"
-msgstr ""
+msgstr "Zpracování dat epizod z Kodi %i z %i"
 
 msgctxt "#32098"
 msgid "Loaded episode data from Kodi"
-msgstr ""
+msgstr "Data epizod z Kodi načtena"
 
 msgctxt "#32099"
 msgid "Loading episode data from Trakt"
-msgstr ""
+msgstr "Načítání dat epizod z Traktu"
 
 msgctxt "#32100"
 msgid "Retrieving episode collection from Trakt"
-msgstr ""
+msgstr "Načítání sbírky epizod z Traktu"
 
 msgctxt "#32101"
 msgid "Retrieving watched episodes from Trakt"
-msgstr ""
+msgstr "Načítání zhlédnutých epizod z Traktu"
 
 msgctxt "#32102"
 msgid "Parsing episode data %i of %i from Trakt"
-msgstr ""
+msgstr "Zpracování dat epizod z Traktu %i z %i"
 
 msgctxt "#32103"
 msgid "Retrieved episode data from Trakt"
-msgstr ""
+msgstr "Data epizod z Traktu načtena"
 
 msgctxt "#32104"
 msgid "Trakt episode collection is up to date, no episodes to add"
-msgstr ""
+msgstr "Sbírka epizod v Traktu je aktuální, není třeba přidat žádné epizody"
 
 msgctxt "#32105"
 msgid "%i episode(s) were added to your Trakt collection"
-msgstr ""
+msgstr "Do vaší sbírky Trakt bylo přidáno %i epizod"
 
 msgctxt "#32106"
 msgid "Trakt episode playcounts are up to date"
-msgstr ""
+msgstr "Počty přehrání epizod na Traktu jsou aktuální"
 
 msgctxt "#32107"
 msgid "Kodi episode playcounts are up to date"
-msgstr ""
+msgstr "Počty přehrání epizod v Kodi jsou aktuální"
 
 msgctxt "#32108"
 msgid "Updating %i of %i episode playcount(s) in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují počty přehrání epizod %i z %i"
 
 msgctxt "#32109"
 msgid "Playcounts updated for %i show(s) in Kodi"
-msgstr ""
+msgstr "Počty přehrání byly v Kodi aktualizovány u %i seriálů"
 
 msgctxt "#32110"
 msgid "Trakt episode collection is clean, no episodes to remove"
-msgstr ""
+msgstr "Sbírka epizod v Traktu je vyčištěná, není třeba odebrat žádné epizody"
 
 msgctxt "#32111"
 msgid "%i episode(s) are being removed from your Trakt collection"
-msgstr ""
+msgstr "Z vaší sbírky Trakt se odebírá %i epizod"
 
 msgctxt "#32112"
 msgid "%i episode(s) were removed from your Trakt collection"
-msgstr ""
+msgstr "Z vaší sbírky Trakt bylo odebráno %i epizod"
 
 msgctxt "#32113"
 msgid "Trakt - Marked as watched"
-msgstr ""
+msgstr "Trakt - označeno jako zhlédnuté"
 
 msgctxt "#32114"
 msgid "Trakt - Failed marking as watched"
-msgstr ""
+msgstr "Trakt - označení jako zhlédnuté selhalo"
 
 msgctxt "#32115"
 msgid "%d episode(s) of '%s'"
-msgstr ""
+msgstr "%d epizod seriálu „%s“"
 
 msgctxt "#32116"
 msgid "Enable debug mode"
-msgstr ""
+msgstr "Povolit ladicí režim"
 
 msgctxt "#32117"
 msgid "Sync movie playback progress to Kodi"
-msgstr ""
+msgstr "Synchronizovat pozici přehrávání filmů do Kodi"
 
 msgctxt "#32118"
 msgid "Sync episode playback progress to Kodi"
-msgstr ""
+msgstr "Synchronizovat pozici přehrávání epizod do Kodi"
 
 msgctxt "#32119"
 msgid "Retrieving episode playback progress from Trakt"
-msgstr ""
+msgstr "Načítání pozice přehrávání epizod z Traktu"
 
 msgctxt "#32120"
 msgid "Parsing episode playback progress %i of %i from Trakt"
-msgstr ""
+msgstr "Zpracování pozic přehrávání epizod z Traktu %i z %i"
 
 msgctxt "#32121"
 msgid "Retrieved episode playback progress from Trakt"
-msgstr ""
+msgstr "Pozice přehrávání epizod z Traktu načteny"
 
 msgctxt "#32122"
 msgid "Retrieving movie playback progress from Trakt"
-msgstr ""
+msgstr "Načítání pozice přehrávání filmů z Traktu"
 
 msgctxt "#32123"
 msgid "Parsing movie playback progress %i of %i from Trakt"
-msgstr ""
+msgstr "Zpracování pozic přehrávání filmů z Traktu %i z %i"
 
 msgctxt "#32124"
 msgid "Retrieved movie playback progress from Trakt"
-msgstr ""
+msgstr "Pozice přehrávání filmů z Traktu načteny"
 
 msgctxt "#32125"
 msgid "Kodi movie playback progress is up to date"
-msgstr ""
+msgstr "Pozice přehrávání filmů v Kodi jsou aktuální"
 
 msgctxt "#32126"
 msgid "%i movie(s) playback progress will be updated in Kodi"
-msgstr ""
+msgstr "V Kodi bude aktualizována pozice přehrávání u %i filmů"
 
 msgctxt "#32127"
 msgid "Updating %i of %i movie(s) playback progress in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují pozice přehrávání filmů %i z %i"
 
 msgctxt "#32128"
 msgid "Playback progress updated for %i movie(s) in Kodi"
-msgstr ""
+msgstr "Pozice přehrávání byly v Kodi aktualizovány u %i filmů"
 
 msgctxt "#32129"
 msgid "Kodi episode playback progress is up to date"
-msgstr ""
+msgstr "Pozice přehrávání epizod v Kodi jsou aktuální"
 
 msgctxt "#32130"
 msgid "Updating %i of %i episode(s) playback progress in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují pozice přehrávání epizod %i z %i"
 
 msgctxt "#32131"
 msgid "Playback progress updated for %i episode(s) in Kodi"
-msgstr ""
+msgstr "Pozice přehrávání byly v Kodi aktualizovány u %i epizod"
 
 msgctxt "#32132"
 msgid "Unrate this season"
-msgstr ""
+msgstr "Odebrat hodnocení této řady"
 
 msgctxt "#32133"
 msgid "Manage Movie's Lists"
-msgstr ""
+msgstr "Spravovat seznamy filmů"
 
 msgctxt "#32134"
 msgid "Manage Show's Lists"
-msgstr ""
+msgstr "Spravovat seznamy seriálů"
 
 msgctxt "#32135"
 msgid "Remove from Watchlist"
-msgstr ""
+msgstr "Odebrat ze seznamu ke zhlédnutí"
 
 msgctxt "#32136"
 msgid "Add to watchlist"
-msgstr ""
+msgstr "Přidat do seznamu ke zhlédnutí"
 
 msgctxt "#32137"
 msgid "Rate this movie"
-msgstr ""
+msgstr "Ohodnotit tento seriál"
 
 msgctxt "#32138"
 msgid "Rate this show"
-msgstr ""
+msgstr "Ohodnotit tento seriál"
 
 msgctxt "#32139"
 msgid "Rate this episode"
-msgstr ""
+msgstr "Ohodnotit tuto epizodu"
 
 msgctxt "#32140"
 msgid "Toggle watched"
-msgstr ""
+msgstr "Přepnout stav zhlédnutí"
 
 msgctxt "#32141"
 msgid "Manage all lists"
-msgstr ""
+msgstr "Spravovat všechny seznamy"
 
 msgctxt "#32142"
 msgid "Update all tags"
-msgstr ""
+msgstr "Aktualizovat všechny štítky"
 
 msgctxt "#32143"
 msgid "Synchronize library"
-msgstr ""
+msgstr "Synchronizovat knihovnu"
 
 msgctxt "#32144"
 msgid "How do I authorize the trakt addon to access my trakt.tv account?"
-msgstr ""
+msgstr "Jak autorizovat doplněk Trakt pro přístup k mému účtu trakt.tv?"
 
 # empty strings from id 32145 to 32146
 msgctxt "#32147"
 msgid "Trakt.tv PIN Authorization Failed"
-msgstr ""
+msgstr "Autorizace Trakt.tv pomocí PINu selhala"
 
 # empty string with id 32148
 msgctxt "#32149"
 msgid "Rate this Season"
-msgstr ""
+msgstr "Ohodnotit tuto řadu"
 
 msgctxt "#32150"
 msgid "You will be reminded in 24 hours"
-msgstr ""
+msgstr "Připomenutí se zobrazí za 24 hodin"
 
 msgctxt "#32151"
 msgid "Use Addon Settings later if you change your mind"
-msgstr ""
+msgstr "Pokud si to rozmyslíte, použijte později nastavení doplňku"
 
 msgctxt "#32152"
 msgid "Trakt Authorization Complete"
-msgstr ""
+msgstr "Autorizace Trakt dokončena"
 
 msgctxt "#32153"
 msgid "Trakt Account Authorization"
-msgstr ""
+msgstr "Autorizace účtu Trakt"
 
 msgctxt "#32154"
 msgid "Authorize"
-msgstr ""
+msgstr "Autorizovat"
 
 msgctxt "#32155"
 msgid "Remind Me Later"
-msgstr ""
+msgstr "Připomenout později"
 
 msgctxt "#32156"
 msgid "No Thanks"
-msgstr ""
+msgstr "Ne, děkuji"
 
 msgctxt "#32157"
 msgid "Account Authorization"
-msgstr ""
+msgstr "Autorizace účtu"
 
 # empty string with id 32158
 msgctxt "#32159"
 msgid "Visit {0} or scan the QR code."
-msgstr ""
+msgstr "Navštivte {0} nebo naskenujte QR kód."
 
 msgctxt "#32162"
 msgid "The trakt addon CAN NOT be used without authorizing it to access your trakt.tv account."
-msgstr ""
+msgstr "Doplněk Trakt nelze používat bez autorizace přístupu k vašemu účtu trakt.tv."
 
 msgctxt "#32163"
 msgid "User"
@@ -638,132 +639,132 @@ msgstr "Uživatel"
 
 msgctxt "#32164"
 msgid "Fallback to Title/Year matching if necessary"
-msgstr ""
+msgstr "V případě potřeby použít porovnání podle názvu/roku"
 
 msgctxt "#32165"
 msgid "Trakt - Added to watchlist"
-msgstr ""
+msgstr "Trakt - přidáno do seznamu ke zhlédnutí"
 
 msgctxt "#32166"
 msgid "Trakt - Failed adding to watchlist"
-msgstr ""
+msgstr "Trakt - přidání do seznamu ke zhlédnutí selhalo"
 
 msgctxt "#32167"
 msgid "Offset scrobble start by X minutes"
-msgstr ""
+msgstr "Posunout začátek scrobblování o X minut"
 
 msgctxt "#32168"
 msgid "Sync ratings"
-msgstr ""
+msgstr "Synchronizovat hodnocení"
 
 msgctxt "#32169"
 msgid "Kodi movie ratings are up to date"
-msgstr ""
+msgstr "Hodnocení filmů v Kodi jsou aktuální"
 
 msgctxt "#32170"
 msgid "%i movie(s) ratings will be updated in Kodi"
-msgstr ""
+msgstr "V Kodi bude aktualizováno hodnocení u %i filmů"
 
 msgctxt "#32171"
 msgid "Updating %i of %i movie ratings in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují hodnocení filmů %i z %i"
 
 msgctxt "#32172"
 msgid "Ratings updated for %i movie(s) in Kodi"
-msgstr ""
+msgstr "Hodnocení byla v Kodi aktualizována u %i filmů"
 
 msgctxt "#32173"
 msgid "Kodi episode ratings are up to date"
-msgstr ""
+msgstr "Hodnocení epizod v Kodi jsou aktuální"
 
 msgctxt "#32174"
 msgid "Updating %i of %i episode ratings in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují hodnocení epizod %i z %i"
 
 msgctxt "#32175"
 msgid "Ratings updated for %i episode(s) in Kodi"
-msgstr ""
+msgstr "Hodnocení byla v Kodi aktualizována u %i epizod"
 
 msgctxt "#32176"
 msgid "Kodi show ratings are up to date"
-msgstr ""
+msgstr "Hodnocení seriálů v Kodi jsou aktuální"
 
 msgctxt "#32177"
 msgid "Updating %i of %i show ratings in Kodi"
-msgstr ""
+msgstr "V Kodi se aktualizují hodnocení seriálů %i z %i"
 
 msgctxt "#32178"
 msgid "Ratings updated for %i show(s) in Kodi"
-msgstr ""
+msgstr "Hodnocení byla v Kodi aktualizována u %i seriálů"
 
 msgctxt "#32179"
 msgid "Trakt movie ratings are up to date"
-msgstr ""
+msgstr "Hodnocení filmů na Traktu jsou aktuální"
 
 msgctxt "#32180"
 msgid "%i movie ratings will be updated on Trakt"
-msgstr ""
+msgstr "Na Traktu bude aktualizováno hodnocení u %i filmů"
 
 msgctxt "#32181"
 msgid "Trakt show ratings are up to date"
-msgstr ""
+msgstr "Hodnocení seriálů na Traktu jsou aktuální"
 
 msgctxt "#32182"
 msgid "%i show ratings will be updated on Trakt"
-msgstr ""
+msgstr "Na Traktu bude aktualizováno hodnocení u %i seriálů"
 
 msgctxt "#32183"
 msgid "Attempt to scrobble MythTV PVR recordings"
-msgstr ""
+msgstr "Pokusit se scrobblovat nahrávky PVR MythTV"
 
 msgctxt "#32184"
 msgid "Attempt secondary show title search"
-msgstr ""
+msgstr "Pokusit se o sekundární vyhledání názvu seriálu"
 
 msgctxt "#32185"
 msgid "Exclude Plugins"
-msgstr ""
+msgstr "Vyloučit pluginy"
 
 msgctxt "#32186"
 msgid "Allow script exclusions"
-msgstr ""
+msgstr "Povolit vyloučení skriptů"
 
 msgctxt "#32187"
 msgid "Override proxy"
-msgstr ""
+msgstr "Vynutit proxy"
 
 msgctxt "#42187"
 msgid "Always enable a proxy, regardless of the kodi configuration. The default value is from the kodi configuration, but can be overriden below. The trakt plugin currently only supports HTTP or HTTPS proxies where kodi also supports SOCKS proxies."
-msgstr ""
+msgstr "Vždy povolí proxy bez ohledu na konfiguraci Kodi. Výchozí hodnota se převezme z konfigurace Kodi, ale níže ji lze přepsat. Plugin Trakt aktuálně podporuje pouze proxy HTTP nebo HTTPS, zatímco Kodi podporuje také proxy SOCKS."
 
 msgctxt "#32188"
 msgid "Proxy URI"
-msgstr ""
+msgstr "URI proxy"
 
 msgctxt "#42188"
 msgid "Location of the proxy server."
-msgstr ""
+msgstr "Umístění proxy serveru."
 
 msgctxt "#32189"
 msgid "Proxy port"
-msgstr ""
+msgstr "Port proxy"
 
 msgctxt "#42189"
 msgid "Port of the proxy server."
-msgstr ""
+msgstr "Port proxy serveru."
 
 msgctxt "#32190"
 msgid "Username"
-msgstr ""
+msgstr "Uživatelské jméno"
 
 msgctxt "#42190"
 msgid "Optional user name needed to authenticate with the proxy."
-msgstr ""
+msgstr "Volitelné uživatelské jméno potřebné k ověření u proxy."
 
 msgctxt "#32191"
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 msgctxt "#42191"
 msgid "Optional password needed to authenticate with the proxy."
-msgstr ""
+msgstr "Volitelné heslo potřebné k ověření u proxy."
