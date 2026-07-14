@@ -580,6 +580,23 @@
 					<default>true</default>
 					<level>1</level>
 				</setting>
+				<setting id="kodi_episode_reset" type="boolean" label="32192" help="" parent="kodi_episode_playcount">
+					<control type="toggle" />
+					<default>false</default>
+					<level>1</level>
+					<dependencies>
+						<dependency type="visible" setting="kodi_episode_playcount">true</dependency>
+					</dependencies>
+				</setting>
+				<setting id="kodi_episode_reset_specials" type="boolean" label="32193" help="" parent="kodi_episode_reset">
+					<control type="toggle" />
+					<default>false</default>
+					<level>1</level>
+					<dependencies>
+						<dependency type="visible" setting="kodi_episode_playcount">true</dependency>
+						<dependency type="enable" setting="kodi_episode_reset">true</dependency>
+					</dependencies>
+				</setting>
 				<setting id="trakt_episode_playback" type="boolean" label="32118" help="">
 					<control type="toggle" />
 					<default>false</default>
