@@ -217,6 +217,23 @@ def test_get_all_pages_follows_pagination_headers():
     )
 
 
+def test_get_all_pages_merges_extra_params_into_query():
+    api = traktAPI.__new__(traktAPI)
+    api.client = TraktClient("id", "secret", "ua")
+    api._get = mock.Mock(return_value=([{"title": "One"}], {}))
+
+    api._get_all_pages(
+        "/sync/watched/shows", authorized=True, params={"extended": "progress"}
+    )
+
+    api._get.assert_called_once_with(
+        "/sync/watched/shows?page=1&limit=100&extended=progress",
+        authorized=True,
+        timeout=90,
+        include_headers=True,
+    )
+
+
 def test_get_all_ratings_fetches_current_rating_bucket_endpoints():
     api = traktAPI.__new__(traktAPI)
     api._get_all_pages = mock.Mock(return_value=[])
@@ -267,6 +284,55 @@ def test_episode_playback_progress_uses_pagination():
     )
     episode = result[0].to_dict()["seasons"][0]["episodes"][0]
     assert episode["progress"] == 50
+
+
+def test_get_shows_watched_requests_progress_and_paginates():
+    api = traktAPI.__new__(traktAPI)
+    api._get_all_pages = mock.Mock(
+        return_value=[
+            {
+                "plays": 3,
+                "last_watched_at": "2026-01-01T00:00:00.000Z",
+                "show": {"title": "Show", "ids": {"trakt": 1}},
+                "seasons": [{"number": 1, "episodes": [{"number": 1, "plays": 1}]}],
+            }
+        ]
+    )
+
+    result = api.getShowsWatched({})
+
+    # extended=progress is what restores the season/episode breakdown (Trakt 2026
+    # API change); without it episode watched-state can't be synced.
+    api._get_all_pages.assert_called_once_with(
+        "/sync/watched/shows",
+        authorized=True,
+        timeout=90,
+        params={"extended": "progress"},
+    )
+    episode = result[1].to_dict()["seasons"][0]["episodes"][0]
+    assert episode["plays"] == 1
+
+
+def test_get_shows_collected_paginates():
+    api = traktAPI.__new__(traktAPI)
+    api._get_all_pages = mock.Mock(return_value=[])
+
+    api.getShowsCollected({})
+
+    api._get_all_pages.assert_called_once_with(
+        "/sync/collection/shows", authorized=True, timeout=90
+    )
+
+
+def test_get_movies_watched_paginates():
+    api = traktAPI.__new__(traktAPI)
+    api._get_all_pages = mock.Mock(return_value=[])
+
+    api.getMoviesWatched({})
+
+    api._get_all_pages.assert_called_once_with(
+        "/sync/watched/movies", authorized=True, timeout=90
+    )
 
 
 def test_client_retries_once_after_rate_limit_retry_after():
