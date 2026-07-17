@@ -460,6 +460,9 @@ class traktAPI(object):
         for key in metadata_keys:
             if key in item:
                 media[key] = item[key]
+        # Normalize watched status for callers expecting it.
+        if "plays" in media and "watched" not in media:
+            media["watched"] = 1 if media["plays"] > 0 else 0
         ids = media.get("ids") or {}
         key = ids.get("trakt") or media.get("title") or len(store)
         existing = store.get(key)
