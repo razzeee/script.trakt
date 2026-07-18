@@ -466,9 +466,28 @@ class traktAPI(object):
         if existing:
             merged = existing.to_dict()
             merged.update(media)
-            store[key] = TraktObject(merged)
         else:
-            store[key] = TraktObject(media)
+            merged = media
+        if media_key == "movie":
+            self._normalize_video(merged, media)
+        store[key] = TraktObject(merged)
+
+    def _normalize_video(self, merged: Dict, incoming: Dict) -> None:
+        if "plays" in incoming:
+            merged["watched"] = 1 if incoming["plays"] > 0 else 0
+        elif "watched" not in merged:
+            merged["watched"] = 1 if merged.get("plays", 0) > 0 else 0
+        if "plays" not in merged:
+            merged["plays"] = 0
+        if "collected_at" in incoming:
+            merged["collected"] = 1
+        elif "collected" not in merged:
+            merged["collected"] = 1 if merged.get("collected_at") else 0
+        merged.setdefault("in_watchlist", 0)
+        merged.setdefault("progress", None)
+        merged.setdefault("last_watched_at", None)
+        merged.setdefault("collected_at", None)
+        merged.setdefault("paused_at", None)
 
     def _merge_show(
         self, store: Dict, item: Dict, metadata_keys: Iterable[str]
@@ -523,6 +542,7 @@ class traktAPI(object):
             number = episode.get("number")
             merged = episodes.get(number, {"number": number})
             merged.update(episode)
+            self._normalize_video(merged, episode)
             episodes[number] = merged
         return list(episodes.values())
 
