@@ -19,6 +19,7 @@ xbmcaddon_mock = mock.Mock()
 xbmcaddon_mock.Addon.return_value.getAddonInfo.return_value = "3.8.2"
 sys.modules["xbmcaddon"] = xbmcaddon_mock
 
+from resources.lib import utilities  # noqa: E402
 from resources.lib.traktapi import TraktClient, TraktObject, TraktSeason, traktAPI  # noqa: E402
 
 
@@ -68,6 +69,83 @@ def test_merge_movie_sync_payloads_preserves_object_shape():
     assert movie.to_dict()["plays"] == 2
 
 
+def test_merge_movie_collection_payload_preserves_legacy_defaults():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_object(
+        store,
+        {
+            "collected_at": "2024-01-01",
+            "movie": {"title": "Movie", "year": 2024, "ids": {"trakt": 1}},
+        },
+        "movie",
+        ("collected_at",),
+    )
+
+    movie = store[1].to_dict()
+    assert movie["collected"] == 1
+    assert movie["watched"] == 0
+    assert movie["plays"] == 0
+    assert movie["in_watchlist"] == 0
+    assert movie["progress"] is None
+    assert movie["last_watched_at"] is None
+    assert movie["paused_at"] is None
+
+
+def test_merge_movie_watched_payload_preserves_legacy_defaults():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_object(
+        store,
+        {"plays": 2, "movie": {"title": "Movie", "ids": {"trakt": 1}}},
+        "movie",
+        ("plays",),
+    )
+
+    movie = store[1].to_dict()
+    assert movie["watched"] == 1
+    assert movie["collected"] == 0
+    assert movie["plays"] == 2
+    assert movie["in_watchlist"] == 0
+    assert movie["progress"] is None
+    assert movie["collected_at"] is None
+    assert movie["paused_at"] is None
+
+
+def test_collected_only_trakt_movie_does_not_break_watched_compare():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_object(
+        store,
+        {
+            "collected_at": "2024-01-01",
+            "movie": {"title": "Movie", "year": 2024, "ids": {"trakt": 1}},
+        },
+        "movie",
+        ("collected_at",),
+    )
+
+    kodi_movies = [
+        {
+            "title": "Movie",
+            "year": 2024,
+            "ids": {"trakt": 1},
+            "watched": 1,
+            "plays": 1,
+            "movieid": 10,
+        }
+    ]
+    trakt_movies = [movie.to_dict() for movie in store.values()]
+
+    assert (
+        utilities.compareMovies(kodi_movies, trakt_movies, True, watched=True)
+        == kodi_movies
+    )
+
+
 def test_merge_show_payloads_merges_nested_episodes():
     api = traktAPI.__new__(traktAPI)
     store = {}
@@ -93,6 +171,89 @@ def test_merge_show_payloads_merges_nested_episodes():
 
     episode = store[1].to_dict()["seasons"][0]["episodes"][0]
     assert episode["collected_at"] == "now"
+    assert episode["plays"] == 3
+
+
+def test_merge_show_collection_payload_preserves_legacy_episode_defaults():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_show(
+        store,
+        {
+            "show": {"title": "Show", "ids": {"trakt": 1}},
+            "seasons": [
+                {
+                    "number": 1,
+                    "episodes": [{"number": 2, "collected_at": "now"}],
+                }
+            ],
+        },
+        ("collected_at",),
+    )
+
+    episode = store[1].to_dict()["seasons"][0]["episodes"][0]
+    assert episode["collected"] == 1
+    assert episode["watched"] == 0
+    assert episode["plays"] == 0
+    assert episode["in_watchlist"] == 0
+    assert episode["progress"] is None
+    assert episode["last_watched_at"] is None
+    assert episode["paused_at"] is None
+
+
+def test_merge_show_watched_payload_preserves_legacy_episode_defaults():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_show(
+        store,
+        {
+            "show": {"title": "Show", "ids": {"trakt": 1}},
+            "seasons": [{"number": 1, "episodes": [{"number": 2, "plays": 3}]}],
+        },
+        ("plays",),
+    )
+
+    episode = store[1].to_dict()["seasons"][0]["episodes"][0]
+    assert episode["watched"] == 1
+    assert episode["collected"] == 0
+    assert episode["plays"] == 3
+    assert episode["in_watchlist"] == 0
+    assert episode["progress"] is None
+    assert episode["collected_at"] is None
+    assert episode["paused_at"] is None
+
+
+def test_merge_show_preserves_episode_flags_across_collection_and_watched_payloads():
+    api = traktAPI.__new__(traktAPI)
+    store = {}
+
+    api._merge_show(
+        store,
+        {
+            "show": {"title": "Show", "ids": {"trakt": 1}},
+            "seasons": [
+                {
+                    "number": 1,
+                    "episodes": [{"number": 2, "collected_at": "now"}],
+                }
+            ],
+        },
+        ("collected_at",),
+    )
+    api._merge_show(
+        store,
+        {
+            "show": {"title": "Show", "ids": {"trakt": 1}},
+            "seasons": [{"number": 1, "episodes": [{"number": 2, "plays": 3}]}],
+        },
+        ("plays",),
+    )
+
+    episode = store[1].to_dict()["seasons"][0]["episodes"][0]
+    assert episode["collected"] == 1
+    assert episode["watched"] == 1
     assert episode["plays"] == 3
 
 
