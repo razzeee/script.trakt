@@ -1,3 +1,9 @@
+version 3.9.0
+- Replace trakt.py dependency with built-in REST client
+- Fix: Adapt to Trakt 2026 API changes (pagination and extended=progress for watched/collected sync)
+- Fix: Restore legacy sync video defaults to keep watched/collection comparisons working
+- Fix: Normalize movie watched state from new Trakt API response format
+
 version 3.8.2
 - Fix: Handle empty Kodi media details
 - Fix functional bugs in utilities and scrobbler
