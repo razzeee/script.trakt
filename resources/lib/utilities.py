@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-#
-
 import difflib
-import time
-import re
 import logging
+import re
+import time
 import traceback
-from typing import Tuple, List, Dict, Union, Optional
+from datetime import datetime, timezone
+
 import dateutil.parser
-from datetime import datetime
-from dateutil.tz import tzutc, tzlocal
+from dateutil.tz import tzlocal, tzutc
 
 # make strptime call prior to doing anything, to try and prevent threading
 # errors
@@ -38,35 +35,37 @@ def isValidMediaType(type: str) -> bool:
     return type in ["movie", "show", "season", "episode"]
 
 
-def chunks(list_data: List, n: int) -> List:
+def chunks(list_data: list, n: int) -> list:
     return [list_data[i : i + n] for i in range(0, len(list_data), n)]
 
 
-def getFormattedItemName(type: str, info: Dict) -> str:
+def getFormattedItemName(type: str, info: dict) -> str:
     s = ""
     try:
         if isShow(type):
             s = info["title"]
         elif isEpisode(type):
-            s = "S%02dE%02d - %s" % (info["season"], info["number"], info["title"])
+            s = "S{:02d}E{:02d} - {:s}".format(
+                info["season"], info["number"], info["title"]
+            )
         elif isSeason(type):
             if isinstance(info, list):
                 info = info[0]
             if info["season"] > 0:
-                s = "%s - Season %d" % (info["title"], info["season"])
+                s = "{:s} - Season {:d}".format(info["title"], info["season"])
             else:
-                s = "%s - Specials" % info["title"]
+                s = "{} - Specials".format(info["title"])
         elif isMovie(type):
-            s = "%s (%s)" % (info["title"], info["year"])
+            s = "{} ({})".format(info["title"], info["year"])
     except KeyError:
         s = ""
     return s
 
 
-def __findInList(list_data: List, case_sensitive: bool = True, **kwargs) -> Optional[Dict]:
+def __findInList(list_data: list, case_sensitive: bool = True, **kwargs) -> dict | None:
     for item in list_data:
         i = 0
-        for key in kwargs:
+        for key, expected in kwargs.items():
             # because we can need to find at the root level and inside ids this
             # is is required
             if key in item:
@@ -77,18 +76,20 @@ def __findInList(list_data: List, case_sensitive: bool = True, **kwargs) -> Opti
                 else:
                     continue
             if not case_sensitive and isinstance(key_val, str):
-                if key_val.lower() == kwargs[key].lower():
+                if key_val.lower() == expected.lower():
                     i = i + 1
             else:
                 # forcing the compare to be done at the string level
-                if str(key_val) == str(kwargs[key]):
+                if str(key_val) == str(expected):
                     i = i + 1
         if i == len(kwargs):
             return item
     return None
 
 
-def findMediaObject(mediaObjectToMatch: Dict, listToSearch: List, matchByTitleAndYear: bool) -> Optional[Dict]:
+def findMediaObject(
+    mediaObjectToMatch: dict, listToSearch: list, matchByTitleAndYear: bool
+) -> dict | None:
     result = None
     if (
         result is None
@@ -134,7 +135,7 @@ def findMediaObject(mediaObjectToMatch: Dict, listToSearch: List, matchByTitleAn
     return result
 
 
-def regex_tvshow(label: str) -> Tuple[str, int, int]:
+def regex_tvshow(label: str) -> tuple[str, int, int]:
     regexes = [
         # ShowTitle.S01E09; s01e09, s01.e09, s01-e09
         r"(.*?)[._ -]s([0-9]+)[._ -]*e([0-9]+)",
@@ -148,7 +149,7 @@ def regex_tvshow(label: str) -> Tuple[str, int, int]:
     ]  # ShowTitle - s01ep03, ShowTitle - s1ep03
 
     for regex in regexes:
-        match = re.search(regex, label, re.I)
+        match = re.search(regex, label, re.IGNORECASE)
         if match:
             show_title, season, episode = match.groups()
             if show_title:
@@ -160,7 +161,7 @@ def regex_tvshow(label: str) -> Tuple[str, int, int]:
     return "", -1, -1
 
 
-def regex_year(title: str) -> Tuple[str, str]:
+def regex_year(title: str) -> tuple[str, str]:
     prog = re.compile(r"^(.+) \((\d{4})\)$")
     result = prog.match(title)
 
@@ -170,7 +171,7 @@ def regex_year(title: str) -> Tuple[str, str]:
         return "", ""
 
 
-def findMovieMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
+def findMovieMatchInList(id: str, listToMatch: dict, idType: str) -> dict:
     return next(
         (
             item.to_dict()
@@ -181,7 +182,7 @@ def findMovieMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
     )
 
 
-def findShowMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
+def findShowMatchInList(id: str, listToMatch: dict, idType: str) -> dict:
     return next(
         (
             item.to_dict()
@@ -192,9 +193,11 @@ def findShowMatchInList(id: str, listToMatch: Dict, idType: str) -> Dict:
     )
 
 
-def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType: str) -> Dict:
+def findSeasonMatchInList(
+    id: str, seasonNumber: int, listToMatch: dict, idType: str
+) -> dict:
     show = findShowMatchInList(id, listToMatch, idType)
-    logger.debug("findSeasonMatchInList %s" % show)
+    logger.debug(f"findSeasonMatchInList {show}")
     if "seasons" in show:
         for season in show["seasons"]:
             if season["number"] == seasonNumber:
@@ -203,7 +206,9 @@ def findSeasonMatchInList(id: str, seasonNumber: int, listToMatch: Dict, idType:
     return {}
 
 
-def findEpisodeMatchInList(id: str, seasonNumber: int, episodeNumber: int, list_data: Dict, idType: str) -> Dict:
+def findEpisodeMatchInList(
+    id: str, seasonNumber: int, episodeNumber: int, list_data: dict, idType: str
+) -> dict:
     season = findSeasonMatchInList(id, seasonNumber, list_data, idType)
     if season:
         for episode in season["episodes"]:
@@ -213,7 +218,7 @@ def findEpisodeMatchInList(id: str, seasonNumber: int, episodeNumber: int, list_
     return {}
 
 
-def convertDateTimeToUTC(toConvert: Optional[str]) -> Optional[str]:
+def convertDateTimeToUTC(toConvert: str | None) -> str | None:
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
         try:
@@ -228,13 +233,13 @@ def convertDateTimeToUTC(toConvert: Optional[str]) -> Optional[str]:
             logger.debug(
                 "convertDateTimeToUTC() ValueError: movie/show was collected/watched outside of the unix timespan. Fallback to datetime utcnow"
             )
-            utc = datetime.utcnow()
+            utc = datetime.now(timezone.utc).replace(tzinfo=None)  # noqa: UP017 - retain Python 3.10 compatibility
         return str(utc)
     else:
         return toConvert
 
 
-def convertUtcToDateTime(toConvert: Optional[str]) -> Optional[str]:
+def convertUtcToDateTime(toConvert: str | None) -> str | None:
     if toConvert:
         dateFormat = "%Y-%m-%d %H:%M:%S"
         try:
@@ -263,7 +268,7 @@ def createError(ex: Exception) -> str:
     return template.format(type(ex).__name__, ex.args, traceback.format_exc())
 
 
-def guessBestTraktId(id: str, type: str) -> Tuple[Dict, str]:
+def guessBestTraktId(id: str, type: str) -> tuple[dict, str]:
     data = {}
     id_type = ""
     if id.startswith("tt"):
@@ -281,7 +286,7 @@ def guessBestTraktId(id: str, type: str) -> Tuple[Dict, str]:
     return data, id_type
 
 
-def best_id(ids: Dict, type: str) -> Tuple[str, str]:
+def best_id(ids: dict, type: str) -> tuple[str, str]:
     if "trakt" in ids:
         return ids["trakt"], "trakt"
     elif "imdb" in ids and isMovie(type):
@@ -296,18 +301,19 @@ def best_id(ids: Dict, type: str) -> Tuple[str, str]:
         return ids["slug"], "slug"
 
 
-def checkExcludePath(excludePath: str, excludePathEnabled: bool, fullpath: str, x: int) -> bool:
+def checkExcludePath(
+    excludePath: str, excludePathEnabled: bool, fullpath: str, x: int
+) -> bool:
     if excludePath != "" and excludePathEnabled and fullpath.startswith(excludePath):
         logger.debug(
-            "checkExclusion(): Video is from location, which is currently set as excluded path %i."
-            % x
+            f"checkExclusion(): Video is from location, which is currently set as excluded path {x:d}."
         )
         return True
     else:
         return False
 
 
-def sanitizeMovies(movies: List) -> None:
+def sanitizeMovies(movies: list) -> None:
     # do not remove watched_at and collected_at may cause problems between the
     # 4 sync types (would probably have to deepcopy etc)
     for movie in movies:
@@ -326,7 +332,7 @@ def sanitizeMovies(movies: List) -> None:
 # todo add tests
 
 
-def sanitizeShows(shows: Dict) -> None:
+def sanitizeShows(shows: dict) -> None:
     # do not remove watched_at and collected_at may cause problems between the
     # 4 sync types (would probably have to deepcopy etc)
     for show in shows["shows"]:
@@ -345,14 +351,14 @@ def sanitizeShows(shows: Dict) -> None:
 
 
 def compareMovies(
-    movies_col1: List,
-    movies_col2: List,
+    movies_col1: list,
+    movies_col2: list,
     matchByTitleAndYear: bool,
     watched: bool = False,
     restrict: bool = False,
     playback: bool = False,
     rating: bool = False,
-) -> List:
+) -> list:
     movies = []
     for movie_col1 in movies_col1:
         if movie_col1:
@@ -384,20 +390,29 @@ def compareMovies(
                     if "collected" in movie_col2 and not movie_col2["collected"]:
                         movies.append(movie_col1)
             else:  # no match found
-                if not restrict:
-                    if "collected" in movie_col1 and movie_col1["collected"]:
-                        if watched and (movie_col1["watched"] == 1):
-                            movies.append(movie_col1)
-                        elif rating and movie_col1["rating"] != 0:
-                            movies.append(movie_col1)
-                        elif not watched and not rating:
-                            movies.append(movie_col1)
+                if (
+                    not restrict
+                    and movie_col1.get("collected")
+                    and (
+                        watched
+                        and (movie_col1["watched"] == 1)
+                        or rating
+                        and movie_col1["rating"] != 0
+                        or not watched
+                        and not rating
+                    )
+                ):
+                    movies.append(movie_col1)
     return movies
 
 
 def compareShows(
-    shows_col1: Dict, shows_col2: Dict, matchByTitleAndYear: bool, rating: bool = False, restrict: bool = False
-) -> Dict:
+    shows_col1: dict,
+    shows_col2: dict,
+    matchByTitleAndYear: bool,
+    rating: bool = False,
+    restrict: bool = False,
+) -> dict:
     shows = []
     # logger.debug("shows_col1 %s" % shows_col1)
     # logger.debug("shows_col2 %s" % shows_col2)
@@ -454,15 +469,15 @@ def compareShows(
 
 # always return shows_col1 if you have enrich it, but don't return shows_col2
 def compareEpisodes(
-    shows_col1: Dict,
-    shows_col2: Dict,
+    shows_col1: dict,
+    shows_col2: dict,
     matchByTitleAndYear: bool,
     watched: bool = False,
     restrict: bool = False,
-    collected: Union[Dict, bool] = False,
+    collected: dict | bool = False,
     playback: bool = False,
     rating: bool = False,
-) -> Dict:
+) -> dict:
     shows = []
     # logger.debug("epi shows_col1 %s" % shows_col1)
     # logger.debug("epi shows_col2 %s" % shows_col2)
@@ -577,9 +592,8 @@ def compareEpisodes(
                                 if len(eps) > 0:
                                     season_diff[season] = eps
                     else:
-                        if not restrict and not rating:
-                            if len(a) > 0:
-                                season_diff[season] = a
+                        if not restrict and not rating and len(a) > 0:
+                            season_diff[season] = a
                 # logger.debug("season_diff %s" % season_diff)
                 if len(season_diff) > 0:
                     # logger.debug("Season_diff")
@@ -593,10 +607,8 @@ def compareEpisodes(
                         show["ids"].update(show_col1["ids"])
                     if show_col2["ids"]:
                         show["ids"].update(show_col2["ids"])
-                    for seasonKey in season_diff:
-                        episodes = []
-                        for episodeKey in season_diff[seasonKey]:
-                            episodes.append(season_diff[seasonKey][episodeKey])
+                    for seasonKey, season_episodes in season_diff.items():
+                        episodes = list(season_episodes.values())
                         show["seasons"].append(
                             {"number": seasonKey, "episodes": episodes}
                         )
@@ -605,42 +617,44 @@ def compareEpisodes(
                     # logger.debug("show %s" % show)
                     shows.append(show)
             else:
-                if not restrict:
-                    if countEpisodes([show_col1]) > 0:
-                        show = {
-                            "title": show_col1["title"],
-                            "ids": {},
-                            "year": show_col1["year"],
-                            "seasons": [],
-                        }
-                        if show_col1["ids"]:
-                            show["ids"].update(show_col1["ids"])
-                        for seasonKey in show_col1["seasons"]:
-                            episodes = []
-                            for episodeKey in seasonKey["episodes"]:
-                                if watched and (episodeKey["watched"] == 1):
-                                    episodes.append(episodeKey)
-                                elif rating and episodeKey["rating"] != 0:
-                                    episodes.append(episodeKey)
-                                elif not watched and not rating:
-                                    episodes.append(episodeKey)
-                            if len(episodes) > 0:
-                                show["seasons"].append(
-                                    {
-                                        "number": seasonKey["number"],
-                                        "episodes": episodes,
-                                    }
-                                )
+                if not restrict and countEpisodes([show_col1]) > 0:
+                    show = {
+                        "title": show_col1["title"],
+                        "ids": {},
+                        "year": show_col1["year"],
+                        "seasons": [],
+                    }
+                    if show_col1["ids"]:
+                        show["ids"].update(show_col1["ids"])
+                    for seasonKey in show_col1["seasons"]:
+                        episodes = []
+                        for episodeKey in seasonKey["episodes"]:
+                            if (
+                                watched
+                                and (episodeKey["watched"] == 1)
+                                or rating
+                                and episodeKey["rating"] != 0
+                                or not watched
+                                and not rating
+                            ):
+                                episodes.append(episodeKey)
+                        if len(episodes) > 0:
+                            show["seasons"].append(
+                                {
+                                    "number": seasonKey["number"],
+                                    "episodes": episodes,
+                                }
+                            )
 
-                        if "tvshowid" in show_col1:
-                            del show_col1["tvshowid"]
-                        if countEpisodes([show]) > 0:
-                            shows.append(show)
+                    if "tvshowid" in show_col1:
+                        del show_col1["tvshowid"]
+                    if countEpisodes([show]) > 0:
+                        shows.append(show)
     result = {"shows": shows}
     return result
 
 
-def countEpisodes(shows: Union[Dict, List], collection: bool = True) -> int:
+def countEpisodes(shows: dict | list, collection: bool = True) -> int:
     count = 0
     if "shows" in shows:
         shows = shows["shows"]
@@ -651,15 +665,15 @@ def countEpisodes(shows: Union[Dict, List], collection: bool = True) -> int:
                     if episodeKey is not None:
                         if (
                             "collected" in episodeKey
-                            and not episodeKey["collected"] == collection
+                            and episodeKey["collected"] != collection
                         ):
                             continue
-                        if "number" in episodeKey and episodeKey["number"]:
+                        if episodeKey.get("number"):
                             count += 1
     return count
 
 
-def __getEpisodes(seasons: List) -> Dict:
+def __getEpisodes(seasons: list) -> dict:
     data = {}
     for season in seasons:
         episodes = {}
@@ -681,12 +695,12 @@ def checkIfNewVersion(old: str, new: str) -> bool:
     if old[1] < new[1]:
         return True
     # Revision
-    if old[2] < new[2]:
-        return True
-    return False
+    return old[2] < new[2]
 
 
-def _to_sec(timedelta_string: str, factors: Tuple[int, ...] = (1, 60, 3600, 86400)) -> float:
+def _to_sec(
+    timedelta_string: str, factors: tuple[int, ...] = (1, 60, 3600, 86400)
+) -> float:
     """[[[days:]hours:]minutes:]seconds -> seconds"""
     return sum(
         x * y
