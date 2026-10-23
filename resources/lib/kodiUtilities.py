@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-#
+import json
+import logging
+import re
 
 import xbmc
-import xbmcgui
 import xbmcaddon
-import json
-import re
-import logging
-from typing import Tuple, List, Dict, Union, Optional
-from resources.lib import utilities
+import xbmcgui
 
+from resources.lib import utilities
 
 # read settings
 __addon__ = xbmcaddon.Addon("script.trakt")
@@ -20,7 +17,10 @@ REGEX_URL = "(^https?://)(.+)"
 
 
 def notification(
-    header: str, message: str, time: int = 5000, icon: str = __addon__.getAddonInfo("icon")
+    header: str,
+    message: str,
+    time: int = 5000,
+    icon: str = __addon__.getAddonInfo("icon"),
 ) -> None:
     xbmcgui.Dialog().notification(header, message, icon, time)
 
@@ -33,7 +33,7 @@ def getSetting(setting: str) -> str:
     return __addon__.getSetting(setting).strip()
 
 
-def setSetting(setting: str, value: Union[str, int, float, bool]) -> None:
+def setSetting(setting: str, value: str | float | bool) -> None:
     __addon__.setSetting(setting, str(value))
 
 
@@ -59,7 +59,7 @@ def getString(string_id: int) -> str:
     return __addon__.getLocalizedString(string_id)
 
 
-def kodiJsonRequest(params: Dict) -> Optional[Union[Dict, List]]:
+def kodiJsonRequest(params: dict) -> dict | list | None:
     data = json.dumps(params)
     request = xbmc.executeJSONRPC(data)
 
@@ -70,7 +70,7 @@ def kodiJsonRequest(params: Dict) -> Optional[Union[Dict, List]]:
             return response["result"]
         return None
     except KeyError:
-        logger.warn("[%s] %s" % (params["method"], response["error"]["message"]))
+        logger.warning("[{}] {}".format(params["method"], response["error"]["message"]))
         return None
 
 
@@ -113,18 +113,21 @@ def checkExclusion(fullpath: str) -> bool:
 
     # Path exclusions
     ExcludePath = getSetting("ExcludePath")
-    if ExcludePath != "" and getSettingAsBool("ExcludePathOption"):
-        if fullpath.startswith(ExcludePath):
-            logger.debug(
-                "checkExclusion(): Video is from location, which is currently set as excluded path 1."
-            )
-            return True
+    if (
+        ExcludePath != ""
+        and getSettingAsBool("ExcludePathOption")
+        and fullpath.startswith(ExcludePath)
+    ):
+        logger.debug(
+            "checkExclusion(): Video is from location, which is currently set as excluded path 1."
+        )
+        return True
 
     found = False
     for x in range(2, 13):
         found |= utilities.checkExcludePath(
-            getSetting("ExcludePath%i" % x),
-            getSettingAsBool("ExcludePathOption%i" % x),
+            getSetting(f"ExcludePath{x:d}"),
+            getSettingAsBool(f"ExcludePathOption{x:d}"),
             fullpath,
             x,
         )
@@ -132,7 +135,9 @@ def checkExclusion(fullpath: str) -> bool:
     return found
 
 
-def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") -> Optional[Dict]:
+def kodiRpcToTraktMediaObject(
+    type: str, data: dict, mode: str = "collected"
+) -> dict | None:
     if type == "show":
         if "uniqueid" in data:
             data["ids"] = data.pop("uniqueid")
@@ -194,9 +199,12 @@ def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") ->
         episode["rating"] = (
             data["userrating"] if "userrating" in data and data["userrating"] > 0 else 0
         )
-        if mode == "watched" and episode["watched"]:
-            return episode
-        elif mode == "collected" and episode["collected"]:
+        if (
+            mode == "watched"
+            and episode["watched"]
+            or mode == "collected"
+            and episode["collected"]
+        ):
             return episode
         else:
             return
@@ -231,7 +239,7 @@ def kodiRpcToTraktMediaObject(type: str, data: Dict, mode: str = "collected") ->
         return
 
 
-def kodiRpcToTraktMediaObjects(data: Dict, mode: str = "collected") -> Optional[List]:
+def kodiRpcToTraktMediaObjects(data: dict, mode: str = "collected") -> list | None:
     if "tvshows" in data:
         shows = data["tvshows"]
 
@@ -252,8 +260,8 @@ def kodiRpcToTraktMediaObjects(data: Dict, mode: str = "collected") -> Optional[
             if episodeObject:
                 a_episodes[s_no].append(episodeObject)
 
-        for episode in a_episodes:
-            seasons.append({"number": episode, "episodes": a_episodes[episode]})
+        for episode, episodes in a_episodes.items():
+            seasons.append({"number": episode, "episodes": episodes})
         return seasons
 
     elif "movies" in data:
@@ -271,7 +279,7 @@ def kodiRpcToTraktMediaObjects(data: Dict, mode: str = "collected") -> Optional[
         return
 
 
-def getShowDetailsFromKodi(showID: int, fields: List) -> Optional[Dict]:
+def getShowDetailsFromKodi(showID: int, fields: list) -> dict | None:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -280,7 +288,7 @@ def getShowDetailsFromKodi(showID: int, fields: List) -> Optional[Dict]:
             "id": 1,
         }
     )
-    logger.debug("getShowDetailsFromKodi(): %s" % str(result))
+    logger.debug(f"getShowDetailsFromKodi(): {result!s}")
 
     if not result:
         logger.debug("getShowDetailsFromKodi(): Result from Kodi was empty.")
@@ -293,7 +301,7 @@ def getShowDetailsFromKodi(showID: int, fields: List) -> Optional[Dict]:
         return None
 
 
-def getSeasonDetailsFromKodi(seasonID: int, fields: List) -> Optional[Dict]:
+def getSeasonDetailsFromKodi(seasonID: int, fields: list) -> dict | None:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -302,7 +310,7 @@ def getSeasonDetailsFromKodi(seasonID: int, fields: List) -> Optional[Dict]:
             "id": 1,
         }
     )
-    logger.debug("getSeasonDetailsFromKodi(): %s" % str(result))
+    logger.debug(f"getSeasonDetailsFromKodi(): {result!s}")
 
     if not result:
         logger.debug("getSeasonDetailsFromKodi(): Result from Kodi was empty.")
@@ -318,7 +326,7 @@ def getSeasonDetailsFromKodi(seasonID: int, fields: List) -> Optional[Dict]:
 # get a single episode from kodi given the id
 
 
-def getEpisodeDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
+def getEpisodeDetailsFromKodi(libraryId: int, fields: list) -> dict | None:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -327,7 +335,7 @@ def getEpisodeDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
             "id": 1,
         }
     )
-    logger.debug("getEpisodeDetailsFromKodi(): %s" % str(result))
+    logger.debug(f"getEpisodeDetailsFromKodi(): {result!s}")
 
     if not result:
         logger.debug("getEpisodeDetailsFromKodi(): Result from Kodi was empty.")
@@ -359,7 +367,7 @@ def getEpisodeDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
 # get a single movie from kodi given the id
 
 
-def getMovieDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
+def getMovieDetailsFromKodi(libraryId: int, fields: list) -> dict | None:
     result = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -368,7 +376,7 @@ def getMovieDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
             "id": 1,
         }
     )
-    logger.debug("getMovieDetailsFromKodi(): %s" % str(result))
+    logger.debug(f"getMovieDetailsFromKodi(): {result!s}")
 
     if not result:
         logger.debug("getMovieDetailsFromKodi(): Result from Kodi was empty.")
@@ -381,7 +389,7 @@ def getMovieDetailsFromKodi(libraryId: int, fields: List) -> Optional[Dict]:
         return None
 
 
-def checkAndConfigureProxy() -> Optional[str]:
+def checkAndConfigureProxy() -> str | None:
     proxyActive = kodiJsonRequest(
         {
             "jsonrpc": "2.0",
@@ -481,10 +489,10 @@ def checkAndConfigureProxy() -> Optional[str]:
     return None
 
 
-def getMediaType() -> Optional[str]:
+def getMediaType() -> str | None:
     listType = xbmc.getInfoLabel("ListItem.DBTYPE")
 
-    xbmc.log("list item type: %s" % listType, xbmc.LOGINFO)
+    xbmc.log(f"list item type: {listType}", xbmc.LOGINFO)
 
     if listType == "movie":
         return "movie"
@@ -498,7 +506,7 @@ def getMediaType() -> Optional[str]:
         return None
 
 
-def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
+def getInfoLabelDetails(result: dict) -> tuple[str, dict]:
     type = result["item"]["type"]
     data = {"action": "started"}
     # check type of item
@@ -520,8 +528,7 @@ def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
         if video_ids:
             data["video_ids"] = json.loads(video_ids)
         logger.debug(
-            "getInfoLabelDetails info - ids: %s, showtitle: %s, Year: %s, Season: %s, Episode: %s"
-            % (video_ids, showtitle, year, season, episode)
+            f"getInfoLabelDetails info - ids: {video_ids}, showtitle: {showtitle}, Year: {year}, Season: {season}, Episode: {episode}"
         )
 
         if season >= 0 and episode > 0 and (showtitle or video_ids):
@@ -535,8 +542,9 @@ def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
             if year.isdigit():
                 data["year"] = int(year)
             logger.debug(
-                "getInfoLabelDetails - Playing a non-library 'episode' - %s - S%02dE%02d - %s."
-                % (data["showtitle"], data["season"], data["episode"], data["title"])
+                "getInfoLabelDetails - Playing a non-library 'episode' - {:s} - S{:02d}E{:02d} - {:s}.".format(
+                    data["showtitle"], data["season"], data["episode"], data["title"]
+                )
             )
         elif (year or video_ids) and season < 0 and not title:
             # we have a year or video_id and no season/showtitle info, enough for a movie
@@ -546,8 +554,9 @@ def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
                 data["year"] = int(year)
             data["title"] = utilities.regex_year(showtitle)[0] or showtitle
             logger.debug(
-                "getInfoLabelDetails - Playing a non-library 'movie' - %s (%s)."
-                % (data["title"], data.get("year", "NaN"))
+                "getInfoLabelDetails - Playing a non-library 'movie' - {} ({}).".format(
+                    data["title"], data.get("year", "NaN")
+                )
             )
         elif showtitle or title:
             title, season, episode = utilities.regex_tvshow(title)
@@ -558,8 +567,7 @@ def getInfoLabelDetails(result: Dict) -> Tuple[str, Dict]:
             data["episode"] = episode
             data["title"] = data["showtitle"] = title or showtitle
             logger.debug(
-                "getInfoLabelDetails - Title: %s, showtitle: %s, season: %d, episode: %d"
-                % (title, showtitle, season, episode)
+                f"getInfoLabelDetails - Title: {title:s}, showtitle: {showtitle:s}, season: {season:d}, episode: {episode:d}"
             )
         else:
             logger.debug(
