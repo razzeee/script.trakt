@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
-#
 import logging
 import os
-import socket
 import threading
 import time
-from json import dumps, loads
-from typing import Any, Dict, Iterable, List, Optional
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Iterable
+from json import dumps, loads
+from typing import Any, Optional
 
 import xbmcaddon
+
 from resources.lib import deviceAuthDialog
 from resources.lib.kodiUtilities import (
     checkAndConfigureProxy,
@@ -21,13 +20,13 @@ from resources.lib.kodiUtilities import (
     notification,
     setSetting,
 )
+from resources.lib.obfuscation import deobfuscate
 from resources.lib.utilities import (
     findEpisodeMatchInList,
     findMovieMatchInList,
     findSeasonMatchInList,
     findShowMatchInList,
 )
-from resources.lib.obfuscation import deobfuscate
 
 # read settings
 __addon__ = xbmcaddon.Addon("script.trakt")
@@ -36,12 +35,12 @@ __addonversion__ = __addon__.getAddonInfo("version")
 logger = logging.getLogger(__name__)
 
 
-class TraktObject(object):
+class TraktObject:
     def __init__(
         self,
-        data: Optional[Dict] = None,
+        data: dict | None = None,
         show: Optional["TraktObject"] = None,
-        keys: Optional[List] = None,
+        keys: list | None = None,
     ) -> None:
         self._data = data or {}
         self._keys = keys
@@ -49,7 +48,7 @@ class TraktObject(object):
         self.pk = (self._data.get("season"), self._data.get("number"))
         self.episodes = self._build_episodes()
 
-    def _build_episodes(self) -> Dict:
+    def _build_episodes(self) -> dict:
         episodes = {}
         for season in self._data.get("seasons", []) or []:
             for episode in season.get("episodes", []) or []:
@@ -65,20 +64,20 @@ class TraktObject(object):
             raise AttributeError(name)
 
     @property
-    def keys(self) -> List:
+    def keys(self) -> list:
         if self._keys is not None:
             return self._keys
         return list((self._data.get("ids") or {}).items())
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return dict(self._data)
 
     def __repr__(self) -> str:
         return repr(self._data)
 
 
-class TraktSeason(object):
-    def __init__(self, data: Dict) -> None:
+class TraktSeason:
+    def __init__(self, data: dict) -> None:
         self._data = data
         self.number = data.get("number")
         self.episodes = {}
@@ -93,7 +92,7 @@ class TraktSeason(object):
         return repr(self._data)
 
 
-class TraktClient(object):
+class TraktClient:
     api_url = "https://api.trakt.tv"
     auth_url = "https://auth.trakt.tv"
     max_retry_after = 60
@@ -103,7 +102,7 @@ class TraktClient(object):
         client_id: str,
         client_secret: str,
         user_agent: str,
-        proxy_url: Optional[str] = None,
+        proxy_url: str | None = None,
     ) -> None:
         self.client_id = client_id
         self.client_secret = client_secret
@@ -114,13 +113,13 @@ class TraktClient(object):
         self,
         method: str,
         path: str,
-        body: Optional[Dict] = None,
-        authorization: Optional[Dict] = None,
+        body: dict | None = None,
+        authorization: dict | None = None,
         timeout: int = 30,
         retry: bool = True,
         include_headers: bool = False,
         include_error_code: bool = False,
-        base_url: Optional[str] = None,
+        base_url: str | None = None,
     ) -> Any:
         url = (base_url or self.api_url) + path
         data = dumps(body).encode("utf-8") if body is not None else None
@@ -131,7 +130,7 @@ class TraktClient(object):
             "User-Agent": self.user_agent,
         }
         if authorization and authorization.get("access_token"):
-            headers["Authorization"] = "Bearer %s" % authorization["access_token"]
+            headers["Authorization"] = "Bearer {}".format(authorization["access_token"])
 
         request = urllib.request.Request(url, data=data, headers=headers, method=method)
         opener = urllib.request.build_opener()
@@ -156,8 +155,7 @@ class TraktClient(object):
                 retry_after = self._retry_after(exc)
                 if retry_after is not None:
                     logger.debug(
-                        "Trakt rate limit reached: retrying %s %s after %s seconds"
-                        % (method, path, retry_after)
+                        f"Trakt rate limit reached: retrying {method} {path} after {retry_after} seconds"
                     )
                     time.sleep(retry_after)
                     return self.request(
@@ -173,17 +171,17 @@ class TraktClient(object):
                     )
             if exc.code == 401 and authorization and authorization.get("refresh_token"):
                 raise
-            logger.debug("Trakt request failed: %s %s -> %s" % (method, path, exc.code))
+            logger.debug(f"Trakt request failed: {method} {path} -> {exc.code}")
             if include_error_code:
                 return None, exc.code
             return None
-        except (urllib.error.URLError, TimeoutError, socket.timeout) as exc:
-            logger.debug("Trakt request failed: %s %s -> %s" % (method, path, exc))
+        except (urllib.error.URLError, TimeoutError) as exc:
+            logger.debug(f"Trakt request failed: {method} {path} -> {exc}")
             if include_error_code:
                 return None, None
             return None
 
-    def _retry_after(self, exc: urllib.error.HTTPError) -> Optional[int]:
+    def _retry_after(self, exc: urllib.error.HTTPError) -> int | None:
         try:
             retry_after = int(exc.headers.get("Retry-After"))
         except (TypeError, ValueError):
@@ -193,23 +191,23 @@ class TraktClient(object):
             return None
         return retry_after
 
-    def build_path(self, path: str, params: Optional[Dict] = None) -> str:
+    def build_path(self, path: str, params: dict | None = None) -> str:
         if not params:
             return path
         clean_params = {k: v for k, v in params.items() if v is not None}
         if not clean_params:
             return path
         separator = "&" if "?" in path else "?"
-        return "%s%s%s" % (path, separator, urllib.parse.urlencode(clean_params))
+        return f"{path}{separator}{urllib.parse.urlencode(clean_params)}"
 
 
-class traktAPI(object):
+class traktAPI:
     # Placeholders for build-time injection
     __client_id: str = "TRAKT_CLIENT_ID_PLACEHOLDER"
     __client_secret: str = "TRAKT_CLIENT_SECRET_PLACEHOLDER"
-    authorization: Optional[Dict] = None
-    authDialog: Optional[deviceAuthDialog.DeviceAuthDialog] = None
-    client: Optional[TraktClient] = None
+    authorization: dict | None = None
+    authDialog: deviceAuthDialog.DeviceAuthDialog | None = None
+    client: TraktClient | None = None
 
     def __init__(self, force: bool = False) -> None:
         logger.debug("Initializing.")
@@ -224,7 +222,7 @@ class traktAPI(object):
             client_id = deobfuscate(self.__client_id)
             client_secret = deobfuscate(self.__client_secret)
 
-        user_agent = "Kodi script.trakt/%s" % __addonversion__
+        user_agent = f"Kodi script.trakt/{__addonversion__}"
         self.client = TraktClient(client_id, client_secret, user_agent, proxyURL)
 
         if getSetting("authorization") and not force:
@@ -254,8 +252,9 @@ class traktAPI(object):
             return
 
         logger.debug(
-            'Enter the code "%s" at %s to authenticate your account'
-            % (code.get("user_code"), code.get("verification_url"))
+            'Enter the code "{}" at {} to authenticate your account'.format(
+                code.get("user_code"), code.get("verification_url")
+            )
         )
 
         self.authDialog = deviceAuthDialog.DeviceAuthDialog(
@@ -272,7 +271,7 @@ class traktAPI(object):
 
         del self.authDialog
 
-    def _poll_device_token(self, code: Dict) -> None:
+    def _poll_device_token(self, code: dict) -> None:
         if not self.client:
             return
         started_at = int(time.time())
@@ -302,9 +301,7 @@ class traktAPI(object):
                 time.sleep(interval)
                 continue
             if error_code in (404, 409, 410, 418):
-                logger.debug(
-                    "Device authentication stopped with status %s" % error_code
-                )
+                logger.debug(f"Device authentication stopped with status {error_code}")
                 self.on_expired()
                 return
             time.sleep(interval)
@@ -314,7 +311,7 @@ class traktAPI(object):
         self,
         method: str,
         path: str,
-        body: Optional[Dict] = None,
+        body: dict | None = None,
         authorized: bool = False,
         timeout: int = 30,
         include_headers: bool = False,
@@ -366,7 +363,7 @@ class traktAPI(object):
                         retry=False,
                         include_headers=include_headers,
                     )
-            logger.debug("Trakt request failed: %s %s -> %s" % (method, path, exc.code))
+            logger.debug(f"Trakt request failed: {method} {path} -> {exc.code}")
             return None
 
     def _get(
@@ -389,7 +386,7 @@ class traktAPI(object):
     def _post(
         self,
         path: str,
-        body: Dict,
+        body: dict,
         authorized: bool = True,
         timeout: int = 30,
         retry: bool = True,
@@ -409,8 +406,8 @@ class traktAPI(object):
         authorized: bool = False,
         timeout: int = 90,
         limit: int = 100,
-        params: Optional[Dict] = None,
-    ) -> List:
+        params: dict | None = None,
+    ) -> list:
         if not self.client:
             return []
 
@@ -446,12 +443,12 @@ class traktAPI(object):
 
         return results
 
-    def _get_all_ratings(self, media_type: str) -> List:
+    def _get_all_ratings(self, media_type: str) -> list:
         results = []
         for rating in range(1, 11):
             results.extend(
                 self._get_all_pages(
-                    "/sync/ratings/%s/%s" % (media_type, rating),
+                    f"/sync/ratings/{media_type}/{rating}",
                     authorized=True,
                     timeout=90,
                 )
@@ -459,7 +456,7 @@ class traktAPI(object):
         return results
 
     def _merge_object(
-        self, store: Dict, item: Dict, media_key: str, metadata_keys: Iterable[str]
+        self, store: dict, item: dict, media_key: str, metadata_keys: Iterable[str]
     ) -> None:
         media = dict(item.get(media_key) or item)
         for key in metadata_keys:
@@ -477,7 +474,7 @@ class traktAPI(object):
             self._normalize_video(merged, media)
         store[key] = TraktObject(merged)
 
-    def _normalize_video(self, merged: Dict, incoming: Dict) -> None:
+    def _normalize_video(self, merged: dict, incoming: dict) -> None:
         if "plays" in incoming:
             merged["watched"] = 1 if incoming["plays"] > 0 else 0
         elif "watched" not in merged:
@@ -495,7 +492,7 @@ class traktAPI(object):
         merged.setdefault("paused_at", None)
 
     def _merge_show(
-        self, store: Dict, item: Dict, metadata_keys: Iterable[str]
+        self, store: dict, item: dict, metadata_keys: Iterable[str]
     ) -> None:
         show = dict(item.get("show") or item)
         incoming_seasons = item.get("seasons", show.get("seasons", []))
@@ -527,7 +524,7 @@ class traktAPI(object):
         )
         store[key] = TraktObject(merged)
 
-    def _merge_seasons(self, existing: List, incoming: List) -> List:
+    def _merge_seasons(self, existing: list, incoming: list) -> list:
         seasons = {season.get("number"): dict(season) for season in existing or []}
         for season in incoming or []:
             number = season.get("number")
@@ -541,7 +538,7 @@ class traktAPI(object):
             seasons[number] = merged
         return list(seasons.values())
 
-    def _merge_episodes(self, existing: List, incoming: List) -> List:
+    def _merge_episodes(self, existing: list, incoming: list) -> list:
         episodes = {episode.get("number"): dict(episode) for episode in existing or []}
         for episode in incoming or []:
             number = episode.get("number")
@@ -559,7 +556,7 @@ class traktAPI(object):
         if self.authDialog:
             self.authDialog.close()
 
-    def on_authenticated(self, token: Dict) -> None:
+    def on_authenticated(self, token: dict) -> None:
         """Triggered when device authentication has been completed
 
         :param token: Authentication token details
@@ -567,7 +564,7 @@ class traktAPI(object):
         """
         self.authorization = token
         setSetting("authorization", dumps(self.authorization))
-        logger.debug("Authentication complete: %r" % token)
+        logger.debug(f"Authentication complete: {token!r}")
         if self.authDialog:
             self.authDialog.close()
         notification(getString(32157), getString(32152), 3000)
@@ -590,7 +587,7 @@ class traktAPI(object):
         # Continue polling
         callback(True)
 
-    def on_token_refreshed(self, response: Dict) -> None:
+    def on_token_refreshed(self, response: dict) -> None:
         # OAuth token refreshed, save token for future calls
         self.authorization = response
         setSetting("authorization", dumps(self.authorization))
@@ -605,39 +602,37 @@ class traktAPI(object):
             setSetting("user", "")
 
     def scrobbleEpisode(
-        self, show: Dict, episode: Dict, percent: float, status: str
-    ) -> Optional[Dict]:
+        self, show: dict, episode: dict, percent: float, status: str
+    ) -> dict | None:
         if status not in ("start", "pause", "stop"):
             logger.debug("scrobble() Bad scrobble status")
             return None
         return self._post(
-            "/scrobble/%s" % status,
+            f"/scrobble/{status}",
             {"show": show, "episode": episode, "progress": percent},
         )
 
-    def scrobbleMovie(self, movie: Dict, percent: float, status: str) -> Optional[Dict]:
+    def scrobbleMovie(self, movie: dict, percent: float, status: str) -> dict | None:
         if status not in ("start", "pause", "stop"):
             logger.debug("scrobble() Bad scrobble status")
             return None
-        return self._post(
-            "/scrobble/%s" % status, {"movie": movie, "progress": percent}
-        )
+        return self._post(f"/scrobble/{status}", {"movie": movie, "progress": percent})
 
-    def getShowsCollected(self, shows: Dict) -> Dict:
+    def getShowsCollected(self, shows: dict) -> dict:
         for item in self._get_all_pages(
             "/sync/collection/shows", authorized=True, timeout=90
         ):
             self._merge_show(shows, item, ("collected_at",))
         return shows
 
-    def getMoviesCollected(self, movies: Dict) -> Dict:
+    def getMoviesCollected(self, movies: dict) -> dict:
         for item in self._get_all_pages(
             "/sync/collection/movies", authorized=True, timeout=90
         ):
             self._merge_object(movies, item, "movie", ("collected_at",))
         return movies
 
-    def getShowsWatched(self, shows: Dict) -> Dict:
+    def getShowsWatched(self, shows: dict) -> dict:
         # extended=progress is required for the season/episode breakdown; without
         # it Trakt returns show-level plays only and episode watched-state can't
         # be synced. All sync endpoints are also paginated, so page through them.
@@ -652,7 +647,7 @@ class traktAPI(object):
             )
         return shows
 
-    def getMoviesWatched(self, movies: Dict) -> Dict:
+    def getMoviesWatched(self, movies: dict) -> dict:
         for item in self._get_all_pages(
             "/sync/watched/movies", authorized=True, timeout=90
         ):
@@ -661,28 +656,28 @@ class traktAPI(object):
             )
         return movies
 
-    def getShowsRated(self, shows: Dict) -> Dict:
+    def getShowsRated(self, shows: dict) -> dict:
         for item in self._get_all_ratings("shows"):
             self._merge_show(shows, item, ("rated_at", "rating"))
         return shows
 
-    def getEpisodesRated(self, shows: Dict) -> Dict:
+    def getEpisodesRated(self, shows: dict) -> dict:
         for item in self._get_all_ratings("episodes"):
             self._merge_show(shows, item, ("rated_at", "rating"))
         return shows
 
-    def getMoviesRated(self, movies: Dict) -> Dict:
+    def getMoviesRated(self, movies: dict) -> dict:
         for item in self._get_all_ratings("movies"):
             self._merge_object(movies, item, "movie", ("rated_at", "rating"))
         return movies
 
-    def addToCollection(self, mediaObject: Dict) -> Optional[Dict]:
+    def addToCollection(self, mediaObject: dict) -> dict | None:
         return self._post("/sync/collection", mediaObject)
 
-    def removeFromCollection(self, mediaObject: Dict) -> Optional[Dict]:
+    def removeFromCollection(self, mediaObject: dict) -> dict | None:
         return self._post("/sync/collection/remove", mediaObject)
 
-    def addToHistory(self, mediaObject: Dict) -> Optional[Dict]:
+    def addToHistory(self, mediaObject: dict) -> dict | None:
         # don't retry this call; it may cause multiple watches
         return self._request(
             "POST",
@@ -693,17 +688,17 @@ class traktAPI(object):
             retry=False,
         )
 
-    def addToWatchlist(self, mediaObject: Dict) -> Optional[Dict]:
+    def addToWatchlist(self, mediaObject: dict) -> dict | None:
         return self._post("/sync/watchlist", mediaObject)
 
-    def getShowRatingForUser(self, showId: str, idType: str = "tvdb") -> Dict:
+    def getShowRatingForUser(self, showId: str, idType: str = "tvdb") -> dict:
         ratings = {}
         self.getShowsRated(ratings)
         return findShowMatchInList(showId, ratings, idType)
 
     def getSeasonRatingForUser(
         self, showId: str, season: int, idType: str = "tvdb"
-    ) -> Dict:
+    ) -> dict:
         ratings = {}
         for item in self._get_all_ratings("seasons"):
             self._merge_show(ratings, item, ("rated_at", "rating"))
@@ -711,25 +706,25 @@ class traktAPI(object):
 
     def getEpisodeRatingForUser(
         self, showId: str, season: int, episode: int, idType: str = "tvdb"
-    ) -> Dict:
+    ) -> dict:
         ratings = {}
         self.getEpisodesRated(ratings)
         return findEpisodeMatchInList(showId, season, episode, ratings, idType)
 
-    def getMovieRatingForUser(self, movieId: str, idType: str = "imdb") -> Dict:
+    def getMovieRatingForUser(self, movieId: str, idType: str = "imdb") -> dict:
         ratings = {}
         self.getMoviesRated(ratings)
         return findMovieMatchInList(movieId, ratings, idType)
 
     # Send a rating to Trakt as mediaObject so we can add the rating
-    def addRating(self, mediaObject: Dict) -> Optional[Dict]:
+    def addRating(self, mediaObject: dict) -> dict | None:
         return self._post("/sync/ratings", mediaObject)
 
     # Send a rating to Trakt as mediaObject so we can remove the rating
-    def removeRating(self, mediaObject: Dict) -> Optional[Dict]:
+    def removeRating(self, mediaObject: dict) -> dict | None:
         return self._post("/sync/ratings/remove", mediaObject)
 
-    def getMoviePlaybackProgress(self) -> List[TraktObject]:
+    def getMoviePlaybackProgress(self) -> list[TraktObject]:
         progressMovies = []
         for item in self._get_all_pages(
             "/sync/playback/movies", authorized=True, timeout=90
@@ -742,7 +737,7 @@ class traktAPI(object):
 
         return progressMovies
 
-    def getEpisodePlaybackProgress(self) -> List[TraktObject]:
+    def getEpisodePlaybackProgress(self) -> list[TraktObject]:
         progressEpisodes = []
         for item in self._get_all_pages(
             "/sync/playback/episodes", authorized=True, timeout=90
@@ -761,10 +756,8 @@ class traktAPI(object):
 
         return progressEpisodes
 
-    def getMovieSummary(
-        self, movieId: str, extended: Optional[str] = None
-    ) -> TraktObject:
-        path = "/movies/%s" % urllib.parse.quote(str(movieId), safe="")
+    def getMovieSummary(self, movieId: str, extended: str | None = None) -> TraktObject:
+        path = "/movies/{}".format(urllib.parse.quote(str(movieId), safe=""))
         if self.client:
             path = self.client.build_path(path, {"extended": extended})
         result = self._get(path)
@@ -773,23 +766,24 @@ class traktAPI(object):
         return TraktObject(result or {})
 
     def getShowSummary(self, showId: str) -> TraktObject:
-        result = self._get("/shows/%s" % urllib.parse.quote(str(showId), safe=""))
+        result = self._get("/shows/{}".format(urllib.parse.quote(str(showId), safe="")))
         if result is not None:
             result.setdefault("seasons", [])
         return TraktObject(result or {})
 
-    def getShowWithAllEpisodesList(self, showId: str) -> List:
+    def getShowWithAllEpisodesList(self, showId: str) -> list:
         result = self._get(
-            "/shows/%s/seasons?extended=episodes"
-            % urllib.parse.quote(str(showId), safe=""),
+            "/shows/{}/seasons?extended=episodes".format(
+                urllib.parse.quote(str(showId), safe="")
+            ),
             timeout=90,
         )
         return [TraktSeason(season) for season in result or []]
 
     def getEpisodeSummary(
-        self, showId: str, season: int, episode: int, extended: Optional[str] = None
+        self, showId: str, season: int, episode: int, extended: str | None = None
     ) -> Any:
-        path = "/shows/%s/seasons/%s/episodes/%s" % (
+        path = "/shows/{}/seasons/{}/episodes/{}".format(
             urllib.parse.quote(str(showId), safe=""),
             season,
             episode,
@@ -801,10 +795,9 @@ class traktAPI(object):
             result.setdefault("season", season)
         return TraktObject(result or {})
 
-    def getIdLookup(self, id: str, id_type: str) -> Optional[List]:
+    def getIdLookup(self, id: str, id_type: str) -> list | None:
         result = self._get_all_pages(
-            "/search/%s/%s"
-            % (
+            "/search/{}/{}".format(
                 urllib.parse.quote(str(id_type), safe=""),
                 urllib.parse.quote(str(id), safe=""),
             ),
@@ -812,27 +805,24 @@ class traktAPI(object):
         )
         return self._wrap_search_results(result)
 
-    def getTextQuery(
-        self, query: str, type: str, year: Optional[int]
-    ) -> Optional[List]:
+    def getTextQuery(self, query: str, type: str, year: int | None) -> list | None:
         if not self.client:
             return None
         if type not in ("movie", "show", "person"):
             logger.debug(
-                "Skipping %s text search; current Trakt API contract only exposes movie, show, and person search"
-                % type
+                f"Skipping {type} text search; current Trakt API contract only exposes movie, show, and person search"
             )
             return None
         path = self.client.build_path(
-            "/search/%s" % urllib.parse.quote(str(type), safe=""),
+            "/search/{}".format(urllib.parse.quote(str(type), safe="")),
             {"query": query, "years": year},
         )
         return self._wrap_search_results(self._get_all_pages(path, timeout=90))
 
-    def getUser(self) -> Optional[Dict]:
+    def getUser(self) -> dict | None:
         return self._get("/users/settings", authorized=True)
 
-    def _wrap_search_results(self, result: Any) -> Optional[List]:
+    def _wrap_search_results(self, result: Any) -> list | None:
         if not result:
             return None
         if not isinstance(result, list):

@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
+from typing import Any
 
 import xbmcaddon
 import xbmcgui
-from typing import List, Optional, Any
-from resources.lib.utilities import isMovie, isShow, isSeason, isEpisode
+
 from resources.lib.kodiUtilities import getString
+from resources.lib.utilities import isEpisode, isMovie, isSeason, isShow
 
 __addon__ = xbmcaddon.Addon("script.trakt")
 
@@ -20,12 +20,14 @@ ACTION_ITEM_SELECT = [ACTION_SELECT_ITEM, ACTION_MOUSE_LEFT_CLICK]
 
 
 class traktContextMenu(xbmcgui.WindowXMLDialog):
-    action: Optional[str] = None
-    buttons: List[str]
+    action: str | None = None
+    buttons: list[str]
     media_type: str
 
-    def __new__(cls, media_type: Optional[str] = None, buttons: Optional[List[str]] = None) -> Any:
-        return super(traktContextMenu, cls).__new__(
+    def __new__(
+        cls, media_type: str | None = None, buttons: list[str] | None = None
+    ) -> Any:
+        return super().__new__(
             cls,
             "script-trakt-ContextMenu.xml",
             __addon__.getAddonInfo("path"),
@@ -36,7 +38,7 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.buttons = kwargs["buttons"]
         self.media_type = kwargs["media_type"]
-        super(traktContextMenu, self).__init__()
+        super().__init__()
 
     def onInit(self) -> None:
         mange_string = (
@@ -78,17 +80,18 @@ class traktContextMenu(xbmcgui.WindowXMLDialog):
 
         self.setFocus(actionList)
 
-    def newListItem(self, label: str, selected: bool = False, *args: Any, **kwargs: Any) -> xbmcgui.ListItem:
+    def newListItem(
+        self, label: str, selected: bool = False, *args: Any, **kwargs: Any
+    ) -> xbmcgui.ListItem:
         item = xbmcgui.ListItem(label)
         item.select(selected)
-        for key in kwargs:
-            item.setProperty(key, str(kwargs[key]))
+        for key, value in kwargs.items():
+            item.setProperty(key, str(value))
         return item
 
     def onAction(self, action: xbmcgui.Action) -> None:
-        if action.getId() not in ACTION_ITEM_SELECT:
-            if action in ACTION_CLOSE_LIST:
-                self.close()
+        if action.getId() not in ACTION_ITEM_SELECT and action in ACTION_CLOSE_LIST:
+            self.close()
 
         if action in ACTION_ITEM_SELECT:
             cID = self.getFocusId()

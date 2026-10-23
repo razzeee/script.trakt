@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import logging
-from typing import Dict, Tuple, Union, Optional, Any
+from typing import Any
 
 from resources.lib import kodiUtilities, utilities
 
@@ -16,14 +14,12 @@ class SyncEpisodes:
         self.sync = sync
         if self.sync.show_notification:
             kodiUtilities.notification(
-                "%s %s"
-                % (kodiUtilities.getString(32045), kodiUtilities.getString(32050)),
+                f"{kodiUtilities.getString(32045)} {kodiUtilities.getString(32050)}",
                 kodiUtilities.getString(32061),
             )  # Sync started
         if self.sync.show_progress and not self.sync.run_silent:
             progress.create(
-                "%s %s"
-                % (kodiUtilities.getString(32045), kodiUtilities.getString(32050)),
+                f"{kodiUtilities.getString(32045)} {kodiUtilities.getString(32050)}",
                 "",
             )
 
@@ -87,8 +83,7 @@ class SyncEpisodes:
 
         if self.sync.show_notification:
             kodiUtilities.notification(
-                "%s %s"
-                % (kodiUtilities.getString(32045), kodiUtilities.getString(32050)),
+                f"{kodiUtilities.getString(32045)} {kodiUtilities.getString(32050)}",
                 kodiUtilities.getString(32062),
             )  # Sync complete
 
@@ -99,22 +94,19 @@ class SyncEpisodes:
             progress.close()
 
         logger.debug(
-            "[Episodes Sync] Shows on Trakt.tv (%d), shows in Kodi (%d)."
-            % (len(traktShowsCollected["shows"]), len(kodiShowsCollected["shows"]))
+            "[Episodes Sync] Shows on Trakt.tv ({:d}), shows in Kodi ({:d}).".format(
+                len(traktShowsCollected["shows"]), len(kodiShowsCollected["shows"])
+            )
         )
 
         logger.debug(
-            "[Episodes Sync] Episodes on Trakt.tv (%d), episodes in Kodi (%d)."
-            % (
-                utilities.countEpisodes(traktShowsCollected),
-                utilities.countEpisodes(kodiShowsCollected),
-            )
+            f"[Episodes Sync] Episodes on Trakt.tv ({utilities.countEpisodes(traktShowsCollected):d}), episodes in Kodi ({utilities.countEpisodes(kodiShowsCollected):d})."
         )
         logger.debug("[Episodes Sync] Complete.")
 
     """ begin code for episode sync """
 
-    def __kodiLoadShows(self) -> Tuple[Optional[Dict], Optional[Dict]]:
+    def __kodiLoadShows(self) -> tuple[dict | None, dict | None]:
         self.sync.UpdateProgress(
             1,
             line1=kodiUtilities.getString(32094),
@@ -135,7 +127,7 @@ class SyncEpisodes:
             return None, None
 
         tvshows = kodiUtilities.kodiRpcToTraktMediaObjects(data)
-        logger.debug("[Episode Sync] Getting shows from kodi finished %s" % tvshows)
+        logger.debug(f"[Episode Sync] Getting shows from kodi finished {tvshows}")
 
         if tvshows is None:
             return None, None
@@ -154,8 +146,9 @@ class SyncEpisodes:
 
             if "ids" not in show_col1:
                 logger.debug(
-                    "[Episodes Sync] Tvshow %s has no imdbnumber or uniqueid"
-                    % show_col1["tvshowid"]
+                    "[Episodes Sync] Tvshow {} has no imdbnumber or uniqueid".format(
+                        show_col1["tvshowid"]
+                    )
                 )
                 continue
 
@@ -191,13 +184,16 @@ class SyncEpisodes:
             )
             if not data:
                 logger.debug(
-                    "[Episodes Sync] There was a problem getting episode data for '%s', aborting sync."
-                    % show["title"]
+                    "[Episodes Sync] There was a problem getting episode data for '{}', aborting sync.".format(
+                        show["title"]
+                    )
                 )
                 return None, None
             elif "episodes" not in data:
                 logger.debug(
-                    "[Episodes Sync] '%s' has no episodes in Kodi." % show["title"]
+                    "[Episodes Sync] '{}' has no episodes in Kodi.".format(
+                        show["title"]
+                    )
                 )
                 continue
 
@@ -218,7 +214,9 @@ class SyncEpisodes:
         self.sync.UpdateProgress(10, line2=kodiUtilities.getString(32098))
         return resultCollected, resultWatched
 
-    def __traktLoadShows(self) -> Tuple[Union[Dict, bool], Union[Dict, bool], Union[Dict, bool], Union[Dict, bool]]:
+    def __traktLoadShows(
+        self,
+    ) -> tuple[dict | bool, dict | bool, dict | bool, dict | bool]:
         self.sync.UpdateProgress(
             10,
             line1=kodiUtilities.getString(32099),
@@ -252,17 +250,15 @@ class SyncEpisodes:
                 )
                 traktEpisodesRated = list(traktEpisodesRated.items())
 
-        except Exception:
+        except Exception:  # noqa: BLE001 - preserve the existing broad failure boundary
             logger.debug(
                 "[Episodes Sync] Invalid Trakt.tv show list, possible error getting data from Trakt, aborting Trakt.tv collection/watched/rated update."
             )
             return False, False, False, False
 
-        i = 0
         x = float(len(traktShowsCollected))
         showsCollected = {"shows": []}
-        for _, show in traktShowsCollected:
-            i += 1
+        for i, (_, show) in enumerate(traktShowsCollected, start=1):
             y = ((i / x) * 4) + 12
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
@@ -273,11 +269,9 @@ class SyncEpisodes:
 
             showsCollected["shows"].append(show)
 
-        i = 0
         x = float(len(traktShowsWatched))
         showsWatched = {"shows": []}
-        for _, show in traktShowsWatched:
-            i += 1
+        for i, (_, show) in enumerate(traktShowsWatched, start=1):
             y = ((i / x) * 4) + 16
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
@@ -288,11 +282,9 @@ class SyncEpisodes:
 
             showsWatched["shows"].append(show)
 
-        i = 0
         x = float(len(traktShowsRated))
         showsRated = {"shows": []}
-        for _, show in traktShowsRated:
-            i += 1
+        for i, (_, show) in enumerate(traktShowsRated, start=1):
             y = ((i / x) * 4) + 20
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
@@ -303,11 +295,9 @@ class SyncEpisodes:
 
             showsRated["shows"].append(show)
 
-        i = 0
         x = float(len(traktEpisodesRated))
         episodesRated = {"shows": []}
-        for _, show in traktEpisodesRated:
-            i += 1
+        for i, (_, show) in enumerate(traktEpisodesRated, start=1):
             y = ((i / x) * 4) + 20
             self.sync.UpdateProgress(
                 int(y), line2=kodiUtilities.getString(32102) % (i, x)
@@ -322,7 +312,9 @@ class SyncEpisodes:
 
         return showsCollected, showsWatched, showsRated, episodesRated
 
-    def __traktLoadShowsPlaybackProgress(self, fromPercent: int, toPercent: int) -> Union[Dict, bool, None]:
+    def __traktLoadShowsPlaybackProgress(
+        self, fromPercent: int, toPercent: int
+    ) -> dict | bool | None:
         if (
             kodiUtilities.getSettingAsBool("trakt_episode_playback")
             and not self.sync.IsCanceled()
@@ -336,18 +328,15 @@ class SyncEpisodes:
             logger.debug("[Playback Sync] Getting playback progress from Trakt.tv")
             try:
                 traktProgressShows = self.sync.traktapi.getEpisodePlaybackProgress()
-            except Exception as ex:
+            except Exception as ex:  # noqa: BLE001 - preserve the existing broad failure boundary
                 logger.debug(
-                    "[Playback Sync] Invalid Trakt.tv progress list, possible error getting data from Trakt, aborting Trakt.tv playback update. Error: %s"
-                    % ex
+                    f"[Playback Sync] Invalid Trakt.tv progress list, possible error getting data from Trakt, aborting Trakt.tv playback update. Error: {ex}"
                 )
                 return False
 
-            i = 0
             x = float(len(traktProgressShows))
             showsProgress = {"shows": []}
-            for show in traktProgressShows:
-                i += 1
+            for i, (show) in enumerate(traktProgressShows, start=1):
                 y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                 self.sync.UpdateProgress(
                     int(y), line2=kodiUtilities.getString(32120) % (i, x)
@@ -363,7 +352,7 @@ class SyncEpisodes:
             return showsProgress
 
     def __addEpisodesToTraktCollection(
-        self, kodiShows: Dict, traktShows: Dict, fromPercent: int, toPercent: int
+        self, kodiShows: dict, traktShows: dict, fromPercent: int, toPercent: int
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("add_episodes_to_trakt")
@@ -392,13 +381,13 @@ class SyncEpisodes:
                 )
                 return
             logger.debug(
-                "[Episodes Sync] %i show(s) have episodes (%d) to be added to your Trakt.tv collection."
-                % (len(traktShowsAdd["shows"]), utilities.countEpisodes(traktShowsAdd))
+                "[Episodes Sync] {:d} show(s) have episodes ({:d}) to be added to your Trakt.tv collection.".format(
+                    len(traktShowsAdd["shows"]), utilities.countEpisodes(traktShowsAdd)
+                )
             )
             for show in traktShowsAdd["shows"]:
                 logger.debug(
-                    "[Episodes Sync] Episodes added: %s"
-                    % self.__getShowAsString(show, short=True)
+                    f"[Episodes Sync] Episodes added: {self.__getShowAsString(show, short=True)}"
                 )
 
             self.sync.UpdateProgress(
@@ -411,29 +400,26 @@ class SyncEpisodes:
             chunksize = 50
             chunked_episodes = utilities.chunks(traktShowsAdd["shows"], chunksize)
             errorcount = 0
-            i = 0
             x = float(len(traktShowsAdd["shows"]))
-            for chunk in chunked_episodes:
+            for i, (chunk) in enumerate(chunked_episodes, start=1):
                 if self.sync.IsCanceled():
                     return
-                i += 1
                 y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                 self.sync.UpdateProgress(
                     int(y),
-                    line2=kodiUtilities.getString(32069)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    line2=kodiUtilities.getString(32069) % (min(x, i * chunksize), x),
                 )
 
                 request = {"shows": chunk}
-                logger.debug("[traktAddEpisodes] Shows to add %s" % request)
+                logger.debug(f"[traktAddEpisodes] Shows to add {request}")
                 try:
                     self.sync.traktapi.addToCollection(request)
-                except Exception as ex:
+                except Exception as ex:  # noqa: BLE001 - preserve the existing broad failure boundary
                     message = utilities.createError(ex)
                     logging.fatal(message)
                     errorcount += 1
 
-            logger.debug("[traktAddEpisodes] Finished with %d error(s)" % errorcount)
+            logger.debug(f"[traktAddEpisodes] Finished with {errorcount:d} error(s)")
             self.sync.UpdateProgress(
                 toPercent,
                 line2=kodiUtilities.getString(32105)
@@ -441,7 +427,7 @@ class SyncEpisodes:
             )
 
     def __deleteEpisodesFromTraktCollection(
-        self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int
+        self, traktShows: dict, kodiShows: dict, fromPercent: int, toPercent: int
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("clean_trakt_episodes")
@@ -469,13 +455,13 @@ class SyncEpisodes:
                 return
 
             logger.debug(
-                "[Episodes Sync] %i show(s) will have episodes removed from Trakt.tv collection."
-                % len(traktShowsRemove["shows"])
+                "[Episodes Sync] {:d} show(s) will have episodes removed from Trakt.tv collection.".format(
+                    len(traktShowsRemove["shows"])
+                )
             )
             for show in traktShowsRemove["shows"]:
                 logger.debug(
-                    "[Episodes Sync] Episodes removed: %s"
-                    % self.__getShowAsString(show, short=True)
+                    f"[Episodes Sync] Episodes removed: {self.__getShowAsString(show, short=True)}"
                 )
 
             self.sync.UpdateProgress(
@@ -485,10 +471,10 @@ class SyncEpisodes:
                 % utilities.countEpisodes(traktShowsRemove),
             )
 
-            logger.debug("[traktRemoveEpisodes] Shows to remove %s" % traktShowsRemove)
+            logger.debug(f"[traktRemoveEpisodes] Shows to remove {traktShowsRemove}")
             try:
                 self.sync.traktapi.removeFromCollection(traktShowsRemove)
-            except Exception as ex:
+            except Exception as ex:  # noqa: BLE001 - preserve the existing broad failure boundary
                 message = utilities.createError(ex)
                 logging.fatal(message)
 
@@ -499,7 +485,7 @@ class SyncEpisodes:
             )
 
     def __addEpisodesToTraktWatched(
-        self, kodiShows: Dict, traktShows: Dict, fromPercent: int, toPercent: int
+        self, kodiShows: dict, traktShows: dict, fromPercent: int, toPercent: int
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_episode_playcount")
@@ -529,13 +515,13 @@ class SyncEpisodes:
                 return
 
             logger.debug(
-                "[Episodes Sync] %i show(s) are missing playcounts on Trakt.tv"
-                % len(traktShowsUpdate["shows"])
+                "[Episodes Sync] {:d} show(s) are missing playcounts on Trakt.tv".format(
+                    len(traktShowsUpdate["shows"])
+                )
             )
             for show in traktShowsUpdate["shows"]:
                 logger.debug(
-                    "[Episodes Sync] Episodes updated: %s"
-                    % self.__getShowAsString(show, short=True)
+                    f"[Episodes Sync] Episodes updated: {self.__getShowAsString(show, short=True)}"
                 )
 
             self.sync.UpdateProgress(
@@ -544,29 +530,27 @@ class SyncEpisodes:
                 line2=kodiUtilities.getString(32070) % (len(traktShowsUpdate["shows"])),
             )
             errorcount = 0
-            i = 0
             x = float(len(traktShowsUpdate["shows"]))
-            for show in traktShowsUpdate["shows"]:
+            for i, (show) in enumerate(traktShowsUpdate["shows"], start=1):
                 if self.sync.IsCanceled():
                     return
                 epCount = utilities.countEpisodes([show])
                 title = show["title"]
-                i += 1
                 y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                 self.sync.UpdateProgress(
                     int(y), line2=title, line3=kodiUtilities.getString(32073) % epCount
                 )
 
                 s = {"shows": [show]}
-                logger.debug("[traktUpdateEpisodes] Shows to update %s" % s)
+                logger.debug(f"[traktUpdateEpisodes] Shows to update {s}")
                 try:
                     self.sync.traktapi.addToHistory(s)
-                except Exception as ex:
+                except Exception as ex:  # noqa: BLE001 - preserve the existing broad failure boundary
                     message = utilities.createError(ex)
                     logging.fatal(message)
                     errorcount += 1
 
-            logger.debug("[traktUpdateEpisodes] Finished with %d error(s)" % errorcount)
+            logger.debug(f"[traktUpdateEpisodes] Finished with {errorcount:d} error(s)")
             self.sync.UpdateProgress(
                 toPercent,
                 line2=kodiUtilities.getString(32072) % (len(traktShowsUpdate["shows"])),
@@ -574,7 +558,12 @@ class SyncEpisodes:
             )
 
     def __addEpisodesToKodiWatched(
-        self, traktShows: Dict, kodiShows: Dict, kodiShowsCollected: Dict, fromPercent: int, toPercent: int
+        self,
+        traktShows: dict,
+        kodiShows: dict,
+        kodiShowsCollected: dict,
+        fromPercent: int,
+        toPercent: int,
     ) -> None:
         if (
             kodiUtilities.getSettingAsBool("kodi_episode_playcount")
@@ -602,14 +591,15 @@ class SyncEpisodes:
                 return
 
             logger.debug(
-                "[Episodes Sync] %i show(s) shows are missing playcounts on Kodi"
-                % len(kodiShowsUpdate["shows"])
+                "[Episodes Sync] {:d} show(s) shows are missing playcounts on Kodi".format(
+                    len(kodiShowsUpdate["shows"])
+                )
             )
             for s in [
-                "%s" % self.__getShowAsString(s, short=True)
+                f"{self.__getShowAsString(s, short=True)}"
                 for s in kodiShowsUpdate["shows"]
             ]:
-                logger.debug("[Episodes Sync] Episodes updated: %s" % s)
+                logger.debug(f"[Episodes Sync] Episodes updated: {s}")
 
             # logger.debug("kodiShowsUpdate: %s" % kodiShowsUpdate)
             episodes = []
@@ -640,28 +630,27 @@ class SyncEpisodes:
                 ],
                 chunksize,
             )
-            i = 0
             x = float(len(episodes))
-            for chunk in chunked_episodes:
+            for i, (chunk) in enumerate(chunked_episodes, start=1):
                 if self.sync.IsCanceled():
                     return
-                i += 1
                 y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                 self.sync.UpdateProgress(
                     int(y),
-                    line2=kodiUtilities.getString(32108)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    line2=kodiUtilities.getString(32108) % (min(x, i * chunksize), x),
                 )
 
-                logger.debug("[Episodes Sync] chunk %s" % str(chunk))
+                logger.debug(f"[Episodes Sync] chunk {chunk!s}")
                 result = kodiUtilities.kodiJsonRequest(chunk)
-                logger.debug("[Episodes Sync] result %s" % str(result))
+                logger.debug(f"[Episodes Sync] result {result!s}")
 
             self.sync.UpdateProgress(
                 toPercent, line2=kodiUtilities.getString(32109) % len(episodes)
             )
 
-    def __addEpisodeProgressToKodi(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __addEpisodeProgressToKodi(
+        self, traktShows: dict, kodiShows: dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_episode_playback")
             and traktShows
@@ -687,14 +676,15 @@ class SyncEpisodes:
                 return
 
             logger.debug(
-                "[Episodes Sync] %i show(s) shows are missing progress in Kodi"
-                % len(kodiShowsUpdate["shows"])
+                "[Episodes Sync] {:d} show(s) shows are missing progress in Kodi".format(
+                    len(kodiShowsUpdate["shows"])
+                )
             )
             for s in [
-                "%s" % self.__getShowAsString(s, short=True)
+                f"{self.__getShowAsString(s, short=True)}"
                 for s in kodiShowsUpdate["shows"]
             ]:
-                logger.debug("[Episodes Sync] Episodes updated: %s" % s)
+                logger.debug(f"[Episodes Sync] Episodes updated: {s}")
 
             episodes = []
             for show in kodiShowsUpdate["shows"]:
@@ -744,17 +734,14 @@ class SyncEpisodes:
                 ],
                 chunksize,
             )
-            i = 0
             x = float(len(episodes))
-            for chunk in chunked_episodes:
+            for i, (chunk) in enumerate(chunked_episodes, start=1):
                 if self.sync.IsCanceled():
                     return
-                i += 1
                 y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                 self.sync.UpdateProgress(
                     int(y),
-                    line2=kodiUtilities.getString(32130)
-                    % ((i) * chunksize if (i) * chunksize < x else x, x),
+                    line2=kodiUtilities.getString(32130) % (min(x, i * chunksize), x),
                 )
 
                 kodiUtilities.kodiJsonRequest(chunk)
@@ -763,7 +750,9 @@ class SyncEpisodes:
                 toPercent, line2=kodiUtilities.getString(32131) % len(episodes)
             )
 
-    def __syncShowsRatings(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __syncShowsRatings(
+        self, traktShows: dict, kodiShows: dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktShows
@@ -785,8 +774,9 @@ class SyncEpisodes:
                 logger.debug("[Episodes Sync] Trakt show ratings are up to date.")
             else:
                 logger.debug(
-                    "[Episodes Sync] %i show(s) will have show ratings added on Trakt"
-                    % len(traktShowsToUpdate["shows"])
+                    "[Episodes Sync] {:d} show(s) will have show ratings added on Trakt".format(
+                        len(traktShowsToUpdate["shows"])
+                    )
                 )
 
                 self.sync.UpdateProgress(
@@ -814,8 +804,9 @@ class SyncEpisodes:
                 logger.debug("[Episodes Sync] Kodi show ratings are up to date.")
             else:
                 logger.debug(
-                    "[Episodes Sync] %i show(s) will have show ratings added in Kodi"
-                    % len(kodiShowsUpdate["shows"])
+                    "[Episodes Sync] {:d} show(s) will have show ratings added in Kodi".format(
+                        len(kodiShowsUpdate["shows"])
+                    )
                 )
 
                 shows = []
@@ -841,18 +832,16 @@ class SyncEpisodes:
                     ],
                     chunksize,
                 )
-                i = 0
                 x = float(len(shows))
-                for chunk in chunked_episodes:
+                for i, (chunk) in enumerate(chunked_episodes, start=1):
                     if self.sync.IsCanceled():
                         return
-                    i += 1
                     y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                     self.sync.UpdateProgress(
                         int(y),
                         line1="",
                         line2=kodiUtilities.getString(32177)
-                        % ((i) * chunksize if (i) * chunksize < x else x, x),
+                        % (min(x, i * chunksize), x),
                     )
 
                     kodiUtilities.kodiJsonRequest(chunk)
@@ -861,7 +850,9 @@ class SyncEpisodes:
                     toPercent, line2=kodiUtilities.getString(32178) % len(shows)
                 )
 
-    def __syncEpisodeRatings(self, traktShows: Dict, kodiShows: Dict, fromPercent: int, toPercent: int) -> None:
+    def __syncEpisodeRatings(
+        self, traktShows: dict, kodiShows: dict, fromPercent: int, toPercent: int
+    ) -> None:
         if (
             kodiUtilities.getSettingAsBool("trakt_sync_ratings")
             and traktShows
@@ -883,8 +874,9 @@ class SyncEpisodes:
                 logger.debug("[Episodes Sync] Trakt episode ratings are up to date.")
             else:
                 logger.debug(
-                    "[Episodes Sync] %i show(s) will have episode ratings added on Trakt"
-                    % len(traktShowsToUpdate["shows"])
+                    "[Episodes Sync] {:d} show(s) will have episode ratings added on Trakt".format(
+                        len(traktShowsToUpdate["shows"])
+                    )
                 )
 
                 self.sync.UpdateProgress(
@@ -909,14 +901,15 @@ class SyncEpisodes:
                 logger.debug("[Episodes Sync] Kodi episode ratings are up to date.")
             else:
                 logger.debug(
-                    "[Episodes Sync] %i show(s) will have episode ratings added in Kodi"
-                    % len(kodiShowsUpdate["shows"])
+                    "[Episodes Sync] {:d} show(s) will have episode ratings added in Kodi".format(
+                        len(kodiShowsUpdate["shows"])
+                    )
                 )
                 for s in [
-                    "%s" % self.__getShowAsString(s, short=True)
+                    f"{self.__getShowAsString(s, short=True)}"
                     for s in kodiShowsUpdate["shows"]
                 ]:
-                    logger.debug("[Episodes Sync] Episodes updated: %s" % s)
+                    logger.debug(f"[Episodes Sync] Episodes updated: {s}")
 
                 episodes = []
                 for show in kodiShowsUpdate["shows"]:
@@ -946,18 +939,16 @@ class SyncEpisodes:
                     ],
                     chunksize,
                 )
-                i = 0
                 x = float(len(episodes))
-                for chunk in chunked_episodes:
+                for i, (chunk) in enumerate(chunked_episodes, start=1):
                     if self.sync.IsCanceled():
                         return
-                    i += 1
                     y = ((i / x) * (toPercent - fromPercent)) + fromPercent
                     self.sync.UpdateProgress(
                         int(y),
                         line1="",
                         line2=kodiUtilities.getString(32174)
-                        % ((i) * chunksize if (i) * chunksize < x else x, x),
+                        % (min(x, i * chunksize), x),
                     )
 
                     kodiUtilities.kodiJsonRequest(chunk)
@@ -966,7 +957,7 @@ class SyncEpisodes:
                     toPercent, line2=kodiUtilities.getString(32175) % len(episodes)
                 )
 
-    def __getShowAsString(self, show: Dict, short: bool = False) -> str:
+    def __getShowAsString(self, show: dict, short: bool = False) -> str:
         p = []
         if "seasons" in show:
             for season in show["seasons"]:
@@ -974,7 +965,7 @@ class SyncEpisodes:
                 if short:
                     s = ", ".join(
                         [
-                            "S%02dE%02d" % (season["number"], i["number"])
+                            "S{:02d}E{:02d}".format(season["number"], i["number"])
                             for i in season["episodes"]
                         ]
                     )
@@ -982,15 +973,15 @@ class SyncEpisodes:
                     episodes = ", ".join(
                         [str(i) for i in show["shows"]["seasons"][season]]
                     )
-                    s = "Season: %d, Episodes: %s" % (season, episodes)
+                    s = f"Season: {season:d}, Episodes: {episodes:s}"
                 p.append(s)
         else:
             p = ["All"]
         if "tvdb" in show["ids"]:
-            return "%s [tvdb: %s] - %s" % (
+            return "{} [tvdb: {}] - {}".format(
                 show["title"],
                 show["ids"]["tvdb"],
                 ", ".join(p),
             )
         else:
-            return "%s [tvdb: No id] - %s" % (show["title"], ", ".join(p))
+            return "{} [tvdb: No id] - {}".format(show["title"], ", ".join(p))
