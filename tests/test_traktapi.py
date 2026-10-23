@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
-
 import sys
 import urllib.error
+from unittest import mock
 
-import mock
 
-
-class WindowXMLDialog(object):
+class WindowXMLDialog:
     pass
 
 
@@ -19,8 +16,8 @@ xbmcaddon_mock = mock.Mock()
 xbmcaddon_mock.Addon.return_value.getAddonInfo.return_value = "3.8.2"
 sys.modules["xbmcaddon"] = xbmcaddon_mock
 
-from resources.lib import utilities  # noqa: E402
-from resources.lib.traktapi import TraktClient, TraktObject, TraktSeason, traktAPI  # noqa: E402
+from resources.lib import utilities
+from resources.lib.traktapi import TraktClient, TraktObject, TraktSeason, traktAPI
 
 
 def test_trakt_object_exposes_legacy_contract():
@@ -512,11 +509,13 @@ def test_client_retries_once_after_rate_limit_retry_after():
     opener = mock.Mock()
     opener.open = mock.Mock(side_effect=[rate_limit, response])
 
-    with mock.patch(
-        "resources.lib.traktapi.urllib.request.build_opener", return_value=opener
+    with (
+        mock.patch(
+            "resources.lib.traktapi.urllib.request.build_opener", return_value=opener
+        ),
+        mock.patch("resources.lib.traktapi.time.sleep") as sleep,
     ):
-        with mock.patch("resources.lib.traktapi.time.sleep") as sleep:
-            result = client.request("GET", "/search/movie")
+        result = client.request("GET", "/search/movie")
 
     assert result == {"ok": True}
     sleep.assert_called_once_with(1)

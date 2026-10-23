@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import os
 import sqlite3
-from json import loads, dumps
-
+from json import dumps, loads
 from time import sleep
 
 try:
@@ -11,49 +8,45 @@ try:
 except ImportError:
     from _dummy_thread import get_ident
 
-import xbmcvfs
-import xbmcaddon
 import logging
-from typing import Any, Iterator, Optional, Dict
+from collections.abc import Iterator
+from typing import Any
+
+import xbmcaddon
+import xbmcvfs
 
 logger = logging.getLogger(__name__)
 
-__addon__ = xbmcaddon.Addon('script.trakt')
+__addon__ = xbmcaddon.Addon("script.trakt")
+
 
 # code from http://flask.pocoo.org/snippets/88/ with some modifications
-class SqliteQueue(object):
-
+class SqliteQueue:
     _create = (
-                'CREATE TABLE IF NOT EXISTS queue '
-                '('
-                '  id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                '  item BLOB'
-                ')'
-                )
-    _count = 'SELECT COUNT(*) FROM queue'
-    _iterate = 'SELECT id, item FROM queue'
-    _append = 'INSERT INTO queue (item) VALUES (?)'
-    _write_lock = 'BEGIN IMMEDIATE'
-    _get = (
-            'SELECT id, item FROM queue '
-            'ORDER BY id LIMIT 1'
-            )
-    _del = 'DELETE FROM queue WHERE id = ?'
-    _peek = (
-            'SELECT item FROM queue '
-            'ORDER BY id LIMIT 1'
-            )
-    _purge = 'DELETE FROM queue'
+        "CREATE TABLE IF NOT EXISTS queue "
+        "("
+        "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  item BLOB"
+        ")"
+    )
+    _count = "SELECT COUNT(*) FROM queue"
+    _iterate = "SELECT id, item FROM queue"
+    _append = "INSERT INTO queue (item) VALUES (?)"
+    _write_lock = "BEGIN IMMEDIATE"
+    _get = "SELECT id, item FROM queue ORDER BY id LIMIT 1"
+    _del = "DELETE FROM queue WHERE id = ?"
+    _peek = "SELECT item FROM queue ORDER BY id LIMIT 1"
+    _purge = "DELETE FROM queue"
 
     path: str
-    _connection_cache: Dict[int, sqlite3.Connection]
+    _connection_cache: dict[int, sqlite3.Connection]
 
     def __init__(self) -> None:
         self.path = xbmcvfs.translatePath(__addon__.getAddonInfo("profile"))
         if not xbmcvfs.exists(self.path):
-            logger.debug("Making path structure: %s" % repr(self.path))
+            logger.debug(f"Making path structure: {self.path!r}")
             xbmcvfs.mkdir(self.path)
-        self.path = os.path.join(self.path, 'queue.db')
+        self.path = os.path.join(self.path, "queue.db")
         self._connection_cache = {}
         with self._get_conn() as conn:
             conn.execute(self._create)
@@ -83,7 +76,7 @@ class SqliteQueue(object):
         with self._get_conn() as conn:
             conn.execute(self._append, (obj_buffer,))
 
-    def get(self, sleep_wait: bool = True) -> Optional[Any]:
+    def get(self, sleep_wait: bool = True) -> Any | None:
         keep_pooling = True
         wait = 0.1
         max_wait = 2
@@ -110,7 +103,7 @@ class SqliteQueue(object):
                 return loads(obj_buffer)
         return None
 
-    def peek(self) -> Optional[Any]:
+    def peek(self) -> Any | None:
         with self._get_conn() as conn:
             cursor = conn.execute(self._peek)
             row = cursor.fetchone()
