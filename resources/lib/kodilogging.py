@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2015 Thomas Amland
 #
@@ -16,20 +15,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from resources.lib.kodiUtilities import getSettingAsBool
-
 import logging
+
 import xbmc
 import xbmcaddon
 
+from resources.lib.kodiUtilities import getSettingAsBool
+
 
 class KodiLogHandler(logging.StreamHandler):
-
     def __init__(self) -> None:
         logging.StreamHandler.__init__(self)
-        addon_id = xbmcaddon.Addon().getAddonInfo('id')
-        prefix = "[%s] " % addon_id
-        formatter = logging.Formatter(prefix + '%(name)s: %(message)s')
+        addon_id = xbmcaddon.Addon().getAddonInfo("id")
+        prefix = f"[{addon_id}] "
+        formatter = logging.Formatter(prefix + "%(name)s: %(message)s")
         self.setFormatter(formatter)
 
     def emit(self, record: logging.LogRecord) -> None:
@@ -41,11 +40,12 @@ class KodiLogHandler(logging.StreamHandler):
             logging.DEBUG: xbmc.LOGDEBUG,
             logging.NOTSET: xbmc.LOGNONE,
         }
-        if getSettingAsBool('debug'):
+        if getSettingAsBool("debug"):
             xbmc.log(self.format(record), levels[record.levelno])
 
     def flush(self) -> None:
         pass
+
 
 def config() -> None:
     logger = logging.getLogger()

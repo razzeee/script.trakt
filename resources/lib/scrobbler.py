@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
-#
+import logging
+import math
+import time
+from typing import Any
 
 import xbmc
-import time
-import logging
-from typing import Dict, List, Optional, Any
-from resources.lib import utilities
-from resources.lib import kodiUtilities
-import math
+
+from resources.lib import kodiUtilities, utilities
 from resources.lib.rating import ratingCheck
 
 logger = logging.getLogger(__name__)
@@ -25,14 +23,15 @@ class Scrobbler:
     videoDuration: float = 1
     watchedTime: float = 0
     pausedAt: float = 0
-    curVideo: Optional[Dict] = None
-    curVideoInfo: Optional[Dict] = None
+    curVideo: dict | None = None
+    curVideoInfo: dict | None = None
     playlistIndex: int = 0
-    traktShowSummary: Optional[Dict] = None
-    videosToRate: List[Dict] = []
+    traktShowSummary: dict | None = None
+    videosToRate: list[dict]
 
     def __init__(self, api: Any) -> None:
         self.traktapi = api
+        self.videosToRate = []
 
     def _currentEpisode(self, watchedPercent: float, episodeCount: int) -> int:
         split = 100 / episodeCount
@@ -66,8 +65,7 @@ class Scrobbler:
                 self.watchedTime = t
             else:
                 logger.debug(
-                    "Current playlist item changed! Not updating time! (%d -> %d)"
-                    % (self.playlistIndex, position)
+                    f"Current playlist item changed! Not updating time! ({self.playlistIndex:d} -> {position:d})"
                 )
 
             # do transition check every minute
@@ -82,14 +80,12 @@ class Scrobbler:
                     if self.curMPEpisode != epIndex:
                         response = self.__scrobble("stop")
                         if response is not None:
-                            logger.debug("Scrobble response: %s" % str(response))
+                            logger.debug(f"Scrobble response: {response!s}")
                             self.videosToRate.append(self.curVideoInfo)
                             # update current information
                             self.curMPEpisode = epIndex
                             episode_details = kodiUtilities.getEpisodeDetailsFromKodi(
-                                self.curVideo["multi_episode_data"][
-                                    self.curMPEpisode
-                                ],
+                                self.curVideo["multi_episode_data"][self.curMPEpisode],
                                 [
                                     "showtitle",
                                     "season",
@@ -101,8 +97,10 @@ class Scrobbler:
                                 ],
                             )
                             if episode_details:
-                                self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
-                                    "episode", episode_details
+                                self.curVideoInfo = (
+                                    kodiUtilities.kodiRpcToTraktMediaObject(
+                                        "episode", episode_details
+                                    )
                                 )
                             else:
                                 self.curVideoInfo = None
@@ -117,7 +115,7 @@ class Scrobbler:
                     activePlayers = kodiUtilities.kodiJsonRequest(
                         {"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}
                     )
-                    logger.debug("Scrobble - activePlayers: %s" % activePlayers)
+                    logger.debug(f"Scrobble - activePlayers: {activePlayers}")
                     playerId = int(activePlayers[0]["playerid"])
                     logger.debug("Scrobble - Doing Player.GetItem kodiJsonRequest")
                     result = kodiUtilities.kodiJsonRequest(
@@ -129,12 +127,12 @@ class Scrobbler:
                         }
                     )
                     if result:
-                        logger.debug("Scrobble - %s" % result)
-                        type, curVideo = kodiUtilities.getInfoLabelDetails(result)
+                        logger.debug(f"Scrobble - {result}")
+                        _type, curVideo = kodiUtilities.getInfoLabelDetails(result)
                         if curVideo != self.curVideo:
                             response = self.__scrobble("stop")
                             if response is not None:
-                                logger.debug("Scrobble response: %s" % str(response))
+                                logger.debug(f"Scrobble response: {response!s}")
                                 logger.debug("Scrobble PVR transition")
                                 # update current information
                                 self.curVideo = curVideo
@@ -152,8 +150,7 @@ class Scrobbler:
                                             "Scrobble Couldn't set curVideoInfo for movie type"
                                         )
                                     logger.debug(
-                                        "Scrobble Movie type, curVideoInfo: %s"
-                                        % self.curVideoInfo
+                                        f"Scrobble Movie type, curVideoInfo: {self.curVideoInfo}"
                                     )
 
                                 elif utilities.isEpisode(self.curVideo["type"]):
@@ -182,28 +179,26 @@ class Scrobbler:
                                             }
 
                                         if "year" in self.curVideo:
-                                            self.traktShowSummary[
-                                                "year"
-                                            ] = self.curVideo["year"]
+                                            self.traktShowSummary["year"] = (
+                                                self.curVideo["year"]
+                                            )
                                 else:
                                     logger.debug(
                                         "Scrobble Couldn't set curVideoInfo/traktShowSummary for episode type"
                                     )
                                 logger.debug(
-                                    "Scrobble Episode type, curVideoInfo: %s"
-                                    % self.curVideoInfo
+                                    f"Scrobble Episode type, curVideoInfo: {self.curVideoInfo}"
                                 )
                                 logger.debug(
-                                    "Scrobble Episode type, traktShowSummary: %s"
-                                    % self.traktShowSummary
+                                    f"Scrobble Episode type, traktShowSummary: {self.traktShowSummary}"
                                 )
                                 response = self.__scrobble("start")
 
                 elif isSeek:
                     self.__scrobble("start")
 
-    def playbackStarted(self, data: Dict) -> None:
-        logger.debug("playbackStarted(data: %s)" % data)
+    def playbackStarted(self, data: dict) -> None:
+        logger.debug(f"playbackStarted(data: {data})")
         if not data:
             return
         self.curVideo = data
@@ -215,11 +210,11 @@ class Scrobbler:
             and "id" not in self.curVideo
             and "video_ids" not in self.curVideo
         ):
-            logger.debug("Aborting scrobble to avoid fallback: %s" % (self.curVideo))
+            logger.debug(f"Aborting scrobble to avoid fallback: {self.curVideo}")
             return
 
         if "type" in self.curVideo:
-            logger.debug("Watching: %s" % self.curVideo["type"])
+            logger.debug("Watching: {}".format(self.curVideo["type"]))
             if not xbmc.Player().isPlayingVideo():
                 logger.debug("Suddenly stopped watching item")
                 return
@@ -242,8 +237,8 @@ class Scrobbler:
                     )
                 else:
                     self.videoDuration = xbmc.Player().getTotalTime()
-            except Exception as e:
-                logger.debug("Suddenly stopped watching item: %s" % str(e))
+            except Exception as e:  # noqa: BLE001 - preserve the existing broad failure boundary
+                logger.debug(f"Suddenly stopped watching item: {e!s}")
                 self.curVideo = None
                 return
 
@@ -287,7 +282,7 @@ class Scrobbler:
                     }
                 else:
                     logger.debug("Couldn't set curVideoInfo for movie type")
-                logger.debug("Movie type, curVideoInfo: %s" % self.curVideoInfo)
+                logger.debug(f"Movie type, curVideoInfo: {self.curVideoInfo}")
 
             elif utilities.isEpisode(self.curVideo["type"]):
                 if "id" in self.curVideo:
@@ -304,7 +299,9 @@ class Scrobbler:
                         ],
                     )
                     if episodeDetailsKodi:
-                        title, year = utilities.regex_year(episodeDetailsKodi["showtitle"])
+                        title, year = utilities.regex_year(
+                            episodeDetailsKodi["showtitle"]
+                        )
                         if not year:
                             self.traktShowSummary = {
                                 "title": episodeDetailsKodi["showtitle"],
@@ -313,7 +310,9 @@ class Scrobbler:
                         else:
                             self.traktShowSummary = {"title": title, "year": year}
                         if "show_ids" in episodeDetailsKodi:
-                            self.traktShowSummary["ids"] = episodeDetailsKodi["show_ids"]
+                            self.traktShowSummary["ids"] = episodeDetailsKodi[
+                                "show_ids"
+                            ]
                         self.curVideoInfo = kodiUtilities.kodiRpcToTraktMediaObject(
                             "episode", episodeDetailsKodi
                         )
@@ -321,8 +320,9 @@ class Scrobbler:
                         self.curVideoInfo = None
                     if not self.curVideoInfo:  # getEpisodeDetailsFromKodi was empty
                         logger.debug(
-                            "Episode details from Kodi was empty, ID (%d) seems invalid, aborting further scrobbling of this episode."
-                            % self.curVideo["id"]
+                            "Episode details from Kodi was empty, ID ({:d}) seems invalid, aborting further scrobbling of this episode.".format(
+                                self.curVideo["id"]
+                            )
                         )
                         self.curVideo = None
                         self.isPlaying = False
@@ -368,10 +368,8 @@ class Scrobbler:
                 ):
                     self.isMultiPartEpisode = True
 
-                logger.debug("Episode type, curVideoInfo: %s" % self.curVideoInfo)
-                logger.debug(
-                    "Episode type, traktShowSummary: %s" % self.traktShowSummary
-                )
+                logger.debug(f"Episode type, curVideoInfo: {self.curVideoInfo}")
+                logger.debug(f"Episode type, traktShowSummary: {self.traktShowSummary}")
 
             self.isPlaying = True
             self.isPaused = False
@@ -386,7 +384,7 @@ class Scrobbler:
                 and utilities.isMovie(self.curVideo["type"])
                 and "ids" in self.curVideoInfo
             ):
-                best_id, id_type = utilities.best_id(
+                best_id, _ = utilities.best_id(
                     self.curVideoInfo["ids"], self.curVideo["type"]
                 )
                 result = {"movie": self.traktapi.getMovieSummary(best_id).to_dict()}
@@ -395,7 +393,7 @@ class Scrobbler:
                 and utilities.isEpisode(self.curVideo["type"])
                 and "ids" in self.traktShowSummary
             ):
-                best_id, id_type = utilities.best_id(
+                best_id, _id_type = utilities.best_id(
                     self.traktShowSummary["ids"], self.curVideo["type"]
                 )
                 result = {
@@ -416,7 +414,7 @@ class Scrobbler:
 
             self.__preFetchUserRatings(result)
 
-    def __preFetchUserRatings(self, result: Dict) -> None:
+    def __preFetchUserRatings(self, result: dict) -> None:
         if result:
             if (
                 utilities.isMovie(self.curVideo["type"])
@@ -452,7 +450,7 @@ class Scrobbler:
                         "trakt",
                     )
                 }
-            logger.debug("Pre-Fetch result: %s; Info: %s" % (result, self.curVideoInfo))
+            logger.debug(f"Pre-Fetch result: {result}; Info: {self.curVideoInfo}")
 
     def playbackResumed(self) -> None:
         if not self.isPlaying or self.isPVR:
@@ -461,7 +459,7 @@ class Scrobbler:
         logger.debug("playbackResumed()")
         if self.isPaused:
             p = time.time() - self.pausedAt
-            logger.debug("Resumed after: %s" % str(p))
+            logger.debug(f"Resumed after: {p!s}")
             self.pausedAt = 0
             self.isPaused = False
             self.__scrobble("start")
@@ -471,7 +469,7 @@ class Scrobbler:
             return
 
         logger.debug("playbackPaused()")
-        logger.debug("Paused after: %s" % str(self.watchedTime))
+        logger.debug(f"Paused after: {self.watchedTime!s}")
         self.isPaused = True
         self.pausedAt = time.time()
         self.__scrobble("pause")
@@ -520,7 +518,7 @@ class Scrobbler:
         else:
             return 0
 
-    def __scrobble(self, status: str) -> Optional[Dict]:
+    def __scrobble(self, status: str) -> dict | None:
         if not self.curVideoInfo:
             return
 
@@ -535,19 +533,19 @@ class Scrobbler:
             )
             if response is not None:
                 self.__scrobbleNotification(response)
-                logger.debug("Scrobble response: %s" % str(response))
+                logger.debug(f"Scrobble response: {response!s}")
                 return response
             else:
                 logger.debug(
-                    "Failed to scrobble movie: %s | %s | %s"
-                    % (self.curVideoInfo, watchedPercent, status)
+                    f"Failed to scrobble movie: {self.curVideoInfo} | {watchedPercent} | {status}"
                 )
 
         elif utilities.isEpisode(self.curVideo["type"]) and scrobbleEpisodeOption:
             if self.isMultiPartEpisode:
                 logger.debug(
-                    "Multi-part episode, scrobbling part %d of %d."
-                    % (self.curMPEpisode + 1, self.curVideo["multi_episode_count"])
+                    "Multi-part episode, scrobbling part {:d} of {:d}.".format(
+                        self.curMPEpisode + 1, self.curVideo["multi_episode_count"]
+                    )
                 )
                 adjustedDuration = int(
                     self.videoDuration / self.curVideo["multi_episode_count"]
@@ -557,10 +555,8 @@ class Scrobbler:
                     / adjustedDuration
                 ) * 100
 
-            logger.debug(
-                "scrobble sending show object: %s" % str(self.traktShowSummary)
-            )
-            logger.debug("scrobble sending episode object: %s" % str(self.curVideoInfo))
+            logger.debug(f"scrobble sending show object: {self.traktShowSummary!s}")
+            logger.debug(f"scrobble sending episode object: {self.curVideoInfo!s}")
             response = self.traktapi.scrobbleEpisode(
                 self.traktShowSummary, self.curVideoInfo, watchedPercent, status
             )
@@ -573,7 +569,9 @@ class Scrobbler:
                 # but rather an alternative title. To handle this case, call the Trakt search function.
                 if response is None:
                     logger.debug(
-                        "Searching for show title: %s" % self.traktShowSummary["title"]
+                        "Searching for show title: {}".format(
+                            self.traktShowSummary["title"]
+                        )
                     )
                     # This text query API is basically the same as searching on the website. Works with alternative
                     # titles, unlike the scrobble function.
@@ -583,16 +581,13 @@ class Scrobbler:
                     if not newResp:
                         logger.debug("Empty Response from getTextQuery, giving up")
                     else:
-                        logger.debug(
-                            "Got Response from getTextQuery: %s" % str(newResp)
-                        )
+                        logger.debug(f"Got Response from getTextQuery: {newResp!s}")
                         # We got something back. Have to assume the first show found is the right one; if there's more than
                         # one, there's no way to know which to use. Pull the primary title from the response (and the year,
                         # just because it's there).
                         showObj = {"title": newResp[0].title, "year": newResp[0].year}
                         logger.debug(
-                            "scrobble sending getTextQuery first show object: %s"
-                            % str(showObj)
+                            f"scrobble sending getTextQuery first show object: {showObj!s}"
                         )
                         # Now we can attempt the scrobble again, using the primary title this time.
                         response = self.traktapi.scrobbleEpisode(
@@ -605,8 +600,7 @@ class Scrobbler:
                     self.curVideoInfo["title"], response["episode"]["title"], 50.0
                 ):
                     logger.debug(
-                        "scrobble sending incorrect scrobbleEpisode stopping: %sx%s - %s != %s"
-                        % (
+                        "scrobble sending incorrect scrobbleEpisode stopping: {}x{} - {} != {}".format(
                             self.curVideoInfo["season"],
                             self.curVideoInfo["number"],
                             self.curVideoInfo["title"],
@@ -616,15 +610,14 @@ class Scrobbler:
                     self.stopScrobbler = True
 
                 self.__scrobbleNotification(response)
-                logger.debug("Scrobble response: %s" % str(response))
+                logger.debug(f"Scrobble response: {response!s}")
                 return response
             else:
                 logger.debug(
-                    "Failed to scrobble episode: %s | %s | %s | %s"
-                    % (self.traktShowSummary, self.curVideoInfo, watchedPercent, status)
+                    f"Failed to scrobble episode: {self.traktShowSummary} | {self.curVideoInfo} | {watchedPercent} | {status}"
                 )
 
-    def __scrobbleNotification(self, info: Dict) -> None:
+    def __scrobbleNotification(self, info: dict) -> None:
         if not self.curVideoInfo:
             return
 
