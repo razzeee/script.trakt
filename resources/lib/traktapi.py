@@ -94,6 +94,7 @@ class TraktSeason:
 
 class TraktClient:
     api_url = "https://api.trakt.tv"
+    auth_url = "https://auth.trakt.tv"
     max_retry_after = 60
 
     def __init__(
@@ -120,7 +121,7 @@ class TraktClient:
         include_error_code: bool = False,
         base_url: str | None = None,
     ) -> Any:
-        url = self.api_url + path
+        url = (base_url or self.api_url) + path
         data = dumps(body).encode("utf-8") if body is not None else None
         headers = {
             "Content-Type": "application/json",
@@ -166,6 +167,7 @@ class TraktClient:
                         retry=False,
                         include_headers=include_headers,
                         include_error_code=include_error_code,
+                        base_url=base_url,
                     )
             if exc.code == 401 and authorization and authorization.get("refresh_token"):
                 raise
@@ -241,6 +243,7 @@ class traktAPI:
             "/oauth/device/code",
             {"client_id": self.client.client_id},
             timeout=90,
+            base_url=self.client.auth_url,
         )
 
         if not code:
@@ -285,6 +288,7 @@ class traktAPI:
                 },
                 timeout=90,
                 include_error_code=True,
+                base_url=self.client.auth_url,
             )
             if token and token.get("access_token"):
                 self.on_authenticated(token)
